@@ -1,0 +1,639 @@
+---
+title: "Tissue-level visualization of graphical results: MITOCHONDRIA-RELATED FEATURES ONLY"
+author: "Nicole Gay, David Amar"
+date: "12/30/2021"
+output: 
+  html_document:
+    toc: true
+    code_folding: hide
+    toc_depth: 4
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+params: 
+  tissue: "SKM-GN"
+  gsutil_cmd: "~/google-cloud-sdk/bin/gsutil"
+  outdir: "/oak/stanford/groups/smontgom/nicolerg/MOTRPAC/PASS_ANALYSIS/PASS1B/INTEGRATIVE/GRAPHICAL"
+  gitdir: "/oak/stanford/groups/smontgom/nicolerg/src/MOTRPAC/motrpac-mawg"
+  scratch: "/oak/stanford/groups/smontgom/nicolerg/MOTRPAC/PASS_ANALYSIS/PASS1B/INTEGRATIVE/GRAPHICAL/scratch"
+---
+
+## Introduction
+
+**Objectives of these reports:**  
+
+* To share representations of complex data as interactive reports that allow researchers to extract meaningful biology  
+* To compile biological insights from these reports, some of which will be included in the landscape manuscript and companions  
+* To highlight results related to mitochondrial genes  
+
+**Background about graphical clustering analysis:**  
+
+A graphical approach with `repfdr` has replaced multiomics clustering as the primary method to characterize and explore main patterns of training-differential analytes in the PASS1B data. To learn more about this approach, see presentations by David Amar [here](https://docs.google.com/presentation/d/1j7bhPO0S3Yz6nf21ljM-x7GrMoBdaGL67XPox9kByok/edit?usp=sharing) and [here](https://docs.google.com/presentation/d/1NrsHfF8ki312D2fjhbmWSRER19aco3AA2EQ6A-HQLlQ/edit?usp=sharing). 
+
+Briefly, each differential molecule is assigned one of nine states [(male up/1, male null/0, male down/-1) x (female up/1, female null/0, female down/-1)] for each training time point (1, 2, 4, and 8 weeks). These states are our `nodes` in the graphs. Then, for each pair of nodes (x,y) such that y is from a time point that is immediately after x (e.g., x is a node from week 4 and y is a node from week 8), we define their edge set as the intersection of their analytes. This defines the `edges` in the graphs. By visualizing these graphs and characterizing different nodes, edges, and paths (i.e. a set of edges that traverses all time points), we can extract meaningful biology.  
+
+We refer to sets of molecules in specific edges, nodes, or paths as **graphical clusters**. Throughout this report, you will see labels for these clusters, e.g. `"SKM-GN:1w_F-1_M-1->2w_F-1_M-1->4w_F-1_M-1->8w_F-1_M-1"`. Here's how to break it down:  
+
+* All clusters are prefixed with the tissue abbreviation and a colon, e.g. `SKM-GN:`  
+* Nodes are defined by the time point and state in each sex, where state is 1 for up, 0 for null, and -1 for down. For example, `1w_F-1_M-1` is a node that characterizes molecules at the `1w` time point that are down-regulated in females (`F-1`) and down-regulated in males (`M-1`). These three pieces of information (time point, female state, male state) are separated by underscores (`_`)   
+* Edges contain `---` and connect a pair of nodes  
+* Paths contain `->` and connect four nodes  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+TISSUE = params$tissue
+gsutil = params$gsutil_cmd
+outdir = params$outdir
+gitdir = params$gitdir
+scratch = params$scratch 
+
+# source auxiliary functions for the graphs, plots, and trajectories
+# load required libraries 
+source(sprintf("%s/pass1b-06/integrative/clustering/graphical_analysis_functions.R", gitdir))
+# source auxiliary functions for trajectory plots
+source(sprintf('%s/pass1b-06/tools/get_fx.R', gitdir))
+# source auxiliary functions for plots of molecular trajectories and enrichments 
+# load required libraries 
+source(sprintf("%s/pass1b-06/integrative/clustering/cluster_viz_fx.R", gitdir))
+```
+
+```{r load data}
+# ## Load data  
+# Graphical results, pathway enrichments, feature-to-gene map, pathway hierarchy lists, ...
+data = load_graph_vis_data(gsutil, scratch) # in cluster_viz_fx.R
+```
+
+```{r subset by MT features and ALL tissues}
+mito_data = "gs://mawg-data/pass1b-06/merged/mitochondrial_graphical_analysis_results_20220422.RData"
+ls_data = system(sprintf("%s ls %s", gsutil, mito_data), intern=T)
+if(length(ls_data)>0){
+  # download
+  target_file = sprintf("%s/%s", scratch, basename(mito_data))
+  if(!file.exists(target_file)){
+    system(sprintf("%s cp %s %s", gsutil, mito_data, scratch))
+  }
+  # read in
+  load(target_file)
+  # feature_to_gene_subset,
+  # mt_feature_info,
+  # mt_edges,
+  # mt_nodes,
+  # selected_clusters,
+  # mt_universes_list,
+  # rat_to_human_map,
+  # mitocarta_pathways,
+  # mt_enrich_res
+}else{
+  
+  # subset features
+  mt = dl_read_gcp("gs://mawg-data/pass1b-06/external-data/external-datasets_gene-sets_Mitocarta_Rat.MitoCarta3.0.genes_only.txt", 
+                   sep="\t",
+                   tmpdir = scratch,
+                   GSUTIL_PATH = gsutil)
+  
+  feature_to_gene = data.table(data$feature_to_gene)
+  feature_to_gene_subset = feature_to_gene[entrez_gene %in% mt[,entrez_gene] | gene_symbol %in% mt[,gene_symbol] | rgd_gene %in% mt[,rgd_gene]]
+  
+  # merge with feature_info (differential features only)
+  feature_info = data$zs_info
+  mt_feature_info = feature_info[feature_ID %in% feature_to_gene_subset[,feature_ID]]
+  # entrez_gene has complete coverage 
+  # ensembl_gene is missing for only 38/132008 features
+  
+  # subset nodes and edges
+  nodes = data$node_sets
+  edges = data$edge_sets
+  mt_nodes = lapply(nodes, function(x){
+    sub = x[x %in% mt_feature_info[,feature]]
+  })
+  mt_edges = lapply(edges, function(x){
+    sub = x[x %in% mt_feature_info[,feature]]
+  })
+  
+  # get top 5 trajectories, top 3 edges, top 3 nodes for each tissue
+  selected_clusters = c()
+  for(tissue in unique(feature_info$tissue)){
+    selected_paths = extract_tissue_sets(tissue,k=5,min_size = 5,mt_nodes,mt_edges)
+    # paths only
+    selected_paths = selected_paths[grepl("->", names(selected_paths))]
+    selected_nodes_edges = extract_tissue_sets(tissue,k=3,min_size = 5,mt_nodes,mt_edges)
+    # remove paths 
+    selected_nodes_edges = selected_nodes_edges[!grepl("->", names(selected_nodes_edges))]
+    
+    # concat
+    curr_sets = c(selected_paths, selected_nodes_edges)
+    if(length(curr_sets)==0){next}
+  
+    names(curr_sets) = paste(tissue,names(curr_sets),sep=":")
+    selected_clusters = c(selected_clusters,curr_sets)
+  }
+  
+  # remove all null paths
+  selected_clusters = selected_clusters[!grepl("1w_F0_M0->2w_F0_M0->4w_F0_M0->8w_F0_M0", names(selected_clusters))]
+  
+  # make MT-only universes_list
+  # exclude metab
+  universes_list = data$universes_list
+  mt_universes_list = list()
+  for(identifier in c('entrez_gene', 'gene_symbol', 'ensembl_gene', 'rgd_gene')){
+    universe_list = universes_list[[identifier]]
+    mt_universe_list = list()
+    for(assay in names(universe_list)){
+      mt_universe_list[[assay]] = list()
+      for(tissue in names(universe_list[[assay]])){
+        if(assay == "METAB"){
+          mt_universe_list[[assay]][[tissue]] = character(0) 
+        }else{
+          all_genes = universe_list[[assay]][[tissue]]
+          mt_genes = unique(all_genes[all_genes %in% feature_to_gene_subset[,get(identifier)]])
+          mt_universe_list[[assay]][[tissue]] = mt_genes 
+        }
+      }
+    }
+    mt_universes_list[[identifier]] = mt_universe_list
+  }
+  
+  #lapply(mt_universes_list, function(x) lapply(x, function(y) lapply(y, function(z) length(z))))
+  
+  # make cluster_df
+  cluster_res_df = check_cluster_res_format(selected_clusters)
+  
+  # run pathway enrichment
+  log1 = sprintf("%s/mt-pw-enrich-log-%s.csv", scratch, format(Sys.time(), "%b-%d-%Y_%H%M"))
+  print(log1)
+  mt_gost = cluster_pathway_enrichment(
+    cluster_res_df,
+    feature_to_gene_subset,
+    gene_identifier_type = "ensembl_gene",
+    universe = mt_universes_list$ensembl_gene,
+    kegg_databaseDir = '/oak/stanford/groups/smontgom/nicolerg/MOTRPAC/PASS_ANALYSIS/PASS1B/INTEGRATIVE/CLUSTERING/KEGG/20211103',
+    databases = c('KEGG','REAC'),
+    num_cores = 12,
+    min_pw_set_size = 10,
+    max_pw_set_size = 200,
+    min_input_set_size = 2,
+    logfile = log1,
+    adjust_p = F)
+  
+  # additional pathway enrichment with mitocarta pathways 
+  mt_pw = dl_read_gcp("gs://mawg-data/pass1b-06/external-data/Human.MitoCarta3.0.txt",
+                      sep = "\t",
+                      tmpdir = scratch,
+                      GSUTIL_PATH = gsutil)
+  
+  # read in rat to human mapping
+  rat_to_human = dl_read_gcp("gs://mawg-data/external-datasets/rat-id-mapping/RGD_ORTHOLOGS_20201001.txt",
+                             sep = "\t",
+                             tmpdir = scratch,
+                             GSUTIL_PATH = gsutil)
+  
+  # merge on entrez gene
+  map1 = merge(feature_to_gene_subset, rat_to_human, by.x='entrez_gene', by.y='RAT_GENE_NCBI_GENE_ID', all.x=T)
+  map1[is.na(HUMAN_ORTHOLOG_SYMBOL)]
+  
+  # merge on gene symbol
+  map2 = map1[is.na(HUMAN_ORTHOLOG_SYMBOL)]
+  map2 = merge(map2[,.(entrez_gene, feature_ID, rgd_gene, gene_symbol, ensembl_gene)], rat_to_human, by.x='gene_symbol', by.y='RAT_GENE_SYMBOL', all.x=T)
+  map2[is.na(HUMAN_ORTHOLOG_SYMBOL)]
+  
+  map1 = map1[!is.na(HUMAN_ORTHOLOG_SYMBOL)]
+  map = rbindlist(list(map1, map2), fill=T)
+  map[is.na(gene_symbol) & !is.na(RAT_GENE_SYMBOL), gene_symbol := RAT_GENE_SYMBOL]
+  # map[is.na(HUMAN_ORTHOLOG_SYMBOL)]
+  # map[is.na(gene_symbol)]
+  map = unique(map[,.(gene_symbol, HUMAN_ORTHOLOG_SYMBOL)])
+  rat_to_human_map = map
+  
+  # make a pathway:member list
+  mitocarta_pathways = list()
+  for(pw in mt_pw[,MitoPathway]){
+    members = unname(unlist(strsplit(mt_pw[MitoPathway==pw, Genes], ', '))) 
+    rat_members = map[HUMAN_ORTHOLOG_SYMBOL %in% members, gene_symbol]
+    rat_members = rat_members[!is.na(rat_members)]
+    rat_members = unique(rat_members)
+    mitocarta_pathways[[pw]] = rat_members
+  }
+  
+  # custom pathway enrichment with mitocarta pathways 
+  log2 = sprintf("%s/mitocarta-pw-enrich-log-%s.csv", scratch, format(Sys.time(), "%b-%d-%Y_%H%M"))
+  mitocarta_enrich = custom_cluster_pathway_enrichment(
+    cluster_res_df, 
+    mitocarta_pathways, 
+    feature_to_gene_subset, 
+    universe = mt_universes_list$gene_symbol, 
+    gene_identifier_type = "gene_symbol",
+    add_ensembl_intersection = T, 
+    source = 'mitocarta3.0', 
+    min_input_set_size=2, 
+    min_pw_set_size=10, 
+    max_pw_set_size=200,
+    num_cores = 12,
+    logfile = log2)
+  setnames(mitocarta_enrich, c('intersection','intersection_ensembl'), c('intersection_input','intersection'))
+  
+  mt_enrich_res = rbindlist(list(mt_gost, mitocarta_enrich), fill=T)
+  
+  # adjust p-values 
+  ihw_res = ihw(mt_enrich_res[,computed_p_value],
+                factor(mt_enrich_res[,tissue]),
+                alpha=0.05)
+  mt_enrich_res[,adj_p_value := adj_pvalues(ihw_res)]
+  
+  mt_enrich_res = as.data.frame(mt_enrich_res)
+  
+  # add pathway parents
+  pathway_parents = data$pathway_parents
+  mt_pw[,term_id := gsub(" |-|,|\\.|;|:","_", MitoPathway)]
+  mt_pw[,parent := unname(unlist(sapply(`MitoPathways Hierarchy`, function(x){
+    splits = unname(unlist(strsplit(x, ' > ')))
+    if(length(splits)==1){
+      return(splits)
+    }
+    if(splits[[1]] %in% c("Metabolism","Mitochondrial dynamics and surveillance","Signaling","Protein import, sorting and homeostasis","Mitochondrial central dogma")){
+      return(splits[[2]])
+    }
+    if(splits[[1]] %in% c("OXPHOS","Small molecule transport")){
+      return(splits[[1]])
+    }
+  })))]
+  mt_pw_parents = list()
+  for(pw in mt_pw[,term_id]){
+    mt_pw_parents[[pw]] = mt_pw[term_id == pw, parent]
+  }
+  pathway_parents = c(pathway_parents, mt_pw_parents)
+  
+  save(feature_to_gene_subset,
+       mt_feature_info,
+       mt_edges,
+       mt_nodes,
+       selected_clusters,
+       mt_universes_list,
+       rat_to_human_map,
+       mitocarta_pathways,
+       mt_enrich_res,
+       pathway_parents, 
+       file = sprintf("%s/mitochondrial_graphical_analysis_results_20220422.RData", scratch))
+  
+  # copy to MAWG GCP bucket 
+  system(sprintf("%s cp %s/mitochondrial_graphical_analysis_results_20220422.RData gs://mawg-data/pass1b-06/merged/", gsutil, scratch))
+}
+```
+
+```{r compare verions}
+# load(sprintf("%s/mitochondrial_graphical_analysis_results_20220422.RData", scratch))
+# mt_enrich_res_422 = data.table(mt_enrich_res)
+# load(sprintf("%s/mitochondrial_graphical_analysis_results_20220119.RData", scratch))
+# mt_enrich_res_119 = data.table(mt_enrich_res) 
+# # compare
+# nrow(mt_enrich_res_422)
+# nrow(mt_enrich_res_119)
+# nrow(mt_enrich_res_422[adj_p_value < 0.05])
+# nrow(mt_enrich_res_119[adj_p_value < 0.05])
+# m = merge(mt_enrich_res_119, mt_enrich_res_422, by=c("cluster","tissue","ome","term_id"), suffixes = c("_old","_new"), all=T)
+# m[,missing := "not"]
+# m[is.na(adj_p_value_old), missing := "old"]
+# m[is.na(adj_p_value_old), adj_p_value_old := 1]
+# m[is.na(adj_p_value_new), missing := "new"]
+# m[is.na(adj_p_value_new), adj_p_value_new := 1]
+# 
+# ggplot(m, aes(x=-log10(adj_p_value_old), y=-log10(adj_p_value_new), colour=factor(missing))) +
+#   geom_point() +
+#   theme_classic() +
+#   geom_abline() +
+#   geom_hline(yintercept = -log10(0.05)) +
+#   geom_vline(xintercept = -log10(0.05)) +
+#   scale_colour_manual(values=c("not" = "black",
+#                                "old" = "green3",
+#                                "new" = "red"))
+# table(m[,missing])
+# m[missing == "new"]
+# table(m[missing == "new", term_size_old])
+# table(m[missing == "new" & term_size_old == 10, source_old])
+# m[missing == "new" & adj_p_value_old < 0.05]
+# 
+# all_old = unique(mt_enrich_res_119[,term_id])
+# all_new = unique(mt_enrich_res_422[,term_id])
+# length(all_old)
+# length(all_new)
+# writeLines(all_old[!all_old %in% all_new])
+# writeLines(all_new[!all_new %in% all_old])
+```
+
+```{r}
+# top 5 paths, top 3 nodes, top 3 edges with at least 5 features
+selected_clusters = selected_clusters[grepl(TISSUE, names(selected_clusters))]
+# edges include "---"
+# paths include "->
+# nodes include neither 
+if(length(selected_clusters)==0){
+  print("No edges, nodes, or paths with at least 5 significant MT-related features.")
+  knitr::knit_exit()
+}
+```
+
+## Graph characteristics  
+
+Graphical analysis has replaced clustering as the primary method of exploring main patterns in the PASS1B data. 
+This approach is more flexible and gives us better resolution.  
+
+### All paths    
+
+Tree of ALL differential analytes (all paths)   
+```{r all trajectories, fig.width = 10, fig.height = 6}
+get_tree_plot_for_tissue(tissues = TISSUE,
+                         omes = NULL,
+                         color_nodes_by_states = T,
+                         node_sets = mt_nodes,
+                         edge_sets = mt_edges,
+                         min_size = 5,
+                         edge_alpha_range = c(0.1, 1)) +
+  ggtitle(sprintf("%s, all mitochondria-related results", TISSUE))
+```
+
+### Top clusters  
+
+A "cluster" is a path, node, or edge. Here we show the size and ome distributions for selected clusters in this tissue.    
+```{r cluster size and ome distn, fig.width=8, fig.height=3.5}
+tissue_sets_df  = check_cluster_res_format(selected_clusters)
+features_per_cluster(tissue_sets_df)$plot
+```
+
+## Top 5 trajectories 
+Here we show trees of the 5 largest trajectories (also called paths) in this tissue, either with all differential features or features split by ome group.  
+
+### All omes  
+```{r top 5 all omes, fig.width = 10, fig.height = 6}
+get_tree_plot_for_tissue(tissues = TISSUE,
+                         omes = NULL,
+                         color_nodes_by_states = T,
+                         node_sets = mt_nodes,
+                         edge_sets = mt_edges,
+                         min_size = 5,
+                         max_trajectories = 5) +
+  ggtitle(sprintf("%s, top 5 MT-related trajectories", TISSUE))
+```
+
+### Split by ome group 
+```{r top 5, fig.width = 10, fig.height = 6}
+get_tree_plot_for_tissue(tissues = TISSUE,
+                         omes = unique(tissue_sets_df$ome),
+                         color_nodes_by_states = T,
+                         parallel_edges_by_ome = T,
+                         node_sets = mt_nodes,
+                         edge_sets = mt_edges,
+                         min_size = 2,
+                         max_trajectories = 5,
+                         curvature = 1, 
+                         edge_alpha_range = c(0.8,1),
+                         edge_width_range = c(1,8)) +
+  ggtitle(sprintf("%s, top 5 MT-related trajectories, all omes", TISSUE))
+```
+
+```{r top 5 split by ome, fig.width = 10, fig.height = 6}
+# get all omes 
+omes = unique(gsub(";.*","",unname(unlist(selected_clusters))))
+
+ome_titles = c(METHYL = 'DNA methylation',
+               ATAC = 'Chromatin accessibility',
+               TRNSCRPT = 'Transcriptomics',
+               PROT = 'Protein abundance',
+               PHOSPHO = 'Protein phosphorylation',
+               ACETYL = 'Protein acetylation',
+               UBIQ = 'Protein ubiquitination',
+               IMMUNO = 'Multiplexed immunoassay',
+               METAB = 'Metabolomics')
+
+ome_groups = list("Genomics" = c("METHYL","ATAC","TRNSCRPT"),
+               "Proteomics" = c("PROT","PHOSPHO","ACETYL","UBIQ"),
+               "Metabolomics and immunoassay" = c("METAB","IMMUNO"))
+
+if(length(omes) > 4){
+  # split by group
+  for(o in names(ome_groups)){
+    curr_omes = omes[omes %in% ome_groups[[o]]]
+    g = get_tree_plot_for_tissue(TISSUE,
+                                 curr_omes,
+                                 mt_nodes,
+                                 mt_edges,
+                                 5,
+                                 max_trajectories = 5,
+                                 parallel_edges_by_ome = T,
+                                 color_nodes_by_states = F,
+                                 curvature = 0.5,
+                                 edge_alpha_range = c(0.5, 1))
+    if(!is.null(g)){
+      g = g + ggtitle(sprintf("MT-related, %s: %s", o, paste0(ome_titles[curr_omes], collapse = ", ")))
+      print(g)
+    }
+  }
+}else{
+  g = get_tree_plot_for_tissue(TISSUE,
+                               omes,
+                               mt_nodes,
+                               mt_edges,
+                               5,
+                               max_trajectories = 5,
+                               parallel_edges_by_ome = T,
+                               color_nodes_by_states = F,
+                               curvature = 0.5,
+                               edge_alpha_range = c(0.5, 1))
+  if(!is.null(g)){
+    g = g + ggtitle(paste0("MT-related, all omes: ", paste0(ome_titles[omes], collapse = ", ")))
+    print(g)
+  }
+}
+
+```
+
+
+## Detailed view of selected clusters  
+
+Here we show highlighted trees, top pathway enrichments, network view of *all* pathway enrichments, and sample-level trajectories for each selected cluster (node, edge, or path).  
+
+**Interactive networks of pathway enrichments** 
+
+These networks summarize all significant pathway enrichments for a set of differential analytes. Results from all omes are combined.  
+
+Each node is a pathway. Hover over a node to see the pathway name (and parent pathway in parentheses), nominal enrichment p-value, datasets in which this pathway was significantly enriched, and the union of genes at the intersection of the input features and pathway members. Larger nodes indicate that more datasets (e.g. METAB;SKM-GN) were significantly enriched for this pathway. **Pathways only enriched with metabolites are not shown because edges are defined using genes, not KEGG IDs.**  
+
+Edges are drawn between nodes if there is a substantial overlap in the intersection of the input features and pathway members for both pathways. Hover over an edge to see the similarity score and list of genes in the intersection. 
+
+Nodes are colored to visually separate groups of related pathway enrichments. Each group has a label (rectangular node), which corresponds to the most frequently occurring parent pathway in the group. These labels are meant to help summarize groups of related pathway enrichments.  
+
+Explore these interactive plots!  
+
+* Hover over nodes (pathways) and edges (intersection between pathways) to see more information  
+* Click nodes to highlight them and connected edges  
+* Zoom in and out  
+* Click and drag nodes  
+
+```{r generate and save plots for all clusters}
+results_list = list()
+for(type in c("edge","path","node")){
+  results_list[[type]] = list()
+}
+for (clust in names(selected_clusters)){
+
+  # what kind is it?
+  # skip if all nodes are null 
+  if(grepl("---", clust)){
+    type = "edge"
+    nodes = unname(unlist(strsplit(gsub(".*:","",clust), "---")))
+    if(all(grepl("?w_F0_M0", nodes))){
+      next()
+    }
+  }else if(grepl("->",clust)){
+    type = "path"
+    nodes = unname(unlist(strsplit(gsub(".*:","",clust), "->")))
+    if(all(grepl("?w_F0_M0", nodes))){
+      next()
+    }
+  }else{
+    type = "node"
+    if(grepl("?w_F0_M0", gsub(".*:","",clust))){
+      next()
+    }
+  }
+  
+  # 1. tree
+  tree = get_tree_plot_for_tissue(tissues = TISSUE,
+                       omes = NULL,
+                       node_sets = mt_nodes, 
+                       edge_sets = mt_edges,
+                       min_size = 5,
+                       highlight_subset = clust) 
+  tree = tree + ggtitle(clust)
+  
+  # 2. grid of enrichments 
+  enrich_res = mt_enrich_res[mt_enrich_res$cluster == clust,]
+  enrich = plot_top_enrichments_for_tissue_set(
+    enrich_res, 
+    kegg_only=F,
+    adj_pval_threshold=0.1, 
+    max_num=20 # max number of pathways/rows in the plot
+  )
+  if(length(enrich$plot) > 0){
+    enrich_grid = enrich$plot[[1]]
+  }else{
+    enrich_grid = NULL
+  }
+  
+  # 3. sample-level trajectories 
+  clust_data = selected_clusters[[clust]]
+  sample_level = plot_group_mean_trajectories(
+    clust_data,
+    data$sample_level_data,
+    gsutil = gsutil,
+    motrpac_mawg_path = gitdir,
+    scratch = scratch, 
+    title = clust)
+  
+  # 4. network of enrichments (concatenated outside of this script)
+  # visNetwork doesn't provide any way to print a plot within a loop
+  # instead, save to HTML and concatenate HTML files after reports are knitted
+  # to show multiple plots, we need to use a workaround that ONLY works when you KNIT TO HTML
+  #system(sprintf("mkdir -p %s/visNetwork-html", outdir))
+  #htmlout = sprintf("%s/visNetwork-html", outdir)
+  tmpfile = sprintf("MT-%s.html", clust) 
+  tmpfile = gsub("->|:","__",tmpfile)
+  vn = enrichment_network_vis(enrich_res,
+                              feature_to_gene_subset,
+                              pathway_parents,
+                              title = sprintf("%s, MT-related only, all datasets",clust),
+                              out_html = tmpfile,
+                              overwrite_html = T, # rerun if HTML is already generated
+                              add_group_label_nodes = T,
+                              return_html = T,
+                              save_similarity_scores = sprintf("%s/%s", outdir, gsub("\\.html", "_similarity_scores\\.RDS", basename(tmpfile)))) 
+  
+  # save list of plots 
+  results_list[[type]][[clust]] = list(tree = tree,
+                                       top_enrich = enrich_grid,
+                                       enrich_network = vn, 
+                                       sample_level_traj = sample_level)
+}
+```
+
+```{r print paths, results = "asis", fig.width = 10, fig.height = 6}
+if(length(results_list$path)>0){
+  cat("\n\n### Selected paths\n")
+}
+for(clust in names(results_list$path)){
+  cat("\n\n#### ", clust,"\n")
+  for(g in results_list$path[[clust]]){
+    if(!is.null(g)){
+      # print plot
+      if(!is.character(g)){
+        print(g)
+      # create iframe
+      }else if(endsWith(g, "html")){
+        print(htmltools::tags$iframe(title = "My embedded document", 
+                       src = basename(g), 
+                       height = "960", width = "960"))
+      }else{
+        warning("I don't know what this is")
+      }
+    }
+  }
+  if(is.null(results_list$path[[clust]]$top_enrich)){
+    cat(sprintf("No significant enrichments for %s\n", clust))
+  }
+  cat("\n\n---\n\n")
+}
+```
+
+```{r print nodes, results = "asis", fig.width = 10, fig.height = 6}
+if(length(results_list$node)>0){
+  cat("\n\n### Selected nodes\n")
+}
+for(clust in names(results_list$node)){
+  cat("\n\n#### ", clust,"\n")
+  for(g in results_list$node[[clust]]){
+    if(!is.null(g)){
+      # print plot
+      if(!is.character(g)){
+        print(g)
+      # create iframe
+      }else if(endsWith(g, "html")){
+        print(htmltools::tags$iframe(title = "My embedded document", 
+                       src = basename(g), 
+                       height = "960", width = "960"))
+      }else{
+        warning("I don't know what this is")
+      }
+    }
+  }
+  if(is.null(results_list$node[[clust]]$top_enrich)){
+    cat(sprintf("No significant enrichments for %s\n", clust))
+  }
+  cat("\n\n---\n\n")
+}
+```
+
+```{r print edges, results = "asis", fig.width = 10, fig.height = 6}
+if(length(results_list$edge)>0){
+  cat("\n\n### Selected edges\n")
+}
+for(clust in names(results_list$edge)){
+  cat("\n\n#### ", clust,"\n")
+  for(g in results_list$edge[[clust]]){
+    if(!is.null(g)){
+      # print plot
+      if(!is.character(g)){
+        print(g)
+      # create iframe
+      }else if(endsWith(g, "html")){
+        print(htmltools::tags$iframe(title = "My embedded document", 
+                       src = basename(g), 
+                       height = "960", width = "960"))
+      }else{
+        warning("I don't know what this is")
+      }
+    }
+  }
+  if(is.null(results_list$edge[[clust]]$top_enrich)){
+    cat(sprintf("No significant enrichments for %s\n\n", clust))
+  }
+  cat("\n\n---\n\n")
+}
+```

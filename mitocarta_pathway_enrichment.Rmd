@@ -1,0 +1,284 @@
+---
+title: "Enrichment in MitoCarta pathways"
+author: "Nicole Gay"
+date: '2022-04-04'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(data.table)
+library(IHW)
+
+gsutil = "~/google-cloud-sdk/bin/gsutil"
+outdir = "/oak/stanford/groups/smontgom/nicolerg/MOTRPAC/PASS_ANALYSIS/PASS1B/INTEGRATIVE/GRAPHICAL"
+gitdir = "/oak/stanford/groups/smontgom/nicolerg/src/MOTRPAC/motrpac-mawg"
+scratch = "/oak/stanford/groups/smontgom/nicolerg/MOTRPAC/PASS_ANALYSIS/PASS1B/INTEGRATIVE/GRAPHICAL/scratch"
+
+# source auxiliary functions for the graphs, plots, and trajectories
+# load required libraries 
+source(sprintf("%s/pass1b-06/integrative/clustering/graphical_analysis_functions.R", gitdir))
+# source auxiliary functions for trajectory plots
+source(sprintf('%s/pass1b-06/tools/get_fx.R', gitdir))
+# source auxiliary functions for plots of molecular trajectories and enrichments 
+# load required libraries 
+source(sprintf("%s/pass1b-06/integrative/clustering/cluster_viz_fx.R", gitdir))
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load data}
+# ## Load data  
+# Graphical results, pathway enrichments, feature-to-gene map, pathway hierarchy lists, ...
+data = load_graph_vis_data(gsutil, scratch) # in cluster_viz_fx.R
+# select just 8-week nodes 
+week8_nodes = data$tree_analysis_selected_sets[grepl(":8w_F1_M1$|:8w_F1_M0$|:8w_F0_M1$|:8w_F-1_M-1$|:8w_F-1_M0$|:8w_F0_M-1$|:8w_F-1_M1$|:8w_F1_M-1$", names(data$tree_analysis_selected_sets))]
+
+# format into cluster_res_df
+cluster_res_df = check_cluster_res_format(week8_nodes)
+
+feature_to_gene = data.table(data$feature_to_gene)
+```
+
+```{r format mt pathways}
+# load mitocarta pathways
+mt_pw = dl_read_gcp("gs://mawg-data/pass1b-06/external-data/Human.MitoCarta3.0.txt",
+                    sep = "\t",
+                    tmpdir = scratch,
+                    GSUTIL_PATH = gsutil)
+
+# read in rat to human mapping
+rat_to_human = dl_read_gcp("gs://mawg-data/external-datasets/rat-id-mapping/gencode.v39.RGD.20201001.human.rat.gene.ids.txt",
+                           sep = "\t",
+                           tmpdir = scratch,
+                           GSUTIL_PATH = gsutil)
+rat_to_human = rat_to_human[!is.na(HUMAN_ORTHOLOG_SYMBOL)]
+rat_to_human_map = unique(rat_to_human[,.(RAT_SYMBOL, HUMAN_ORTHOLOG_SYMBOL)])
+
+# make a pathway:member list
+mitocarta_pathways = list()
+for(pw in mt_pw[,MitoPathway]){
+  members = unname(unlist(strsplit(mt_pw[MitoPathway==pw, Genes], ', '))) 
+  rat_members = rat_to_human_map[HUMAN_ORTHOLOG_SYMBOL %in% members, RAT_SYMBOL]
+  rat_members = unique(na.omit(rat_members))
+  mitocarta_pathways[[pw]] = rat_members
+  print(paste(pw, length(members), length(rat_members)))
+}
+```
+
+```{r pathway enrichment}
+# # custom pathway enrichment with mitocarta pathways 
+# log = sprintf("%s/mitocarta-pw-enrich-log-%s.csv", scratch, format(Sys.time(), "%b-%d-%Y_%H%M"))
+# mitocarta_enrich = custom_cluster_pathway_enrichment(
+#   cluster_res_df, 
+#   mitocarta_pathways, 
+#   feature_to_gene, 
+#   universe = data$universes_list$gene_symbol, 
+#   gene_identifier_type = "gene_symbol",
+#   add_ensembl_intersection = T, 
+#   source = 'mitocarta3.0', 
+#   min_input_set_size=1, 
+#   min_pw_set_size=1, 
+#   max_pw_set_size=500,
+#   num_cores = 12,
+#   logfile = log)
+# save(mitocarta_enrich, log, file="/oak/stanford/groups/smontgom/nicolerg/MOTRPAC/PASS_ANALYSIS/PASS1B/MITO/mitocarta-enrich-8w-nodes_20220404.RData")
+load("/oak/stanford/groups/smontgom/nicolerg/MOTRPAC/PASS_ANALYSIS/PASS1B/MITO/mitocarta-enrich-8w-nodes_20220404.RData")
+
+# look at logfile
+logged = fread(log, sep=",", header=T)
+# only includes METAB and IMMUNO, as expected
+
+mitocarta_enrich = as.data.table(mitocarta_enrich)
+setnames(mitocarta_enrich, c('intersection','intersection_ensembl'), c('intersection_input','intersection'))
+
+# adjust p-values 
+mitocarta_enrich[,adj_p_value := p.adjust(computed_p_value, method="BH")]
+nrow(mitocarta_enrich)
+nrow(mitocarta_enrich[adj_p_value < 0.1])
+```
+
+```{r pathway parents}
+# add pathway parents
+pathway_parents = data$pathway_parents
+mt_pw[,term_id := gsub(" |-|,|\\.|;|:","_", MitoPathway)]
+mt_pw[,parent := unname(unlist(sapply(`MitoPathways Hierarchy`, function(x){
+  splits = unname(unlist(strsplit(x, ' > ')))
+  if(length(splits)==1){
+    return(splits)
+  }
+  if(splits[[1]] %in% c("Metabolism","Mitochondrial dynamics and surveillance","Signaling","Protein import, sorting and homeostasis","Mitochondrial central dogma")){
+    return(splits[[2]])
+  }
+  if(splits[[1]] %in% c("OXPHOS","Small molecule transport")){
+    return(splits[[1]])
+  }
+})))]
+mt_pw_parents = list()
+for(pw in mt_pw[,term_id]){
+  mt_pw_parents[[pw]] = mt_pw[term_id == pw, parent]
+}
+pathway_parents = c(pathway_parents, mt_pw_parents)
+```
+
+```{r filter}
+mitocarta_enrich_sig = mitocarta_enrich[adj_p_value < 0.05]
+
+# filter down to just PROT, TRNSCRPT, ACETYL
+table(mitocarta_enrich_sig[,ome])
+mitocarta_enrich_sig = mitocarta_enrich_sig[ome %in% c("PROT","TRNSCRPT","ACETYL")]
+
+by_tissue = unique(mitocarta_enrich_sig[,.(tissue, term_id)])
+tissue_count = data.table(table(by_tissue[,tissue]))
+tissue_count = tissue_count[order(N, decreasing = T)]
+tissue_count
+
+# filter tissues
+mitocarta_enrich_sig = mitocarta_enrich_sig[tissue %in% c(tissue_count[1:8, V1],"BLOOD")]
+
+# for each category, pick the pathway with the most enrichments 
+mitocarta_enrich_sig[,toplevel := unlist(pathway_parents[term_id])]
+
+keep = c()
+for(parent in unique(mitocarta_enrich_sig[,toplevel])){
+  sub = mitocarta_enrich_sig[toplevel==parent]
+  t = data.table(table(sub[,term_name]))
+  t = t[order(N, decreasing = T)]
+  keep = c(keep, t[1, V1])
+}
+
+mitocarta_enrich_sig = mitocarta_enrich_sig[term_name %in% keep]
+```
+
+```{r plot, fig.height=8, fig.width=6.7}
+all_8w = copy(mitocarta_enrich_sig)
+all_8w[,shape := ifelse(grepl("-1", cluster), "down", "up")]
+all_8w[,group := "sex-consistent"]
+all_8w[grepl("8w_F0_M1|8w_F0_M-1", cluster),group := "male-specific"]
+all_8w[grepl("8w_F1_M0|8w_F-1_M0", cluster),group := "female-specific"]
+all_8w[,group := factor(group, levels = c("sex-consistent", "female-specific", "male-specific"))]
+all_8w[,tissue := factor(tissue, levels = tissue_order[tissue_order %in% all_8w[,tissue]])]
+all_8w[,toplevel_label := gsub(" ","\n", toplevel)]
+
+assay_cols = define_assay_cols()
+assay_cols = assay_cols[names(assay_cols) %in% all_8w[,ome]]
+
+all_8w = all_8w[order(group, decreasing = F)]
+all_8w[,ome := factor(ome, levels=MotrpacBicQC::assay_order[MotrpacBicQC::assay_order %in% all_8w[,ome]])]
+
+pdf("~/presentation_figures/PASS1B/mitocarta-pathway-enrichments-with-blood.pdf", width=6.7, height=8)
+ggplot(all_8w, aes(y=term_name, x=ome, size=group, shape=shape)) +
+  geom_point(aes(fill=group, colour=group)) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(),
+        plot.background = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_rect(size=1),
+        axis.text.y = element_text(colour="black"),
+        axis.text.x = element_text(colour="black", angle=90, hjust=1, vjust=0.5),
+        axis.title = element_blank(),
+        strip.text.x = element_text(angle=90, hjust=0, vjust=0.5),
+        legend.position = "top",
+        legend.box = "vertical",
+        legend.justification = "center",
+        legend.title = element_blank(),
+        legend.margin = margin(t = 0, b = -0.3, unit='cm'),
+        legend.spacing.x = unit(0.1, 'cm'),
+        strip.background = element_rect(fill=NA, size=NA)) +
+  scale_fill_manual(values=c("sex-consistent" = "white",
+                             "male-specific" = sex_cols[['male']],
+                             "female-specific" = sex_cols[['female']]),
+                    name = "Node type", guide="none") +
+  scale_colour_manual(values=c("sex-consistent" = "black",
+                             "male-specific" = sex_cols[['male']],
+                             "female-specific" = sex_cols[['female']]),
+                    name = "Node type", guide="none") +
+  scale_shape_manual(values=c('up'=24, 'down'=25), 
+                     labels=c(up="Up-regulated",down="Down-regulated"), 
+                     name="Node direction") +
+  scale_size_manual(values=c("sex-consistent" = 4,
+                             "male-specific" = 1.5,
+                             "female-specific" = 3),
+                    breaks = c("sex-consistent","female-specific","male-specific"),
+                    name="Node type") +
+  facet_grid(cols=vars(tissue), scales="free", space="free", switch = "y") +
+  guides(shape=guide_legend(override.aes = list(size=3, fill="black")),
+         size=guide_legend(override.aes = list(shape=24, 
+                                               size=c(4,3,1.5), 
+                                               fill=c("white",sex_cols[['female']],sex_cols[['male']]),
+                                               colour=c("black",sex_cols[['female']],sex_cols[['male']])))) +
+  scale_y_discrete(limits=rev)
+dev.off()
+```
+
+```{r version with all tissues, fig.height=8, fig.width=9}
+mitocarta_enrich_sig = mitocarta_enrich[adj_p_value < 0.05]
+
+# filter down to just PROT, TRNSCRPT, ACETYL
+table(mitocarta_enrich_sig[,ome])
+mitocarta_enrich_sig = mitocarta_enrich_sig[ome %in% c("PROT","TRNSCRPT","ACETYL")]
+
+# for each category, pick the pathway with the most enrichments 
+mitocarta_enrich_sig[,toplevel := unlist(pathway_parents[term_id])]
+
+mitocarta_enrich_sig = mitocarta_enrich_sig[term_name %in% keep]
+all_8w = copy(mitocarta_enrich_sig)
+all_8w[,shape := ifelse(grepl("-1", cluster), "down", "up")]
+all_8w[,group := "sex-consistent"]
+all_8w[grepl("8w_F0_M1|8w_F0_M-1", cluster),group := "male-specific"]
+all_8w[grepl("8w_F1_M0|8w_F-1_M0", cluster),group := "female-specific"]
+all_8w[,group := factor(group, levels = c("sex-consistent", "female-specific", "male-specific"))]
+all_8w[,tissue := factor(tissue, levels = tissue_order[tissue_order %in% all_8w[,tissue]])]
+all_8w[,toplevel_label := gsub(" ","\n", toplevel)]
+
+assay_cols = define_assay_cols()
+assay_cols = assay_cols[names(assay_cols) %in% all_8w[,ome]]
+
+all_8w = all_8w[order(group, decreasing = F)]
+all_8w[,ome := factor(ome, levels=MotrpacBicQC::assay_order[MotrpacBicQC::assay_order %in% all_8w[,ome]])]
+
+pdf("~/presentation_figures/PASS1B/mitocarta-pathway-enrichments-all-tissues.pdf", width=9, height=8)
+ggplot(all_8w, aes(y=term_name, x=ome, size=group, shape=shape)) +
+  geom_point(aes(fill=group, colour=group)) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(),
+        plot.background = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_rect(size=1),
+        axis.text.y = element_text(colour="black"),
+        axis.text.x = element_text(colour="black", angle=90, hjust=1, vjust=0.5),
+        axis.title = element_blank(),
+        strip.text.x = element_text(angle=90, hjust=0, vjust=0.5),
+        legend.position = "top",
+        legend.box = "vertical",
+        legend.justification = "center",
+        legend.title = element_blank(),
+        legend.margin = margin(t = 0, b = -0.3, unit='cm'),
+        legend.spacing.x = unit(0.1, 'cm'),
+        strip.background = element_rect(fill=NA, size=NA)) +
+  scale_fill_manual(values=c("sex-consistent" = "white",
+                             "male-specific" = sex_cols[['male']],
+                             "female-specific" = sex_cols[['female']]),
+                    name = "Node type", guide="none") +
+  scale_colour_manual(values=c("sex-consistent" = "black",
+                             "male-specific" = sex_cols[['male']],
+                             "female-specific" = sex_cols[['female']]),
+                    name = "Node type", guide="none") +
+  scale_shape_manual(values=c('up'=24, 'down'=25), 
+                     labels=c(up="Up-regulated",down="Down-regulated"), 
+                     name="Node direction") +
+  scale_size_manual(values=c("sex-consistent" = 4,
+                             "male-specific" = 1.5,
+                             "female-specific" = 3),
+                    breaks = c("sex-consistent","female-specific","male-specific"),
+                    name="Node type") +
+  facet_grid(cols=vars(tissue), scales="free", space="free", switch = "y") +
+  guides(shape=guide_legend(override.aes = list(size=3, fill="black")),
+         size=guide_legend(override.aes = list(shape=24, 
+                                               size=c(4,3,1.5), 
+                                               fill=c("white",sex_cols[['female']],sex_cols[['male']]),
+                                               colour=c("black",sex_cols[['female']],sex_cols[['male']])))) +
+  scale_y_discrete(limits=rev)
+dev.off()
+```
