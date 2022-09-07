@@ -1,0 +1,200 @@
+---
+title: 'Mito genes: PCA analysis'
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(data.table)
+library(ggplot2)
+library(ggrepel)
+library(MotrpacBicQC)
+knitr::opts_chunk$set(echo = TRUE)
+gsutil = '~/google-cloud-sdk/bin/gsutil'
+scratch = "~/Desktop/MoTrPAC/data/pass1b_6m/"
+
+source('~/Desktop/repos/motrpac-mawg/pass1b-06/integrative/outliers_covariates/pi1_cook_fx.R')
+source('~/Desktop/repos/motrpac-mawg/pass1b-06/tools/get_fx.R')
+source('~/Desktop/repos/motrpac-mawg/pass1b-06/integrative/clustering/cluster_viz_fx.R')
+```
+
+# Code for loading the RNA-seq data:
+
+```{r}
+# rna_outliers = dl_read_gcp(
+#   'gs://mawg-data/pass1b-06/transcript-rna-seq/dea/pass1b-06_transcript-rna-seq_removed-outliers_20201028.txt', tmpdir = scratch, sep='\t')
+# outliers = as.character(rna_outliers[,viallabel])
+# # also add vena cava outliers
+# pheno = dl_format_pheno(scratch = scratch, gsutil_path = gsutil)
+# venacv_outliers = unique(pheno[sex=="female" & sacrificetime %in% c("1w","2w") & specimen.processing.sampletypedescription=="Aorta", viallabel])
+# outliers = c(outliers, venacv_outliers)
+# 
+# bic_animal_tissue_code = data.table(MotrpacBicQC::bic_animal_tissue_code)
+# tissue_codes = unique(bic_animal_tissue_code[!grepl("Human", bic_tissue_name),tissue_name_release])
+# tissue_codes = tissue_codes[tissue_codes != '']
+# 
+# data_list = list()
+# for(tissue_code in tissue_codes){
+#   data = preprocess_pass1b_rnaseq_gcp(tissue_code, 
+#     'all', gsutil_path = gsutil, outliers = outliers,scratch=scratch)
+#   if(!is.null(data)){
+#     data_list[[tissue_code]] = data
+#   }
+# }
+# 
+# # map transcripts to genes using biomart
+# library(biomaRt)
+# mart_rat = useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
+# attrs  = c("ensembl_gene_id","ensembl_peptide_id","rgd_symbol")
+# rat_prot_gene = getBM(attributes = attrs, mart = mart_rat,  uniqueRows=T)
+# rat_prot_gene = rat_prot_gene[rat_prot_gene$ensembl_peptide_id!="",]
+# rat_prot_gene = rat_prot_gene[rat_prot_gene$rgd_symbol != "",]
+# save(data_list, rat_prot_gene,file=paste0(scratch,"data_list.RData"))
+
+# # Add mito gene annotations
+# mt = dl_read_gcp(
+#   "gs://mawg-data/pass1b-06/external-data/external-datasets_gene-sets_Mitocarta_Rat.MitoCarta3.0.genes_only.txt", 
+#     sep="\t",
+#     tmpdir = scratch,GSUTIL_PATH = gsutil)
+# mt = as.data.frame(mt)
+# 
+# # additional pathway enrichment with mitocarta pathways 
+# mt_pw = dl_read_gcp(
+#     "gs://mawg-data/pass1b-06/external-data/Human.MitoCarta3.0.txt",
+#     sep = "\t",
+#     tmpdir = scratch, GSUTIL_PATH = gsutil)
+# mt_pw = as.data.frame(mt_pw)
+#   
+# # read in rat to human mapping
+# rat_to_human = dl_read_gcp(
+#   "gs://mawg-data/external-datasets/rat-id-mapping/RGD_ORTHOLOGS_20201001.txt",
+#   sep = "\t",
+#   tmpdir = scratch,GSUTIL_PATH = gsutil)
+# rat_to_human = as.data.frame(rat_to_human)
+# rat_to_human = rat_to_human[!is.na(rat_to_human$HUMAN_ORTHOLOG_SYMBOL),]
+# rat_to_human_map = unique(rat_to_human[,c("RAT_GENE_SYMBOL", "HUMAN_ORTHOLOG_SYMBOL")])
+# 
+# make a pathway:member list
+# mitocarta_pathways = list()
+# for(pw in mt_pw$MitoPathway){
+#   members = unname(unlist(strsplit(mt_pw[mt_pw$MitoPathway==pw, "Genes"], ', ')))
+#   rat_members = rat_to_human_map[rat_to_human_map$HUMAN_ORTHOLOG_SYMBOL %in% members, 1]
+#   rat_members = unique(na.omit(rat_members))
+#   mitocarta_pathways[[pw]] = rat_members
+#   #print(paste(pw, length(members), length(rat_members)))
+# }
+
+# save(data_list, rat_prot_gene,pheno,
+#      mt,mt_pw,mitocarta_pathways,rat_to_human,
+#      file=paste0(scratch,"data_list.RData"))
+
+load(paste0(scratch,"data_list.RData"))
+rat_t2g = rat_prot_gene$rgd_symbol
+names(rat_t2g) = rat_prot_gene$ensembl_gene_id
+mito_encoded_genes = rat_t2g[grepl("^Mt-",rat_t2g,perl=T)]
+mitocarta_pathways[["mito-encoded"]] = mito_encoded_genes
+
+```
+
+# Merge data across tissues
+
+```{r}
+merged_norm_rnaseq_data = c()
+merged_meta = c()
+for(dataset in names(data_list)){
+  unnorm_counts = data_list[[dataset]]$raw_counts
+  curr_samples = as.character(colnames(unnorm_counts))
+  # For rat data, take samples whose label id starts with "9" - remove qc pools
+  curr_samples = curr_samples[grepl("^9",curr_samples)]
+  unnorm_counts  = unnorm_counts[,curr_samples]
+  
+  # get the dataset metadata
+  curr_meta = data_list[[dataset]]$meta
+  rownames(curr_meta) = curr_meta$viallabel
+  # add site and tissue
+  curr_meta$tissue = dataset
+  curr_meta$tissue_abbr = MotrpacBicQC::tissue_abbr[dataset]
+ 
+  if(length(merged_norm_rnaseq_data)==0){
+      merged_norm_rnaseq_data = unnorm_counts
+      merged_meta = curr_meta
+  }
+  else{
+      # make sure that features are the same
+      if (any(rownames(merged_norm_rnaseq_data)!=rownames(unnorm_counts))){
+        print(paste("warning, row names are not the same in tissue:",dataset))
+      }
+      merged_norm_rnaseq_data = cbind(merged_norm_rnaseq_data,unnorm_counts)
+      merged_meta = rbind(merged_meta,curr_meta)
+  }
+}
+
+merged_meta = as.data.frame(merged_meta)
+rownames(merged_meta) = merged_meta$viallabel
+get_numeric_timepoint<-function(x){
+  v = rep(0,length(x))
+  tps = c("Eight"=8,"Four"=4,"One"=1,"Two"=2)
+  for(tp in names(tps)){
+    v[grepl(paste0(tp,"-week"),x,perl = T,ignore.case = T)] = tps[tp]
+  }
+  return(v)
+}
+merged_meta$timepoint = get_numeric_timepoint(merged_meta$key.anirandgroup)
+merged_meta$is_control = as.numeric(grepl("control",
+          merged_meta$key.anirandgroup,ignore.case = T))
+table(merged_meta$timepoint,merged_meta$is_control)
+table(merged_meta$timepoint,merged_meta$group)
+
+# exclude low count genes in the current dataset
+library(edgeR)
+merged_counts_rnaseq_data = merged_norm_rnaseq_data
+merged_norm_rnaseq_data = edgeR_normalized_log_cpm(
+      x = as.matrix(merged_counts_rnaseq_data),
+      min_cpm = 1,
+      min_num_samples = 4,
+      norm_method = "TMM"
+)
+dim(merged_norm_rnaseq_data)
+
+```
+
+# PCA per mito pathway
+
+```{r}
+library(randomForest)
+print("pathway tissue_prediction_err_rate group_prediction_error_rate")
+for(pname in names(mitocarta_pathways)){
+  pgenes = mitocarta_pathways[[pname]]
+  ptranscripts = names(rat_t2g)[rat_t2g%in%pgenes]
+  ptranscripts = intersect(ptranscripts,rownames(merged_norm_rnaseq_data))
+  if(length(ptranscripts)<5){next}
+  px = merged_norm_rnaseq_data[ptranscripts,]
+  px = px[,colnames(px) %in% merged_meta$viallabel]
+  ppca = prcomp(t(px),center = T,scale. = T)
+  ppcs = ppca$x[,1:5]
+  ppca_df = data.frame(
+    ppcs,
+    group = merged_meta[rownames(ppcs),"group"],
+    sex = merged_meta[rownames(ppcs),"sex"],
+    tissue = merged_meta[rownames(ppcs),"tissue_abbr"],
+    groupsex = paste(
+      merged_meta[rownames(ppcs),"group"],
+      merged_meta[rownames(ppcs),"sex"], sep=";"
+    )
+  )
+  ggplot(ppca_df, aes(x = PC1, y = PC2)) +
+   geom_point(aes(color = factor(tissue),shape=groupsex))
+
+  rf1 = randomForest(ppcs,y=factor(ppca_df$tissue))
+  rf2 = randomForest(ppcs,y=factor(ppca_df$groupsex))
+  print(c(pname,
+          mean(colMeans(rf1$err.rate)),
+          mean(colMeans(rf2$err.rate))))
+}
+
+
+```
+
+
+

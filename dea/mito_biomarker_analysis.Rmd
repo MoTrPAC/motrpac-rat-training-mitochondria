@@ -1,0 +1,343 @@
+---
+title: "Mito-biomarker analysis"
+author: "David Amar"
+date: "6/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# External libraries
+library(data.table)
+library(org.Rn.eg.db)
+library(biomaRt)
+library(MotrpacBicQC)
+library(ggplot2)
+library(corrplot)
+library(ggcorrplot)
+# Load MoTrPAC data:
+library(MotrpacRatTraining6moData)
+
+# # Load useful functions
+# mawg_repo = "~/Desktop/repos/motrpac-mawg/"
+# source(paste0(mawg_repo,'pass1b-06/integrative/outliers_covariates/pi1_cook_fx.R'))
+# source(paste0(mawg_repo,'pass1b-06/tools/get_fx.R'))
+# source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
+
+gsutil = '~/google-cloud-sdk/bin/gsutil'
+data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
+scratch = data_dir
+knitr::opts_knit$set(root.dir = data_dir)
+setwd(data_dir)
+```
+
+# Load the biomarker data
+
+## RNA-seq and cDNA data
+
+```{r define data set}
+
+# read the mtDNA data file
+mt_data = read.csv(
+  file=paste0(data_dir,"mtDNA_motrpac_pass1b.csv"),
+  stringsAsFactors = F
+)
+mt_data$bid = mt_data$Label
+
+# read the RNA-seq metrics to obtain mtRNA read percentages
+rnaseq_qa_qc = TRNSCRPT_META
+pct_mito_reads = rnaseq_qa_qc$pct_chrM
+names(pct_mito_reads) = as.character(rnaseq_qa_qc$vial_label)
+rownames(rnaseq_qa_qc) = as.character(rnaseq_qa_qc$vial_label)
+colnames(rnaseq_qa_qc) = tolower(colnames(rnaseq_qa_qc))
+
+# load the pheno data
+pheno = PHENO
+```
+
+## Get metab data
+
+```{r}
+sample_data = METAB_NORM_DATA_FLAT
+sample_data_featureinfo = sample_data[,1:5]
+# Limit the data to cardiolipins
+cl_inds = grepl("^CL",sample_data$feature_ID,perl = T)
+cl_data = sample_data[cl_inds,]
+cl_fdata = sample_data_featureinfo[cl_inds,]
+# change column names to bids
+m = unique(pheno[,c("pid","bid")])
+p2b = as.character(m[,2])
+names(p2b) = as.character(m[,1])
+colnames(cl_data)[-c(1:5)] = unname(p2b[colnames(cl_data)[-c(1:5)]])
+```
+
+# Get mito gene annotation
+
+```{r,eval=F}
+# Add mito gene annotations
+mt = dl_read_gcp(
+  "gs://mawg-data/pass1b-06/external-data/external-datasets_gene-sets_Mitocarta_Rat.MitoCarta3.0.genes_only.txt",
+    sep="\t",
+    tmpdir = scratch,GSUTIL_PATH = gsutil)
+mt = as.data.frame(mt)
+
+# additional pathway enrichment with mitocarta pathways
+mt_pw = dl_read_gcp(
+    "gs://mawg-data/pass1b-06/external-data/Human.MitoCarta3.0.txt",
+    sep = "\t",
+    tmpdir = scratch, GSUTIL_PATH = gsutil)
+mt_pw = as.data.frame(mt_pw)
+
+# map transcripts to genes using biomart
+library(biomaRt)
+mart_rat = useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
+attrs  = c("ensembl_gene_id","ensembl_peptide_id","rgd_symbol")
+rat_prot_gene = getBM(attributes = attrs, mart = mart_rat,  uniqueRows=T)
+rat_prot_gene = rat_prot_gene[rat_prot_gene$ensembl_peptide_id!="",]
+rat_prot_gene = rat_prot_gene[rat_prot_gene$rgd_symbol != "",]
+
+# read in rat to human mapping
+rat_to_human = dl_read_gcp(
+  "gs://mawg-data/external-datasets/rat-id-mapping/RGD_ORTHOLOGS_20201001.txt",
+  sep = "\t",
+  tmpdir = scratch,GSUTIL_PATH = gsutil)
+rat_to_human = as.data.frame(rat_to_human)
+rat_to_human = rat_to_human[!is.na(rat_to_human$HUMAN_ORTHOLOG_SYMBOL),]
+rat_to_human_map = unique(rat_to_human[,c("RAT_GENE_SYMBOL", "HUMAN_ORTHOLOG_SYMBOL")])
+
+# make a pathway:member list
+mitocarta_pathways = list()
+for(pw in mt_pw$MitoPathway){
+  members = unname(unlist(strsplit(mt_pw[mt_pw$MitoPathway==pw, "Genes"], ', ')))
+  rat_members = rat_to_human_map[rat_to_human_map$HUMAN_ORTHOLOG_SYMBOL %in% members, 1]
+  rat_members = unique(na.omit(rat_members))
+  mitocarta_pathways[[pw]] = rat_members
+  #print(paste(pw, length(members), length(rat_members)))
+}
+
+save(rat_prot_gene,
+     mt,mt_pw,mitocarta_pathways,rat_to_human,
+     file=paste0(scratch,"mito_gene_annotation.RData"))
+
+```
+
+Load above data:
+```{r}
+load(paste0(scratch,"mito_gene_annotation.RData"))
+```
+
+# Tissue comparison at baseline
+
+```{r}
+control_vials = rownames(pheno)[pheno$intervention=="control"]
+control_vials = intersect(control_vials,names(pct_mito_reads))
+baseline_pct_mito = data.frame(
+  pct_mito_reads = pct_mito_reads[control_vials],
+  tissue = pheno[control_vials,"tissue"],
+  sex = pheno[control_vials,"sex"]
+)
+
+baseline_pct_mito_male = baseline_pct_mito[baseline_pct_mito$sex == "male",]
+baseline_pct_mito_female = baseline_pct_mito[baseline_pct_mito$sex == "female",]
+
+currdf = baseline_pct_mito_male
+tissue_med = tapply(currdf$pct_mito_reads,currdf$tissue,median)
+tissue_med = sort(tissue_med,decreasing = T)
+currdf$tissue = factor(currdf$tissue,levels = names(tissue_med))
+boxplot(pct_mito_reads ~ tissue,data=currdf,las=2,xlab="")
+
+currdf = baseline_pct_mito_female
+tissue_med = tapply(currdf$pct_mito_reads,currdf$tissue,median)
+tissue_med = sort(tissue_med,decreasing = T)
+currdf$tissue = factor(currdf$tissue,levels = names(tissue_med))
+boxplot(pct_mito_reads ~ tissue,data=currdf,las=2,xlab="")
+
+```
+
+# Comparison of mt biomarkers
+
+```{r}
+# get the biomarkers in each tissue
+get_corrmat<-function(x){
+  n = ncol(x)
+  m = matrix(NA,ncol=n,nrow=n,dimnames=list(colnames(x),colnames(x)))
+  for(i in 1:n){
+    inds1 = !is.na(x[,i])
+    if(sum(inds1)<3){next}
+    for(j in 1:i){
+      inds2 = !is.na(x[,j])
+      if(sum(inds2)<3){next}
+      inds = inds1 & inds2
+      m[i,j] = cor(as.numeric(x[inds,i]),as.numeric(x[inds,j]))
+      m[j,i] = m[i,j]
+    }
+  }
+  return(m)
+}
+
+mt_biomarkers = list()
+mt_biomarker_correlations2 = c()
+mt_biomarker_8wfc = c()
+mt_biomarker_8wp = c()
+mt_group_kw = c()
+for(tissue_name in unique(pheno$tissue)){
+  if(is.na(tissue_name)){next}
+  if(grepl("VENA",tissue_name)){next}
+  print(paste("Analyzing data from:",tissue_name))
+  
+  # get all vial labels
+  tissue_vials = rownames(pheno)[pheno$tissue == tissue_name]
+  # limit to vial labels that appear in the rna-seq data
+  tissue_vials = intersect(names(pct_mito_reads),tissue_vials)
+  if(length(tissue_vials)<5){next}
+  # get the bids
+  tissue_bids = sapply(tissue_vials,substring,1,5)
+  # save results in a data frame
+  tissue_df = data.frame(
+    mt_reads = pct_mito_reads[tissue_vials],
+    viallabel = tissue_vials,
+    bid = tissue_bids
+  )
+  
+  tissue_df$mtdna = NA
+  if(sum(mt_data$Tissue==tissue_name)>0){
+    currmt_data = mt_data[mt_data$Tissue==tissue_name,]
+    rownames(currmt_data) = as.character(currmt_data$bid)
+    curr_shared_bids = intersect(tissue_df$bid,rownames(currmt_data))
+    for(bid in curr_shared_bids){
+      tissue_df[tissue_df$bid==bid,"mtdna"] = currmt_data[bid,"Level"]
+    }
+  }
+  
+  tissue_df$clPC1 = NA
+  tissue_df$clPC2 = NA
+  curr_cl_data = NULL
+  if(sum(cl_fdata$tissue == tissue_name)>0){
+    curr_shared_bids = intersect(tissue_df$bid,colnames(cl_data))
+    curr_cl_data = cl_data[cl_fdata$tissue == tissue_name,curr_shared_bids]
+    metab_names = cl_fdata$feature_ID[cl_fdata$tissue == tissue_name]
+    curr_cl_data = aggregate(curr_cl_data,by=list(metab_names),mean,na.rm=T)
+    rownames(curr_cl_data) = curr_cl_data[,1]
+    curr_cl_data = curr_cl_data[,-1]
+    # remove columns that are all NAs
+    bid_na_rate = colSums(is.na(curr_cl_data)) / nrow(curr_cl_data)
+    curr_cl_data = curr_cl_data[,bid_na_rate<1]
+    curr_shared_bids = colnames(curr_cl_data)
+    # check missing values
+    na_rate = sum(is.na(curr_cl_data))/(nrow(curr_cl_data)*ncol(curr_cl_data))
+    if(na_rate >= 0.05){
+      curr_cl_data = NULL
+    }
+    else{
+      # use min imputation
+      curr_cl_data = t(curr_cl_data)
+      curr_cl_data[is.nan(curr_cl_data)] = NA
+      curr_cl_data[is.na(curr_cl_data)] = min(curr_cl_data,na.rm=T)
+    }
+    
+    if(!is.null(curr_cl_data)){
+      cl_pca = prcomp(curr_cl_data)
+      num_cols = min(2,ncol(curr_cl_data))
+      curr_cl_data = as.matrix(cl_pca$x[,1:num_cols],ncol=num_cols)
+      colnames(curr_cl_data) = paste0("clPC",1:num_cols)
+      for(pc in colnames(curr_cl_data)){
+        for(bid in curr_shared_bids){
+          tissue_df[tissue_df$bid==bid,pc] = curr_cl_data[bid,pc]
+        }
+      }
+    }
+  }
+  
+  # add sex and group
+  tissue_df$group = pheno[tissue_df$viallabel,"group"]
+  tissue_df$sex = pheno[tissue_df$viallabel,"sex"]
+  curr_tissue_biomarker_zs = c()
+  curr_tissue_biomarker_ps = c()
+  curr_tissue_biomarker_kw_ps = c()
+  for(s in c("female","male")){
+    x = tissue_df[tissue_df$sex==s,]
+    # perform KW test
+    kw_res_v = rep(NA,4)
+    names(kw_res_v) = c("mt_reads","mtdna","clPC1","clPC2")
+    for(nn in names(kw_res_v)){
+      if(all(is.na(x[,nn]))){next}
+      try({
+        kw_res_v[nn] = kruskal.test(x[,nn],x$group)$p.value
+      })
+    }
+    names(kw_res_v) = paste0(names(kw_res_v),"_",s)
+    curr_tissue_biomarker_kw_ps = c(
+      curr_tissue_biomarker_kw_ps,kw_res_v
+    )
+    
+    # perform t-test for week 8
+    x$mtdna = log2(x$mtdna)
+    x_8w = x[x$group=="8w",]
+    x_control = x[x$group=="control",]
+    effs = rep(NA,4)
+    names(effs) = c("mt_reads","mtdna","clPC1","clPC2")
+    ps = rep(NA,4)
+    names(ps) = names(effs)
+    for(col in names(effs)){
+      if(all(is.na(x[,col]))){next}
+      if(sum(!is.na(x_8w[,col]))<2){next}
+      if(sum(!is.na(x_control[,col]))<2){next}
+      tres = t.test(x_8w[,col],x_control[,col])
+      effs[col] = tres$statistic
+      ps[col] = tres$p.value
+    }
+    names(effs) = paste0(names(effs),"_",s)
+    names(ps) = names(effs)
+    curr_tissue_biomarker_zs = c(
+      curr_tissue_biomarker_zs,effs
+    )
+    curr_tissue_biomarker_ps = c(
+      curr_tissue_biomarker_ps,ps
+    )
+  }
+  mt_biomarker_8wfc = rbind(mt_biomarker_8wfc,curr_tissue_biomarker_zs)
+  rownames(mt_biomarker_8wfc)[nrow(mt_biomarker_8wfc)] = tissue_name
+  mt_biomarker_8wp = rbind(mt_biomarker_8wp,curr_tissue_biomarker_ps)
+  rownames(mt_biomarker_8wp)[nrow(mt_biomarker_8wp)] = tissue_name
+  mt_group_kw = rbind(mt_group_kw,curr_tissue_biomarker_kw_ps)
+  rownames(mt_group_kw)[nrow(mt_group_kw)] = tissue_name
+  curr_cols = c("mt_reads","mtdna","clPC1","clPC2")
+  curr_corrs = get_corrmat(tissue_df[,curr_cols])
+  rhos = curr_corrs[upper.tri(curr_corrs)]
+  names(rhos) = c("reads-mtdna","reads-clPC1","mtdna-clPC1",
+                    "reads-clPC2","mtdna-clPC2","clPC1-clPC2")
+  mt_biomarker_correlations2 = rbind(mt_biomarker_correlations2,rhos)
+  rownames(mt_biomarker_correlations2)[
+      nrow(mt_biomarker_correlations2)] = tissue_name
+  mt_biomarkers[[gsub("-","",tissue_name)]] = tissue_df
+}
+ggcorrplot(mt_biomarker_correlations2,method = "circle")
+corrplot(t(-log10(mt_group_kw)),is.corr = F,method = "circle",
+         p.mat = t(mt_group_kw),sig.level = 0.05)
+par(mar=c(8,8,8,8))
+barplot(sort(colSums(mt_group_kw<0.05,na.rm=T),decreasing = T),las=2,col="white")
+
+tstats = mt_biomarker_8wfc
+corrplot(t(tstats),method = "circle",is.corr = F,
+         p.mat = t(mt_biomarker_8wp),sig.level = 0.05)
+barplot(sort(colSums(mt_biomarker_8wp<0.05,na.rm=T),decreasing = T),las=2,col="white")
+
+mt_biomarker_8wfc = as.data.frame(mt_biomarker_8wfc)
+mt_biomarker_8wfc$tissue = rownames(mt_biomarker_8wfc)
+ggplot(mt_biomarker_8wfc,aes(
+  x = mt_reads_female, y = mtdna_female, label=tissue
+)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) +
+  xlim(c(-2.5,5)) + geom_abline(slope=1) + ggtitle("Female fold changes")
+ggplot(mt_biomarker_8wfc,aes(
+  x = mt_reads_male, y = mtdna_male, label=tissue
+)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) + 
+  xlim(-7,6) + geom_abline(slope=1) + ggtitle("Male fold changes")
+
+save(mt_biomarkers,
+     mt_biomarker_correlations2,
+     mt_biomarker_8wfc,mt_biomarker_8wp,
+     mt_group_kw,
+     file=paste0(scratch,"mt_biomarkers.RData"))
+
+```
+

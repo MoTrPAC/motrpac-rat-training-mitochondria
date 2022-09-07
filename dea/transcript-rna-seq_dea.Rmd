@@ -1,0 +1,425 @@
+---
+title: "Mito-adjusted gene expression DEA"
+author: "David Amar"
+date: "6/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# External libraries
+library(data.table)
+library(edgeR)
+library(limma)
+library(DESeq2)
+library(org.Hs.eg.db)
+library(clusterProfiler)
+library(org.Rn.eg.db)
+library(MotrpacBicQC)
+library(plotrix)
+library(ggplot2)
+library(gprofiler2)
+library(metap)
+library(IHW)
+library(corrplot)
+# Load MoTrPAC data:
+library(MotrpacRatTraining6moData)
+
+# Load useful functions
+mawg_repo = "~/Desktop/repos/motrpac-mawg/"
+source(paste0(mawg_repo,'pass1b-06/integrative/outliers_covariates/pi1_cook_fx.R'))
+source(paste0(mawg_repo,'pass1b-06/tools/get_fx.R'))
+source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
+
+gsutil = '~/google-cloud-sdk/bin/gsutil'
+data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
+scratch = data_dir
+knitr::opts_knit$set(root.dir = data_dir)
+setwd(data_dir)
+```
+
+
+# Load datasets
+
+```{r define data set}
+# get animal code data
+tissue_codes = names(TISSUE_CODE_TO_ABBREV)
+
+# read the RNA-seq metrics to obtain mtRNA read percentages
+rnaseq_qa_qc = TRNSCRPT_META
+pct_mito_reads = rnaseq_qa_qc$pct_chrM
+names(pct_mito_reads) = as.character(rnaseq_qa_qc$vial_label)
+rownames(rnaseq_qa_qc) = as.character(rnaseq_qa_qc$vial_label)
+colnames(rnaseq_qa_qc) = tolower(colnames(rnaseq_qa_qc))
+
+# Add outliers and phenotypic data
+outliers = as.character(OUTLIERS[,1])
+pheno = PHENO
+# also add vena cava outliers
+venacv_outliers = unique(pheno[
+  pheno$sex=="female" & pheno$sacrificetime %in% c("1w","2w") & 
+    pheno$specimen.processing.sampletypedescription=="Aorta", "viallabel"])
+outliers = union(outliers, venacv_outliers)
+rownames(pheno) = as.character(pheno$viallabel)
+```
+
+Load mito biomarker data (see `mito_biomarker_analysis.Rmd`)
+```{r}
+load(paste0(scratch,"mt_biomarkers.RData"))
+```
+
+Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
+```{r}
+load(paste0(scratch,"mito_gene_annotation.RData"))
+```
+
+# Run differential analysis
+
+See main functions in pass1b-06/tools/get_fx.R. 
+
+## Adjust for mtDNA levels
+
+```{r rna-seq dea table,eval=F}
+
+dea_results = list()
+adj_mt_cols = c("mt_reads","clPC1","clPC2")
+for(tissue_name in unique(pheno$tissue)){
+  tissue_code = TISSUE_ABBREV_TO_CODE[tissue_name]
+  if(tissue_name=="" || tissue_code == ""){next}
+  if(!tissue_name %in% names(mt_biomarkers)){next}
+  if(tissue_code %in% names(dea_results)){next}
+
+  # load data 
+  raw_data_name = paste0("TRNSCRPT_",gsub("-","",tissue_name),"_RAW_COUNTS")
+  norm_data_name = paste0("TRNSCRPT_",gsub("-","",tissue_name),"_NORM_DATA")
+  raw_data = get(raw_data_name)
+  norm_data = get(norm_data_name)
+  rownames(raw_data) = raw_data$feature_ID
+  raw_data = raw_data[,-c(1:4)]
+  rownames(norm_data) = norm_data$feature_ID
+  norm_data = norm_data[,-c(1:4)]
+  # filter unexpressed genes by taking the genes in the norm data
+  raw_data = raw_data[rownames(norm_data),]
+  curr_vials = colnames(norm_data)
+  data = list(
+    meta = data.table(cbind(pheno[curr_vials,],rnaseq_qa_qc[curr_vials,])),
+    counts = raw_data[,curr_vials],
+    tmm = norm_data[,curr_vials]
+  )
+  
+  # prep data
+  prepped = transcript_prep_data(tissue_code, 
+    data$meta, 
+    data$counts, 
+    data$tmm,
+    covariates=c('pct_globin', 'rin', 'pct_umi_dup', 'median_5_3_bias'),
+    outliers=outliers)
+  
+  curr_mt_biomarkers = mt_biomarkers[[tissue_name]][,adj_mt_cols]
+  biomarkers_to_keep = colSums(is.na(curr_mt_biomarkers))==0
+  shared_vials = intersect(
+    rownames(curr_mt_biomarkers),
+    prepped$fixed_meta$viallabel
+  )
+  prepped$fixed_meta = as.data.frame(prepped$fixed_meta)
+  rownames(prepped$fixed_meta) = as.character(prepped$fixed_meta$viallabel)
+  prepped$fixed_meta = prepped$fixed_meta[shared_vials,]
+  prepped$fixed_counts = prepped$fixed_counts[,shared_vials]
+  for(newcol in names(which(biomarkers_to_keep))){
+    prepped$fixed_meta[[newcol]] = curr_mt_biomarkers[shared_vials,newcol]
+  }
+  prepped$fixed_meta = data.table(prepped$fixed_meta)
+  
+  # take training groups that appear in both sexes
+  reduced_meta = as.data.frame(prepped$fixed_meta)
+  rownames(reduced_meta) = reduced_meta$viallabel
+  reduced_meta = reduced_meta[!rownames(reduced_meta) %in% outliers,]
+  tb = table(reduced_meta$group,reduced_meta$sex)
+  tb = tb[!rownames(tb)=="control",]
+  if(!is.null(dim(tb)) && ncol(tb)>1){
+    tb = tb[apply(tb>2,1,all),]
+    training_groups = rownames(tb)
+  }
+  else{
+    tb = tb[tb>2]
+    training_groups = names(tb)
+  }
+  
+  print("analyzing the following timewise contrasts:")
+  print(training_groups)
+  
+  timewise_dea = transcript_timewise_dea_each_sex(tissue_code, 
+    prepped$fixed_meta, 
+    prepped$fixed_counts, 
+    prepped$fixed_covariates, 
+    prepped$curr_outliers,
+    date = "17082022",
+    training_groups = training_groups,
+    write=F, save_rdata = F)
+  
+  training_dea = transcript_training_dea_each_sex(tissue_code, 
+    prepped$fixed_meta, 
+    prepped$fixed_counts, 
+    prepped$fixed_covariates, 
+    prepped$curr_outliers,
+    date = "17082022",write=F)
+  
+  prepped$fixed_covariates = c(prepped$fixed_covariates,
+                               names(which(biomarkers_to_keep)))
+  
+  timewise_dea_mt_adjusted = transcript_timewise_dea_each_sex(tissue_code, 
+    prepped$fixed_meta, 
+    prepped$fixed_counts, 
+    prepped$fixed_covariates, 
+    prepped$curr_outliers,
+    date = "17082022",
+    training_groups = training_groups,
+    write=F, save_rdata = F)
+  
+  training_dea_mt_adjusted = transcript_training_dea_each_sex(tissue_code, 
+    prepped$fixed_meta, 
+    prepped$fixed_counts, 
+    prepped$fixed_covariates, 
+    prepped$curr_outliers,
+    date = "17082022",write=F)
+  
+  dea_results[[gsub("-","",tissue_name)]] = list(
+    timewise_dea = timewise_dea,
+    timewise_dea_mt_adjusted = timewise_dea_mt_adjusted,
+    training_dea = training_dea,
+    training_dea_mt_adjusted = training_dea_mt_adjusted
+  )
+}
+
+save(dea_results,file="mito_paper_dea_results.RData")
+
+# Sanity check, compare our code to pre-computed DEA
+for(tissue_name in names(dea_results)){
+  # load data 
+  da_name = paste0("TRNSCRPT_",tissue_name,"_DA")
+  curr_da = get(da_name)
+  computed_da = dea_results[[tissue_name]]$timewise_dea
+  computed_da = as.data.frame(computed_da)
+  rownames(computed_da) = paste(
+    computed_da$feature_ID,computed_da$sex,computed_da$comparison_group,sep=";"
+  )
+  rownames(curr_da) = paste(
+    curr_da$feature_ID,curr_da$sex,curr_da$comparison_group,sep=";"
+  )
+  rowname_jacc = length(intersect(rownames(curr_da),rownames(computed_da))) / 
+    length(union(rownames(curr_da),rownames(computed_da)))
+  if(rowname_jacc < 1){
+    print(paste("In tissue",tissue_name,"covered timeise data differs"))
+  }
+  curr_da = curr_da[rownames(computed_da),]
+  inds = !is.na(curr_da$p_value) & !is.na(computed_da$p_value)
+  rho1 = round(cor(curr_da$p_value[inds],computed_da$p_value[inds]),digits = 4)
+  rho2 = round(cor(curr_da$logFC[inds],computed_da$logFC[inds]),digits = 4)
+  print(paste(tissue_name,rho1,rho2))
+}
+
+# Merge tables and use IHW
+dea_combined = list()
+for(j in 1:length(dea_results)){
+  print(j)
+  tissue = names(dea_results)[j]
+  for(nn in names(dea_results[[j]])){
+    d = dea_results[[j]][[nn]]
+    d = as.data.frame(d)
+    d$tissue_abbr = tissue
+    d$assay = "TRNSCRPT"
+    if(!is.null(dea_combined[[nn]])){
+      missing_cols = setdiff(colnames(dea_combined[[nn]]),colnames(d))
+      for(cc in missing_cols){d[[cc]]=NA}
+      d = d[,colnames(dea_combined[[nn]])]
+    }
+    dea_combined[[nn]] = rbind(dea_combined[[nn]],d)
+  }
+}
+sapply(dea_combined,dim)
+dea_combined$training_dea$ihw_q = IHW::ihw(
+  dea_combined$training_dea$p_value,
+  factor(dea_combined$training_dea$tissue_abbr),
+  alph = 0.05
+)@df$adj_pvalue
+dea_combined$training_dea_mt_adjusted$ihw_q = IHW::ihw(
+  dea_combined$training_dea_mt_adjusted$p_value,
+  factor(dea_combined$training_dea_mt_adjusted$tissue_abbr),
+  alph = 0.05
+)@df$adj_pvalue
+table(dea_combined$training_dea$ihw_q < 0.05,
+      dea_combined$training_dea_mt_adjusted$ihw_q < 0.05)
+sapply(dea_combined,dim)
+
+save(dea_combined,file="ihw_adjusted_mito_paper_dea_results.RData")
+
+```
+
+```{r}
+load("ihw_adjusted_mito_paper_dea_results.RData")
+```
+
+
+<!-- # GSEA before (total effects) and after adjustment -->
+
+<!-- ```{r} -->
+<!-- library(fgsea) -->
+<!-- mito_gsea_res = c() -->
+<!-- for(analysis_name in names(gsea_input)){ -->
+<!--   print(paste("analyzing",analysis_name)) -->
+<!--   m = gsea_input[[analysis_name]] -->
+<!--   print(paste(analysis_name,cor(m)[1,2])) -->
+<!--   gsea_adj = fgsea(mitocarta_pathways,m[,1],minSize=5,sampleSize=1000) -->
+<!--   gsea_adj = as.data.frame(gsea_adj) -->
+<!--   gsea_unadj = fgsea(mitocarta_pathways,m[,2],minSize=5,sampleSize=1000) -->
+<!--   gsea_unadj = as.data.frame(gsea_unadj) -->
+<!--   rownames(gsea_adj) = gsea_adj$pathway -->
+<!--   rownames(gsea_unadj) = gsea_unadj$pathway -->
+<!--   gsea_unadj = gsea_unadj[rownames(gsea_adj),] -->
+<!--   colnames(gsea_unadj) = paste0(colnames(gsea_unadj),"_unadj") -->
+<!--   colnames(gsea_adj) = paste0(colnames(gsea_adj),"_adj") -->
+<!--   gsea_res = cbind(gsea_adj,gsea_unadj) -->
+<!--   arr = strsplit(analysis_name,split=",")[[1]] -->
+<!--   gsea_res$query = analysis_name -->
+<!--   gsea_res$tissue = arr[1] -->
+<!--   gsea_res$sex = arr[2] -->
+<!--   gsea_res$week = arr[3] -->
+<!--   mito_gsea_res = rbind(mito_gsea_res,gsea_res) -->
+<!-- } -->
+<!-- mito_gsea_res = mito_gsea_res[!is.na(mito_gsea_res$pval_unadj),] -->
+<!-- mito_gsea_res = mito_gsea_res[!is.na(mito_gsea_res$pval_adj),] -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- qthr=0.1 -->
+<!-- gsea_simple_stats = c() -->
+<!-- for(query in unique(mito_gsea_res$query)){ -->
+<!--   res = mito_gsea_res[mito_gsea_res$query==query,] -->
+<!--   adj_fdr = res$padj_adj < qthr -->
+<!--   unadj_fdr = res$padj_unadj<qthr -->
+<!--   v = data.frame( -->
+<!--     query = query, -->
+<!--     overlap = sum(adj_fdr & unadj_fdr), -->
+<!--     unadjusted_only = sum(!adj_fdr & unadj_fdr), -->
+<!--     adjusted_only = sum(adj_fdr &!unadj_fdr) -->
+<!--   ) -->
+<!--   gsea_simple_stats = rbind(gsea_simple_stats,v) -->
+<!-- } -->
+<!-- gsea_simple_stats = gsea_simple_stats[order(gsea_simple_stats$query),] -->
+<!-- m = as.matrix(gsea_simple_stats[,-1]) -->
+<!-- rownames(m) = gsea_simple_stats[,1] -->
+<!-- library(gplots) -->
+<!-- heatmap.2(m,scale="none",trace="none",Colv = F,Rowv = F,col=bluered,mar=c(10,10),cexCol=1.3) -->
+
+<!-- ``` -->
+
+<!-- # Enrichment analysis of lost signals -->
+
+<!-- ```{r} -->
+
+<!-- simple_enrichment_analysis<-function( -->
+<!--   s,univ,pathways,rat_prot_gene,min_size=5,setname=""){ -->
+<!--   if(length(s)<min_size){ -->
+<!--     print("Warning: input set is smaller than min_size, returning NULL") -->
+<!--     return(NULL) -->
+<!--   } -->
+<!--   sg = rat_prot_gene[rat_prot_gene[,1] %in% s,3] -->
+<!--   if(length(sg)<min_size){ -->
+<!--     print("Warning: input has less than min_size mapped genes, returning NULL") -->
+<!--     return(NULL) -->
+<!--   } -->
+<!--   v1 = univ %in% sg -->
+<!--   enrichment_results = c() -->
+<!--   for(pname in names(pathways)){ -->
+<!--     pg = pathways[[pname]] -->
+<!--     pg = intersect(pg,univ) -->
+<!--     if(length(pg)<min_size){next} -->
+<!--     v2 = univ %in% pg -->
+<!--     fisher_res = fisher.test(table(v1,v2),alternative = "g") -->
+<!--     overlap_set = intersect(sg,pg) -->
+<!--     res = data.frame( -->
+<!--         setname=setname, -->
+<!--         pathway = pname, -->
+<!--         setsize = length(sg),pathwaysize=length(pg), -->
+<!--         overlap = length(overlap_set), -->
+<!--         p = fisher_res$p.value, -->
+<!--         genes = paste(overlap_set,collapse=",") -->
+<!--     ) -->
+<!--     enrichment_results = rbind(enrichment_results,res) -->
+<!--   } -->
+<!--   return(enrichment_results) -->
+<!-- } -->
+
+<!-- enrichment_results = c() -->
+<!-- for (setname in names(selected_sets)){ -->
+<!--   tissue = strsplit(setname,split="_")[[1]][1] -->
+<!--   univ = unique(dea_combined$training_dea$feature_ID[ -->
+<!--     dea_combined$training_dea$tissue_abbr == tissue -->
+<!--   ]) -->
+<!--   univ = univ[univ %in% mt_ensg] -->
+<!--   univ = rat_prot_gene[rat_prot_gene[,1] %in% univ,3] -->
+<!--   enr_res =  simple_enrichment_analysis( -->
+<!--               selected_sets[[setname]],univ, -->
+<!--               mitocarta_pathways,rat_prot_gene,setname = setname) -->
+<!--   if(!is.null(enr_res)){ -->
+<!--     enrichment_results=rbind(enrichment_results,enr_res) -->
+<!--   } -->
+<!-- } -->
+<!-- enrichment_results$q = p.adjust(enrichment_results$p,method="fdr") -->
+<!-- selected_enrichment_results = enrichment_results[enrichment_results$q < 0.1 & -->
+<!--   enrichment_results$overlap > 1 & enrichment_results$pathwaysize < 200,] -->
+<!-- dim(selected_enrichment_results) -->
+
+<!-- # Standard enrichment (not mitocarta) -->
+<!-- library(gprofiler2) -->
+<!-- res = gost(selected_sets, -->
+<!--     organism='rnorvegicus', -->
+<!--     significant=FALSE, # return all results -->
+<!--     correction_method='fdr', # it will not return unadjusted p-values. calculate those yourself -->
+<!--     sources=c('KEGG','REAC'), -->
+<!--     custom_bg=mt_ensg, -->
+<!--     domain_scope='custom', -->
+<!--     evcodes=T) -->
+<!-- pathway_enrichments = res$result -->
+<!-- pathway_enrichments$q = p.adjust(pathway_enrichments$p_value,method="fdr") -->
+<!-- table(pathway_enrichments$q < 0.1) -->
+<!-- selected_pathway_enrichment_results = pathway_enrichments[ -->
+<!--   pathway_enrichments$q < 0.1 & -->
+<!--   pathway_enrichments$intersection_size > 1 & pathway_enrichments$term_size < 200,] -->
+<!-- dim(selected_pathway_enrichment_results) -->
+<!-- selected_pathway_enrichment_results[1:10,c(1,11)] -->
+<!-- selected_pathway_enrichment_results$term_name[ -->
+<!--   grepl( -->
+<!--     "Respiratory electron transport, ATP synthesis by chemiosmotic coupling,", -->
+<!--     selected_pathway_enrichment_results$term_name -->
+<!--   ) -->
+<!-- ] = "Electron transport,ATP synthesis,heat production" -->
+
+
+<!-- selected_enrichment_results[grepl("_1",selected_enrichment_results$setname),1:2] -->
+<!-- selected_pathway_enrichment_results[grepl("_1",selected_pathway_enrichment_results$query),c(1,11)] -->
+
+<!-- selected_enrichment_results[grepl("_2",selected_enrichment_results$setname),1:2] -->
+<!-- selected_pathway_enrichment_results[grepl("_2",selected_pathway_enrichment_results$query),c(1,11)] -->
+
+<!-- selected_enrichment_results[grepl("_3",selected_enrichment_results$setname),1:2] -->
+<!-- selected_pathway_enrichment_results[grepl("_3",selected_pathway_enrichment_results$query),c(1,11)] -->
+
+<!-- selected_enrichment_results[grepl("_4",selected_enrichment_results$setname),1:2] -->
+<!-- selected_pathway_enrichment_results[grepl("_4",selected_pathway_enrichment_results$query),c(1,11)] -->
+
+<!-- selected_enrichment_results[grepl("_5",selected_enrichment_results$setname),1:2] -->
+<!-- selected_pathway_enrichment_results[grepl("_5",selected_pathway_enrichment_results$query),c(1,11)] -->
+
+<!-- selected_enrichment_results[grepl("Complex I$",selected_enrichment_results$pathway),1:2] -->
+<!-- selected_enrichment_results[grepl("HEART",selected_enrichment_results$setname) ,1:2] -->
+<!-- selected_enrichment_results[grepl("LIVER",selected_enrichment_results$setname),1:2] -->
+<!-- selected_enrichment_results[grepl("Lipid",selected_enrichment_results$pathway),1:2] -->
+<!-- # check LYPLAL1 -->
+<!-- selected_enrichment_results[grepl("LYPLAL1",selected_enrichment_results$genes,ignore.case = T),] -->
+<!-- selected_enrichment_results[grepl("LYP",selected_enrichment_results$genes,ignore.case = T),] -->
+<!-- ``` -->
+
+
+
+

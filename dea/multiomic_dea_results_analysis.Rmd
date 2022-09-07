@@ -1,0 +1,305 @@
+---
+title: "Multi-omic analysis of adjusted mito results"
+author: "David Amar"
+date: "6/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# External libraries
+library(data.table)
+library(org.Hs.eg.db)
+library(clusterProfiler)
+library(org.Rn.eg.db)
+library(MotrpacBicQC)
+library(plotrix)
+library(ggplot2)
+library(gprofiler2)
+library(corrplot)
+# Load MoTrPAC data:
+library(MotrpacRatTraining6moData)
+
+mawg_repo = "~/Desktop/repos/motrpac-mawg/"
+source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
+
+gsutil = '~/google-cloud-sdk/bin/gsutil'
+data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
+scratch = data_dir
+knitr::opts_knit$set(root.dir = data_dir)
+setwd(data_dir)
+```
+
+# Load datasets
+
+Load mito biomarker data (see `mito_biomarker_analysis.Rmd`)
+```{r}
+load(paste0(scratch,"mt_biomarkers.RData"))
+```
+
+Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
+```{r}
+load(paste0(scratch,"mito_gene_annotation.RData"))
+```
+
+Load DEA results from prot and RNA-seq
+
+```{r}
+rna_seq_dea = get(load("ihw_adjusted_mito_paper_dea_results.RData"))
+dea_combined = get(load("ihw_adjusted_mito_paper_dea_prot_results.RData"))
+dea_combined[["TRNSCRPT"]] = rna_seq_dea
+```
+
+# Analyze the effect of adjustment
+
+## Compare tissues by their adjustment effect on mito genes
+
+```{r}
+# Create a feature to gene to mito mapping
+mt_symbols = mt$gene_symbol
+# Remove RRBS and ATAC features
+FEATURE_TO_GENE = FEATURE_TO_GENE[!grepl("cluster",FEATURE_TO_GENE$feature_ID),]
+FEATURE_TO_GENE = FEATURE_TO_GENE[!grepl("^chr\\d",FEATURE_TO_GENE$feature_ID,perl=T),]
+gc()
+FEATURE_TO_GENE$is_mito = FEATURE_TO_GENE$gene_symbol %in% mt_symbols
+mito_features = FEATURE_TO_GENE$feature_ID[FEATURE_TO_GENE$is_mito]
+  
+# Initial comparison: do mt genes tend to have better robustness to adjustment?
+mt_enrichment_training_level = c()
+for (ome in names(dea_combined)){
+  for(tissue in unique(dea_combined[[ome]]$training_dea$tissue_abbr)){
+    unadjusted = dea_combined[[ome]]$training_dea[
+      dea_combined[[ome]]$training_dea$tissue_abbr == tissue,
+    ]
+    adjusted = dea_combined[[ome]]$training_dea_mt_adjusted[
+      dea_combined[[ome]]$training_dea_mt_adjusted$tissue_abbr == tissue,
+    ]
+    unadjusted$is_mito = unadjusted$feature_ID %in% mito_features
+    adjusted$is_mito = adjusted$feature_ID %in% mito_features
+    rownames(adjusted) = adjusted$feature_ID
+    rownames(unadjusted) = unadjusted$feature_ID
+    adjusted = adjusted[rownames(unadjusted),]
+    training_summary_df = data.frame(
+      before = unadjusted$ihw_q < 0.05,
+      after = adjusted$ihw_q < 0.05,
+      is_mito = adjusted$is_mito
+    )
+    training_summary_df$robust = training_summary_df$before & training_summary_df$after
+    training_summary_df$not_robust = training_summary_df$before & !training_summary_df$after
+    training_summary_df$new = !training_summary_df$before & training_summary_df$after
+    
+    enrichment_res = c()
+    for(cc in c("robust","not_robust","new")){
+      enrichment_res[cc] = 1
+      tb = table(training_summary_df$is_mito,
+                training_summary_df[[cc]])
+      if(is.null(dim(tb)) || length(tb)<3){next}
+      enrichment_res[cc] = fisher.test(tb,alternative = "g")$p.value
+    }
+    enrichment_res = data.frame(t(enrichment_res))
+    enrichment_res$tissue = tissue
+    enrichment_res$ome = ome
+    mt_enrichment_training_level = rbind(mt_enrichment_training_level,enrichment_res)
+  }
+}
+print(mt_enrichment_training_level)
+```
+
+## Merge the data from tissues with mito biomarker effects
+
+```{r}
+tissues_for_adjustment_comparisons = 
+  rownames(mt_group_kw)[rowSums(mt_group_kw<0.05,na.rm=T)>0]
+tissues_for_adjustment_comparisons = setdiff(
+  tissues_for_adjustment_comparisons,
+  c("TESTES","OVARY","VENACV")
+)
+tissues_for_adjustment_comparisons = gsub("-","",tissues_for_adjustment_comparisons)
+
+get_zmat<-function(timewise){
+  timewise_col = "zscore"
+  if(!timewise_col %in% colnames(timewise)){
+    timewise_col = "tscore"
+  }
+  rs = unique(timewise$feature_ID)
+  cs = c(
+    paste("female",sort(unique(timewise$comparison_group)),sep=","),
+    paste("male",sort(unique(timewise$comparison_group)),sep=",")
+  )
+  m = matrix(NA,nrow=length(rs),ncol=length(cs),dimnames = list(rs,cs))
+  for(col in cs){
+    arr = strsplit(col,split=",")[[1]]
+    tmp = timewise[
+      timewise$sex == arr[1] & timewise$comparison_group == arr[2],
+    ]
+    m[tmp$feature_ID,col] = tmp[[timewise_col]] 
+  }
+  return(m)
+}
+
+tissue_adj_stats = c()
+zmat = c()
+for(ome in names(dea_combined)){
+  for(tissue in tissues_for_adjustment_comparisons){
+    if(!tissue %in% unique(dea_combined[[ome]]$training_dea$tissue_abbr)){next}
+    tr_before = dea_combined[[ome]]$training_dea[
+      dea_combined[[ome]]$training_dea$tissue_abbr == tissue,
+    ]
+    tr_before = tr_before[tr_before$ihw_q < 0.05,]
+    tr_before = tr_before[tr_before$feature_ID %in% mito_features,]
+    
+    tr_after = dea_combined[[ome]]$training_dea_mt_adjusted[
+      dea_combined[[ome]]$training_dea_mt_adjusted$tissue_abbr == tissue,
+    ]
+    tr_after = tr_after[tr_after$ihw_q < 0.05,]
+    tr_after = tr_after[tr_after$feature_ID %in% mito_features,]
+    
+    curr_features = union(tr_after$feature_ID,tr_before$feature_ID)
+    if(length(curr_features)==0){next}
+    
+    stats_df = data.frame(
+      ome=ome,
+      tissue = tissue,
+      n_before = nrow(tr_before),
+      n_after = nrow(tr_after),
+      overlap = length(intersect(tr_before$feature_ID,tr_after$feature_ID)),
+      union = length(curr_features),
+      new = length(setdiff(tr_after$feature_ID,tr_before$feature_ID)),
+      lost = length(setdiff(tr_before$feature_ID,tr_after$feature_ID))
+    )
+    stats_df$jaccard = stats_df$overlap/stats_df$union
+    tissue_adj_stats = rbind(tissue_adj_stats,stats_df)
+    
+    # extract z-scores before vs. after for both sexes
+    timewise_before = dea_combined[[ome]]$timewise_dea[
+      dea_combined[[ome]]$timewise_dea$tissue_abbr == tissue,
+    ]
+    timewise_before = timewise_before[
+      timewise_before$feature_ID %in% curr_features,
+    ]
+    z_before = get_zmat(timewise_before)
+    colnames(z_before) = paste(colnames(z_before),"before",sep=",")
+    
+    timewise_after = dea_combined[[ome]]$timewise_dea_mt_adjusted[
+      dea_combined[[ome]]$timewise_dea_mt_adjusted$tissue_abbr == tissue,
+    ]
+    timewise_after = timewise_after[
+      timewise_after$feature_ID %in% curr_features,
+    ]
+    z_after = get_zmat(timewise_after)
+    colnames(z_after) = paste(colnames(z_after),"after",sep=",")
+    
+    if(nrow(z_before)>1){
+      merged_zs = cbind(z_before,z_after[rownames(z_before),])
+    }
+    else{
+      merged_zs = cbind(z_before,z_after)
+    }
+    
+    rownames(merged_zs) = paste(ome,tissue,rownames(merged_zs),sep=";")
+    zmat = rbind(zmat,merged_zs)
+  }
+}
+
+
+tissue_adj_stats = tissue_adj_stats[order(tissue_adj_stats$jaccard),]
+tissue_adj_stats$col = tissue_cols[tissue_adj_stats$tissue]
+tissue_adj_stats$ord = 1:nrow(tissue_adj_stats)
+tissue_adj_stats$name = paste(tissue_adj_stats$ome,tissue_adj_stats$tissue,sep=";")
+
+ggplot(
+    tissue_adj_stats, 
+    aes(y=log10(1+n_before), 
+    x=log10(1+n_after),label=tissue,col=jaccard,shape=ome)) + 
+    geom_point(size=2) + 
+    ylab("Unadjusted") + 
+    xlab("Adjusted") + geom_abline(slope=1) + 
+    xlim(0,0.2+max(log10(1+tissue_adj_stats$n_after))) +
+    geom_text(hjust=-0.1, vjust=0,size=4)
+
+```
+
+## Analysis of the timewise z-scores
+
+```{r}
+z_diffs = zmat[,1:8] - zmat[,9:16]
+par(mfrow = c(2,4))
+for(j in 1:8){hist(abs(z_diffs[,j]),breaks=50,xlim=c(0,8),
+                   main=colnames(zmat)[j])}
+z_diff_features = apply(abs(z_diffs)>2,1,any)
+table(z_diff_features)
+table(z_diff_features) / length(z_diff_features)
+```
+
+```{r}
+
+binary_clustering_wrapper<-function(zmat,zthr=2,...){
+  xmat = zmat > zthr
+  mode(xmat) = "numeric"
+  xmat[zmat < -zthr] = -1
+  return(kmeans(xmat,...))
+}
+
+k_res = list()
+for(k in 1:20){
+  k_res[[k]] = kmeans(zmat[z_diff_features,],k,nstart = 10,iter.max = 500)
+  # k_res[[k]] = binary_clustering_wrapper(zmat,3,centers=k,nstart = 10,iter.max = 500)
+}
+within_rss = sapply(k_res,function(x)sum(x$withinss))
+plot(within_rss,type="b")
+arrs = strsplit(rownames(zmat)[z_diff_features],split=";")
+arrs = t(sapply(arrs,function(x)x))
+
+cluster_obj = k_res[[3]]$cluster
+# cluster_obj = spsol$assignments
+cluster_res = data.frame(
+  cluster = cluster_obj,
+  ome=arrs[,1],feature_ID = arrs[,3],tissue=arrs[,2]
+)
+cluster_res$feature = names(cluster_obj)
+cluster_res$feature = gsub("SKMGN","SKM-GN",cluster_res$feature)
+cluster_res$feature = gsub("SKMVL","SKM-VL",cluster_res$feature)
+cluster_res$tissue =gsub("SKMGN","SKM-GN",cluster_res$tissue)
+cluster_res$tissue = gsub("SKMVL","SKM-VL",cluster_res$tissue)
+
+zmat1 = zmat[z_diff_features,1:8]
+zmat1_cols = t(sapply(strsplit(colnames(zmat1),split=","),function(x)x))
+colnames(zmat1) = paste(zmat1_cols[,1],zmat1_cols[,2],sep="_")
+pls_before = plot_cluster_trajectories(zmat1[,1:8],cluster_res)
+
+zmat2 = zmat[z_diff_features,9:16]
+zmat2_cols = t(sapply(strsplit(colnames(zmat2),split=","),function(x)x))
+colnames(zmat2) = paste(zmat2_cols[,1],zmat2_cols[,2],sep="_")
+pls_after = plot_cluster_trajectories(zmat2[,1:8],cluster_res)
+library(gridExtra)
+pls = list()
+for(i in 1:length(pls_before[[2]])){
+  pls = c(pls,list(pls_before[[2]][[i]],pls_after[[2]][[i]]))
+}
+grid.arrange(grobs = pls, ncol=2)
+
+table(cluster_res$cluster,cluster_res$tissue)
+features_per_cluster(cluster_res)
+
+# # create a clustering solution by tissue for downstream analysis
+# selected_sets = list()
+# for(cl in unique(cluster_obj)){
+#   cl_features = names(cluster_obj)[cluster_obj==cl]
+#   arrs = strsplit(cl_features,split=",")
+#   ens_ids = sapply(arrs,function(x)x[1])
+#   tissues = sapply(arrs,function(x)x[2])
+#   tissue_size = table(tissues)
+#   curr_tissues = names(tissue_size)[tissue_size>9]
+#   for(tissue in curr_tissues){
+#     curr_name = paste(tissue,cl,sep="_")
+#     curr_genes = ens_ids[tissues==tissue]
+#     selected_sets[[curr_name]] = curr_genes
+#   }
+# }
+# sort(sapply(selected_sets,length))
+
+```
+
+
+
+
