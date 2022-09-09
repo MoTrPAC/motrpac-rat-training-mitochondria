@@ -15,6 +15,7 @@ library(MotrpacBicQC)
 library(ggplot2)
 library(corrplot)
 library(ggcorrplot)
+library(dplyr)
 # Load MoTrPAC data:
 library(MotrpacRatTraining6moData)
 
@@ -23,17 +24,16 @@ library(MotrpacRatTraining6moData)
 # source(paste0(mawg_repo,'pass1b-06/integrative/outliers_covariates/pi1_cook_fx.R'))
 # source(paste0(mawg_repo,'pass1b-06/tools/get_fx.R'))
 # source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
-
-gsutil = '~/google-cloud-sdk/bin/gsutil'
-data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
-scratch = data_dir
-knitr::opts_knit$set(root.dir = data_dir)
-setwd(data_dir)
+# gsutil = '~/google-cloud-sdk/bin/gsutil'
+data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/"
+# data_dir = data_dir
 ```
 
-# Load the biomarker data
+# Download and process the additional mitochondria biomarker data
 
 **All external data files used in this code are available at https://github.com/MoTrPAC/motrpac-rat-training-mitochondria/tree/main/data**
+
+**This script assumes that these files were downloaded to the data_dir path specified above**
 
 ## RNA-seq and cDNA data
 
@@ -60,35 +60,66 @@ pheno = PHENO
 ## Get metab data
 
 ```{r}
-sample_data = METAB_NORM_DATA_FLAT
-sample_data_featureinfo = sample_data[,1:5]
-# Limit the data to cardiolipins
-cl_inds = grepl("^CL",sample_data$feature_ID,perl = T)
-cl_data = sample_data[cl_inds,]
-cl_fdata = sample_data_featureinfo[cl_inds,]
-# change column names to bids
-m = unique(pheno[,c("pid","bid")])
-p2b = as.character(m[,2])
-names(p2b) = as.character(m[,1])
-colnames(cl_data)[-c(1:5)] = unname(p2b[colnames(cl_data)[-c(1:5)]])
+cardiolipins_dir = paste0(data_dir,"/cardiolipins/")
+cl_files = list.files(cardiolipins_dir,full.names = T)
+cl_files = cl_files[!grepl("name_mapping",cl_files)]
+cl_data = c()
+cl_fdata = c()
+for(f in cl_files){
+  f_arr = strsplit(f,split="_")[[1]]
+  tissue = f_arr[length(f_arr)]
+  tissue = gsub(".csv","",tissue)
+  tissue = toupper(tissue)
+  if(tissue=="MUSCLE"){
+    tissue = "SKMGN"
+  }
+  if(tissue=="hippocampus"){
+    tissue = "HIPPOC"
+  }
+  d = fread(f,stringsAsFactors = F,data.table = F,header=T)
+  d = d[!is.na(d[,1]),]
+  if(ncol(d)<51){next} # ignore inomplete tissues
+  # use bid instead of vial labels
+  colnames(d)[-1] = substring(colnames(d)[-1],1,5)
+  feature_d = cbind(tissue,d[,1])
+  if(length(cl_data)==0){
+    cl_data = d
+    cl_fdata = feature_d
+  }else{
+    cl_data = rbind(cl_data,d[,colnames(cl_data)])
+    cl_fdata = rbind(cl_fdata,feature_d)
+  }
+}
+cl_data = cl_data[,-1]
+colnames(cl_fdata) = c("tissue","feature_ID")
+cl_fdata = data.frame(cl_fdata,stringsAsFactors = F)
+
+# # Obsolete: get cardiolipins from the main landscape paper:
+# sample_data = METAB_NORM_DATA_FLAT
+# sample_data_featureinfo = sample_data[,1:5]
+# # Limit the data to cardiolipins
+# cl_inds = grepl("^CL",sample_data$feature_ID,perl = T)
+# cl_data = sample_data[cl_inds,]
+# cl_fdata = sample_data_featureinfo[cl_inds,]
+# # change column names to bids
+# m = unique(pheno[,c("pid","bid")])
+# p2b = as.character(m[,2])
+# names(p2b) = as.character(m[,1])
+# colnames(cl_data)[-c(1:5)] = unname(p2b[colnames(cl_data)[-c(1:5)]])
+
 ```
 
 # Get mito gene annotation
 
 ```{r,eval=F}
 # Add mito gene annotations
-mt = dl_read_gcp(
-  "gs://mawg-data/pass1b-06/external-data/external-datasets_gene-sets_Mitocarta_Rat.MitoCarta3.0.genes_only.txt",
-    sep="\t",
-    tmpdir = scratch,GSUTIL_PATH = gsutil)
-mt = as.data.frame(mt)
+mt = fread(paste0(data_dir,
+        "external-datasets_gene-sets_Mitocarta_Rat.MitoCarta3.0.genes_only.txt"),
+        stringsAsFactors = F,data.table = F)
 
 # additional pathway enrichment with mitocarta pathways
-mt_pw = dl_read_gcp(
-    "gs://mawg-data/pass1b-06/external-data/Human.MitoCarta3.0.txt",
-    sep = "\t",
-    tmpdir = scratch, GSUTIL_PATH = gsutil)
-mt_pw = as.data.frame(mt_pw)
+mt_pw = fread(paste0(data_dir,"Human.MitoCarta3.0.txt"),
+        stringsAsFactors = F,data.table = F)
 
 # map transcripts to genes using biomart
 library(biomaRt)
@@ -99,11 +130,8 @@ rat_prot_gene = rat_prot_gene[rat_prot_gene$ensembl_peptide_id!="",]
 rat_prot_gene = rat_prot_gene[rat_prot_gene$rgd_symbol != "",]
 
 # read in rat to human mapping
-rat_to_human = dl_read_gcp(
-  "gs://mawg-data/external-datasets/rat-id-mapping/RGD_ORTHOLOGS_20201001.txt",
-  sep = "\t",
-  tmpdir = scratch,GSUTIL_PATH = gsutil)
-rat_to_human = as.data.frame(rat_to_human)
+rat_to_human = fread(paste0(data_dir,"RGD_ORTHOLOGS_20201001.txt"),
+        stringsAsFactors = F,data.table = F)
 rat_to_human = rat_to_human[!is.na(rat_to_human$HUMAN_ORTHOLOG_SYMBOL),]
 rat_to_human_map = unique(rat_to_human[,c("RAT_GENE_SYMBOL", "HUMAN_ORTHOLOG_SYMBOL")])
 
@@ -119,13 +147,13 @@ for(pw in mt_pw$MitoPathway){
 
 save(rat_prot_gene,
      mt,mt_pw,mitocarta_pathways,rat_to_human,
-     file=paste0(scratch,"mito_gene_annotation.RData"))
+     file=paste0(data_dir,"mito_gene_annotation.RData"))
 
 ```
 
 Load above data:
 ```{r}
-load(paste0(scratch,"mito_gene_annotation.RData"))
+load(paste0(data_dir,"mito_gene_annotation.RData"))
 ```
 
 # Tissue comparison at baseline
@@ -313,7 +341,9 @@ for(tissue_name in unique(pheno$tissue)){
       nrow(mt_biomarker_correlations2)] = tissue_name
   mt_biomarkers[[gsub("-","",tissue_name)]] = tissue_df
 }
-ggcorrplot(mt_biomarker_correlations2,method = "circle")
+ggcorrplot(
+  mt_biomarker_correlations2[,-ncol(mt_biomarker_correlations2)],
+  method = "circle")
 corrplot(t(-log10(mt_group_kw)),is.corr = F,method = "circle",
          p.mat = t(mt_group_kw),sig.level = 0.05)
 par(mar=c(8,8,8,8))
@@ -339,7 +369,7 @@ save(mt_biomarkers,
      mt_biomarker_correlations2,
      mt_biomarker_8wfc,mt_biomarker_8wp,
      mt_group_kw,
-     file=paste0(scratch,"mt_biomarkers.RData"))
+     file=paste0(data_dir,"mt_biomarkers.RData"))
 
 ```
 
