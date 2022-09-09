@@ -1,0 +1,181 @@
+---
+title: "Mito features multiomic unsupervided analysis"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+library(MotrpacRatTraining6moData)
+library(ggplot2)
+data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
+scratch = data_dir
+```
+
+
+# Load datasets
+
+Load mito biomarker data (see `mito_biomarker_analysis.Rmd`)
+```{r}
+load(paste0(scratch,"mt_biomarkers.RData"))
+```
+
+Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
+```{r}
+load(paste0(scratch,"mito_gene_annotation.RData"))
+```
+
+Define the mito-associated features across omes
+```{r}
+# Create a feature to gene to mito mapping
+mt_symbols = mt$gene_symbol
+# Remove RRBS and ATAC features
+FEATURE_TO_GENE = FEATURE_TO_GENE[!grepl("cluster",FEATURE_TO_GENE$feature_ID),]
+FEATURE_TO_GENE = FEATURE_TO_GENE[
+  !grepl("^chr\\d",FEATURE_TO_GENE$feature_ID,perl=T),]
+gc()
+FEATURE_TO_GENE$is_mito = FEATURE_TO_GENE$gene_symbol %in% mt_symbols
+mito_features = FEATURE_TO_GENE$feature_ID[FEATURE_TO_GENE$is_mito]
+```
+
+Add outliers and phenotypic data
+```{r}
+# Add outliers and phenotypic data
+outliers = as.character(OUTLIERS[,1])
+pheno = PHENO
+# also add vena cava outliers
+venacv_outliers = unique(pheno[
+  pheno$sex=="female" & pheno$sacrificetime %in% c("1w","2w") & 
+    pheno$specimen.processing.sampletypedescription=="Aorta", "viallabel"])
+outliers = union(outliers, venacv_outliers)
+rownames(pheno) = as.character(pheno$viallabel)
+```
+
+Sample level data: load and merge by biospecimen ids
+
+```{r,warning=F}
+
+merge_dfs<-function(df1,df2){
+  missing_cols1 = setdiff(colnames(df1),colnames(df2))
+  for(cc in missing_cols1){df2[[cc]]=NA}
+  missing_cols2 = setdiff(colnames(df2),colnames(df1))
+  for(cc in missing_cols2){df1[[cc]]=NA}
+  return(rbind(df1,df2[,colnames(df1)]))
+}
+
+tissues = unname(unique(TISSUE_CODE_TO_ABBREV))
+
+# take the metab data as the template
+df = METAB_NORM_DATA_FLAT
+# change column names to bids
+m = unique(pheno[,c("pid","bid")])
+p2b = as.character(m[,2])
+names(p2b) = as.character(m[,1])
+colnames(df)[-c(1:5)] = unname(p2b[colnames(df)[-c(1:5)]])
+
+# rna-seq
+for(tissue in tissues){
+  norm_data_name = paste0("TRNSCRPT_",gsub("-","",tissue),"_NORM_DATA")
+  try({
+      norm_data = get(norm_data_name)
+      # transform columns to bid
+      colnames(norm_data)[-c(1:4)] =
+        sapply(colnames(norm_data)[-c(1:4)],substring,1,5)
+      norm_data$dataset = "rnaseq"
+      norm_data = norm_data[norm_data$feature_ID %in% mito_features,]
+      df = merge_dfs(df,norm_data)
+  })
+}
+
+# proteomics datasets
+omes = c("PROT","PHOSPHO","ACETYL","UBIQ")
+prot_tissues = c("CORTEX","HEART","KIDNEY","LIVER","LUNG","SKMGN","WATSC")
+for(ome in omes){
+  for(tissue in prot_tissues){
+    try({
+      x = get(sprintf("%s_%s_NORM_DATA", ome,gsub("-","",tissue)))
+      colnames(x)[-c(1:4)] = sapply(colnames(x)[-c(1:4)],substring,1,5)
+      x$dataset = "rnaseq"
+      x = x[x$feature_ID %in% mito_features,]
+      df = merge_dfs(df,x)
+    })
+  }
+}
+
+```
+
+# Simple intensity-based analysis
+
+## Transcriptomics
+
+```{r}
+baseline_df = c()
+for(tissue in tissues){
+  norm_data_name = paste0("TRNSCRPT_",gsub("-","",tissue),"_NORM_DATA")
+  if(tissue %in% c("PLASMA","TESTES","OVARY")){next}
+  print(tissue)
+  norm_data = get(norm_data_name)
+  rownames(norm_data) = norm_data$feature_ID
+  norm_data_vials = colnames(norm_data)[-c(1:4)]
+  curr_meta = pheno[norm_data_vials,c("sex","group")]
+  curr_meta$group = paste(curr_meta$sex,curr_meta$group,sep=",")
+  is_mito = norm_data$feature_ID %in% mito_features
+  norm_data_mito = norm_data[is_mito,norm_data_vials]
+  norm_data_nonmito = norm_data[!is_mito,norm_data_vials]
+  tmp = aggregate(t(norm_data_mito),list(curr_meta$group),mean)
+  rownames(tmp) = tmp[,1]
+  tmp = tmp[,-1]
+  tmp = t(tmp)
+  tmp = as.data.frame(tmp)
+  norm_data_mito = tmp
+  tmp = aggregate(t(norm_data_nonmito),list(curr_meta$group),mean)
+  rownames(tmp) = tmp[,1]
+  tmp = tmp[,-1]
+  tmp = t(tmp)
+  tmp = as.data.frame(tmp)
+  norm_data_nonmito = tmp
+  norm_data_mito$is_mito = T
+  norm_data_nonmito$is_mito = F
+  curr_data = rbind(
+    norm_data_nonmito[,c("female,control","male,control","is_mito")],
+    norm_data_mito[,c("female,control","male,control","is_mito")]
+  )
+  curr_data$tissue = tissue
+  baseline_df = rbind(baseline_df,curr_data)
+}
+
+# add boxplots
+colnames(baseline_df) = gsub(",control","",colnames(baseline_df))
+ggplot(baseline_df,aes(x=tissue,y=male,fill=is_mito)) +
+  geom_boxplot() +
+  theme(axis.text.x = 
+          element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+# PCA plots per ome
+
+## PROT
+
+# MOFA within selected tissues
+
+## HEART
+
+## SKM-GN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

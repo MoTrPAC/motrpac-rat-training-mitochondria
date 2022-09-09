@@ -33,6 +33,8 @@ setwd(data_dir)
 
 # Load the biomarker data
 
+**All external data files used in this code are available at https://github.com/MoTrPAC/motrpac-rat-training-mitochondria/tree/main/data**
+
 ## RNA-seq and cDNA data
 
 ```{r define data set}

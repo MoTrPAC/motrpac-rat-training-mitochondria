@@ -45,8 +45,8 @@ load(paste0(scratch,"mito_gene_annotation.RData"))
 Load DEA results from prot and RNA-seq
 
 ```{r}
-rna_seq_dea = get(load("ihw_adjusted_mito_paper_dea_results.RData"))
-dea_combined = get(load("ihw_adjusted_mito_paper_dea_prot_results.RData"))
+rna_seq_dea = get(load(paste0(scratch,"ihw_adjusted_mito_paper_dea_results.RData")))
+dea_combined = get(load(paste0(scratch,"ihw_adjusted_mito_paper_dea_prot_results.RData")))
 dea_combined[["TRNSCRPT"]] = rna_seq_dea
 ```
 
