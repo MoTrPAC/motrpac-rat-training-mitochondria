@@ -7,35 +7,24 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# External libraries
+# load libraries
 library(data.table)
-library(edgeR)
-library(limma)
 library(DESeq2)
-library(org.Hs.eg.db)
-library(clusterProfiler)
-library(org.Rn.eg.db)
 library(MotrpacBicQC)
-library(plotrix)
 library(ggplot2)
-library(gprofiler2)
 library(metap)
 library(IHW)
 library(corrplot)
-# Load MoTrPAC data:
 library(MotrpacRatTraining6moData)
 
 # Load useful functions
 mawg_repo = "~/Desktop/repos/motrpac-mawg/"
 source(paste0(mawg_repo,'pass1b-06/integrative/outliers_covariates/pi1_cook_fx.R'))
 source(paste0(mawg_repo,'pass1b-06/tools/get_fx.R'))
-source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
+#source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
 
-gsutil = '~/google-cloud-sdk/bin/gsutil'
-data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
-scratch = data_dir
-knitr::opts_knit$set(root.dir = data_dir)
-setwd(data_dir)
+data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/"
+output_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
 ```
 
 
@@ -65,12 +54,12 @@ rownames(pheno) = as.character(pheno$viallabel)
 
 Load mito biomarker data (see `mito_biomarker_analysis.Rmd`)
 ```{r}
-load(paste0(scratch,"mt_biomarkers.RData"))
+load(paste0(data_dir,"mt_biomarkers.RData"))
 ```
 
 Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
 ```{r}
-load(paste0(scratch,"mito_gene_annotation.RData"))
+load(paste0(data_dir,"mito_gene_annotation.RData"))
 ```
 
 # Run differential analysis
@@ -79,14 +68,14 @@ See main functions in pass1b-06/tools/get_fx.R.
 
 ## Adjust for mtDNA levels
 
-```{r rna-seq dea table,eval=F}
+```{r rna-seq dea table,eval=T}
 
 dea_results = list()
-adj_mt_cols = c("mt_reads","clPC1","clPC2")
+adj_mt_cols = c("mt_reads","clPC1","clPC2","clPC3")
 for(tissue_name in unique(pheno$tissue)){
   tissue_code = TISSUE_ABBREV_TO_CODE[tissue_name]
   if(tissue_name=="" || tissue_code == ""){next}
-  if(!tissue_name %in% names(mt_biomarkers)){next}
+  if(!gsub("-","",tissue_name) %in% names(mt_biomarkers)){next}
   if(tissue_code %in% names(dea_results)){next}
 
   # load data 
@@ -115,7 +104,7 @@ for(tissue_name in unique(pheno$tissue)){
     covariates=c('pct_globin', 'rin', 'pct_umi_dup', 'median_5_3_bias'),
     outliers=outliers)
   
-  curr_mt_biomarkers = mt_biomarkers[[tissue_name]][,adj_mt_cols]
+  curr_mt_biomarkers = mt_biomarkers[[gsub("-","",tissue_name)]][,adj_mt_cols]
   biomarkers_to_keep = colSums(is.na(curr_mt_biomarkers))==0
   shared_vials = intersect(
     rownames(curr_mt_biomarkers),
@@ -191,7 +180,8 @@ for(tissue_name in unique(pheno$tissue)){
   )
 }
 
-save(dea_results,file="mito_paper_dea_results.RData")
+save(dea_results,
+     file=paste0(output_dir,"mito_paper_dea_results.RData"))
 
 # Sanity check, compare our code to pre-computed DEA
 for(tissue_name in names(dea_results)){
@@ -251,12 +241,13 @@ table(dea_combined$training_dea$ihw_q < 0.05,
       dea_combined$training_dea_mt_adjusted$ihw_q < 0.05)
 sapply(dea_combined,dim)
 
-save(dea_combined,file="ihw_adjusted_mito_paper_dea_results.RData")
+save(dea_combined,
+     file=paste0(output_dir,"ihw_adjusted_mito_paper_dea_results.RData"))
 
 ```
 
 ```{r}
-load("ihw_adjusted_mito_paper_dea_results.RData")
+load(paste0(output_dir,"ihw_adjusted_mito_paper_dea_results.RData"))
 ```
 
 
