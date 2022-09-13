@@ -189,6 +189,31 @@ rownames(pheno) = as.character(pheno$viallabel)</code></pre>
 <pre class="r"><code>load(paste0(data_dir,&quot;mt_biomarkers.RData&quot;))</code></pre>
 <p>Load existing mito annotation data (see <code>mito_biomarker_analysis.Rmd</code>):</p>
 <pre class="r"><code>load(paste0(data_dir,&quot;mito_gene_annotation.RData&quot;))</code></pre>
+<p>Define the tissues and features for the adjusted analysis</p>
+<pre class="r"><code>tissues_for_adjustment = c()
+adjustment_features = list()
+for(tissue in names(mt_biomarkers)){
+  if(tissue %in% c(&quot;TESTES&quot;,&quot;OVARY&quot;,&quot;VENACAVA&quot;)){next}
+  df = mt_biomarkers[[tissue]]
+  df$CL_72_8 = df$`CL(72:8)&gt;CL(18:2/18:2/18:2/18:2)`
+  if(all(is.na(df$CL_72_8))){df$CL_72_8=df$`CL(72:8)`}
+  if(!all(is.na(df$CL_72_8))){
+    tissues_for_adjustment = union(tissues_for_adjustment,tissue)
+    adjustment_features[[tissue]] = c(&quot;CL_72_8&quot;)
+  }
+  x1 = df$mt_reads
+  x2 = df$mtdna
+  inds = !is.na(x1) &amp; !is.na(x2)
+  if(sum(inds)&gt;10){
+    rho = cor(x1[inds],x2[inds])
+    if(rho &gt; 0.5){
+      tissues_for_adjustment = union(tissues_for_adjustment,tissue)
+      adjustment_features[[tissue]] = 
+        union(adjustment_features[[tissue]],&quot;mt_reads&quot;)
+    }
+  }
+  mt_biomarkers[[tissue]] = df
+}</code></pre>
 </div>
 <div id="run-differential-analysis" class="section level1">
 <h1>Run differential analysis</h1>
@@ -365,6 +390,7 @@ proteomics_training_dea  &lt;- function(x,covs,assay, tissue){
 <pre class="r"><code>dea_results = list()
 omes = c(&quot;PROT&quot;,&quot;PHOSPHO&quot;)
 tissues = c(&quot;CORTEX&quot;,&quot;HEART&quot;,&quot;KIDNEY&quot;,&quot;LIVER&quot;,&quot;LUNG&quot;,&quot;SKMGN&quot;,&quot;WATSC&quot;)
+tissues = intersect(tissues,tissues_for_adjustment)
 for(ome in omes){
   dea_results[[ome]] = list()
   for(tissue in tissues){
@@ -379,10 +405,13 @@ for(ome in omes){
     shared_bids = intersect(x_bid,additional_covs$bid)
     x = x[,names(x_bid[x_bid %in% shared_bids])]
     x_bid = sapply(colnames(x),substring,1,5)
-    additional_covs = additional_covs[x_bid,c(&quot;mt_reads&quot;,&quot;clPC1&quot;,&quot;clPC2&quot;,&quot;clPC3&quot;)]
-    rownames(additional_covs) = names(x_bid)
+    additional_covs = additional_covs[x_bid,]
+    # subset the data frame to the selected markers 
+    additional_covs = additional_covs[adjustment_features[[tissue]]]
+    
     selected_mt_markers = colSums(is.na(additional_covs))==0
     mt_cov_names = colnames(additional_covs)[selected_mt_markers]
+    # subset the data frame to the selected markers (after the NA filtering)
     additional_covs = additional_covs[selected_mt_markers]
       
     #Specify covariates
@@ -475,21 +504,19 @@ for(ome in names(dea_results)){
 ## [1] 4
 ## [1] 5
 ## [1] 6
-## [1] 7
 ## [1] 1
 ## [1] 2
 ## [1] 3
 ## [1] 4
 ## [1] 5
-## [1] 6
-## [1] 7</code></pre>
+## [1] 6</code></pre>
 <pre class="r"><code>sapply(dea_combined,function(y)sapply(y,nrow))</code></pre>
 <pre><code>##                            PROT PHOSPHO
-## mt_cov_names                 25      25
-## timewise_dea             534200 2144296
-## timewise_dea_mt_adjusted 534200 2144296
-## training_dea              66775  268037
-## training_dea_mt_adjusted  66775  268037</code></pre>
+## mt_cov_names                  7       7
+## timewise_dea             445336 1772280
+## timewise_dea_mt_adjusted 445336 1772280
+## training_dea              55667  221535
+## training_dea_mt_adjusted  55667  221535</code></pre>
 <pre class="r"><code>for(ome in names(dea_results)){
   dea_combined[[ome]]$training_dea$ihw_q = IHW::ihw(
       dea_combined[[ome]]$training_dea$p_value,
@@ -504,12 +531,12 @@ for(ome in names(dea_results)){
 }</code></pre>
 <pre><code>##        
 ##         FALSE  TRUE
-##   FALSE 64757    75
-##   TRUE   1529   414
+##   FALSE 53612   115
+##   TRUE    735  1205
 ##        
 ##          FALSE   TRUE
-##   FALSE 267209     74
-##   TRUE     661     93</code></pre>
+##   FALSE 220668    127
+##   TRUE     510    230</code></pre>
 <pre class="r"><code>save(dea_combined,
      file=paste0(output_dir,&quot;ihw_adjusted_mito_paper_dea_prot_results.RData&quot;))</code></pre>
 <pre class="r"><code>load(paste0(output_dir,&quot;ihw_adjusted_mito_paper_dea_prot_results.RData&quot;))</code></pre>

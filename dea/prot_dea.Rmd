@@ -50,6 +50,35 @@ Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
 load(paste0(data_dir,"mito_gene_annotation.RData"))
 ```
 
+Define the tissues and features for the adjusted analysis
+
+```{r}
+tissues_for_adjustment = c()
+adjustment_features = list()
+for(tissue in names(mt_biomarkers)){
+  if(tissue %in% c("TESTES","OVARY","VENACAVA")){next}
+  df = mt_biomarkers[[tissue]]
+  df$CL_72_8 = df$`CL(72:8)>CL(18:2/18:2/18:2/18:2)`
+  if(all(is.na(df$CL_72_8))){df$CL_72_8=df$`CL(72:8)`}
+  if(!all(is.na(df$CL_72_8))){
+    tissues_for_adjustment = union(tissues_for_adjustment,tissue)
+    adjustment_features[[tissue]] = c("CL_72_8")
+  }
+  x1 = df$mt_reads
+  x2 = df$mtdna
+  inds = !is.na(x1) & !is.na(x2)
+  if(sum(inds)>10){
+    rho = cor(x1[inds],x2[inds])
+    if(rho > 0.5){
+      tissues_for_adjustment = union(tissues_for_adjustment,tissue)
+      adjustment_features[[tissue]] = 
+        union(adjustment_features[[tissue]],"mt_reads")
+    }
+  }
+  mt_biomarkers[[tissue]] = df
+}
+```
+
 # Run differential analysis
 
 ## Auxlilary functions
@@ -192,6 +221,7 @@ proteomics_training_dea  <- function(x,covs,assay, tissue){
 dea_results = list()
 omes = c("PROT","PHOSPHO")
 tissues = c("CORTEX","HEART","KIDNEY","LIVER","LUNG","SKMGN","WATSC")
+tissues = intersect(tissues,tissues_for_adjustment)
 for(ome in omes){
   dea_results[[ome]] = list()
   for(tissue in tissues){
@@ -206,10 +236,13 @@ for(ome in omes){
     shared_bids = intersect(x_bid,additional_covs$bid)
     x = x[,names(x_bid[x_bid %in% shared_bids])]
     x_bid = sapply(colnames(x),substring,1,5)
-    additional_covs = additional_covs[x_bid,c("mt_reads","clPC1","clPC2","clPC3")]
-    rownames(additional_covs) = names(x_bid)
+    additional_covs = additional_covs[x_bid,]
+    # subset the data frame to the selected markers 
+    additional_covs = additional_covs[adjustment_features[[tissue]]]
+    
     selected_mt_markers = colSums(is.na(additional_covs))==0
     mt_cov_names = colnames(additional_covs)[selected_mt_markers]
+    # subset the data frame to the selected markers (after the NA filtering)
     additional_covs = additional_covs[selected_mt_markers]
       
     #Specify covariates

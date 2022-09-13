@@ -22,8 +22,6 @@ library(MotrpacRatTraining6moData)
 
 mawg_repo = "~/Desktop/repos/motrpac-mawg/"
 source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
-
-# gsutil = '~/google-cloud-sdk/bin/gsutil'
 data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
 scratch = data_dir
 knitr::opts_knit$set(root.dir = data_dir)
@@ -242,12 +240,11 @@ for(k in 1:20){
   k_res[[k]] = kmeans(zmat[z_diff_features,],k,nstart = 50,iter.max = 500)
 }
 within_rss = sapply(k_res,function(x)sum(x$withinss))
-plot(within_rss,type="b")
+plot(within_rss,type="b",ylab = "Within cluster SS",xlab="Number of clusters",col="blue")
 arrs = strsplit(rownames(zmat)[z_diff_features],split=";")
 arrs = t(sapply(arrs,function(x)x))
 
-cluster_obj = k_res[[5]]$cluster
-# cluster_obj = spsol$assignments
+cluster_obj = k_res[[4]]$cluster
 cluster_res = data.frame(
   cluster = cluster_obj,
   ome=arrs[,1],feature_ID = arrs[,3],tissue=arrs[,2]

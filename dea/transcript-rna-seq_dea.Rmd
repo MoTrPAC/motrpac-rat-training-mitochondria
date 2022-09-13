@@ -5,7 +5,7 @@ date: "6/21/2022"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=T}
 knitr::opts_chunk$set(echo = TRUE)
 # load libraries
 library(data.table)
@@ -62,6 +62,36 @@ Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
 load(paste0(data_dir,"mito_gene_annotation.RData"))
 ```
 
+
+Define the tissues and features for the adjusted analysis
+
+```{r}
+tissues_for_adjustment = c()
+adjustment_features = list()
+for(tissue in names(mt_biomarkers)){
+  if(tissue %in% c("TESTES","OVARY","VENACAVA")){next}
+  df = mt_biomarkers[[tissue]]
+  df$CL_72_8 = df$`CL(72:8)>CL(18:2/18:2/18:2/18:2)`
+  if(all(is.na(df$CL_72_8))){df$CL_72_8=df$`CL(72:8)`}
+  if(!all(is.na(df$CL_72_8))){
+    tissues_for_adjustment = union(tissues_for_adjustment,tissue)
+    adjustment_features[[tissue]] = c("CL_72_8")
+  }
+  x1 = df$mt_reads
+  x2 = df$mtdna
+  inds = !is.na(x1) & !is.na(x2)
+  if(sum(inds)>10){
+    rho = cor(x1[inds],x2[inds])
+    if(rho > 0.5){
+      tissues_for_adjustment = union(tissues_for_adjustment,tissue)
+      adjustment_features[[tissue]] = 
+        union(adjustment_features[[tissue]],"mt_reads")
+    }
+  }
+  mt_biomarkers[[tissue]] = df
+}
+```
+
 # Run differential analysis
 
 See main functions in pass1b-06/tools/get_fx.R. 
@@ -69,14 +99,16 @@ See main functions in pass1b-06/tools/get_fx.R.
 ## Adjust for mtDNA levels
 
 ```{r rna-seq dea table,eval=T}
-
 dea_results = list()
-adj_mt_cols = c("mt_reads","clPC1","clPC2","clPC3")
 for(tissue_name in unique(pheno$tissue)){
   tissue_code = TISSUE_ABBREV_TO_CODE[tissue_name]
   if(tissue_name=="" || tissue_code == ""){next}
   if(!gsub("-","",tissue_name) %in% names(mt_biomarkers)){next}
+  if(!gsub("-","",tissue_name) %in% tissues_for_adjustment){next}
   if(tissue_code %in% names(dea_results)){next}
+  
+  # define the columns for the current adjustment analysis
+  adj_mt_cols = adjustment_features[[gsub("-","",tissue_name)]]
 
   # load data 
   raw_data_name = paste0("TRNSCRPT_",gsub("-","",tissue_name),"_RAW_COUNTS")
@@ -104,7 +136,7 @@ for(tissue_name in unique(pheno$tissue)){
     covariates=c('pct_globin', 'rin', 'pct_umi_dup', 'median_5_3_bias'),
     outliers=outliers)
   
-  curr_mt_biomarkers = mt_biomarkers[[gsub("-","",tissue_name)]][,adj_mt_cols]
+  curr_mt_biomarkers = mt_biomarkers[[gsub("-","",tissue_name)]][adj_mt_cols]
   biomarkers_to_keep = colSums(is.na(curr_mt_biomarkers))==0
   shared_vials = intersect(
     rownames(curr_mt_biomarkers),
