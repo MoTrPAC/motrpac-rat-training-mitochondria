@@ -93,8 +93,17 @@ cl_fdata$tissue[cl_fdata$tissue=="SKMGN"] = "SKM-GN"
 cl_fdata$tissue[cl_fdata$tissue=="WATSC"] = "WAT-SC"
 cl_fdata$tissue[cl_fdata$tissue=="WAT"] = "WAT-SC"
 table(cl_fdata$tissue)
+sort(table(cl_fdata$feature_ID),decreasing=T)[1:4]
+cl_fdata[cl_fdata$feature_ID=="CL(72:8)",]
 
-# # Obsolete: get cardiolipins from the main landscape paper:
+selected_cls = c(
+  "CL(72:8)>CL(18:2/18:2/18:2/18:2)",
+  "CL(72:8)",
+  "CL(74:11)",
+  "CL(74:9)"
+)
+
+# # Optional: get cardiolipins from the main landscape paper:
 # sample_data = METAB_NORM_DATA_FLAT
 # sample_data_featureinfo = sample_data[,1:5]
 # # Limit the data to cardiolipins
@@ -111,14 +120,14 @@ table(cl_fdata$tissue)
 
 # Get mito gene annotation
 
-```{r,eval=F}
+```{r,eval=T}
 # Add mito gene annotations
 mt = fread(paste0(data_dir,
         "external-datasets_gene-sets_Mitocarta_Rat.MitoCarta3.0.genes_only.txt"),
         stringsAsFactors = F,data.table = F)
 
 # additional pathway enrichment with mitocarta pathways
-mt_pw = fread(paste0(data_dir,"Human.MitoCarta3.0.txt"),
+mt_pw = fread(paste0(data_dir,"Human.MitoCarta3.0.txt"),header = T,
         stringsAsFactors = F,data.table = F)
 
 # map transcripts to genes using biomart
@@ -186,30 +195,11 @@ boxplot(pct_mito_reads ~ tissue,data=currdf,las=2,xlab="")
 
 # Comparison of mt biomarkers
 
-```{r}
-# get the biomarkers in each tissue
-get_corrmat<-function(x){
-  n = ncol(x)
-  m = matrix(NA,ncol=n,nrow=n,dimnames=list(colnames(x),colnames(x)))
-  for(i in 1:n){
-    inds1 = !is.na(x[,i])
-    if(sum(inds1)<3){next}
-    for(j in 1:i){
-      inds2 = !is.na(x[,j])
-      if(sum(inds2)<3){next}
-      inds = inds1 & inds2
-      m[i,j] = cor(as.numeric(x[inds,i]),as.numeric(x[inds,j]))
-      m[j,i] = m[i,j]
-    }
-  }
-  return(m)
-}
+## Get the biomarker df per tissue
 
+```{r,eval=T}
+# Get data frames with all mito biomarkers, by tissue
 mt_biomarkers = list()
-mt_biomarker_correlations2 = c()
-mt_biomarker_8wfc = c()
-mt_biomarker_8wp = c()
-mt_group_kw = c()
 for(tissue_name in unique(pheno$tissue)){
   if(is.na(tissue_name)){next}
   if(grepl("VENA",tissue_name)){next}
@@ -219,6 +209,7 @@ for(tissue_name in unique(pheno$tissue)){
   tissue_vials = rownames(pheno)[pheno$tissue == tissue_name]
   # limit to vial labels that appear in the rna-seq data
   tissue_vials = intersect(names(pct_mito_reads),tissue_vials)
+  tissue_vials = setdiff(tissue_vials,OUTLIERS$viallabel)
   if(length(tissue_vials)<5){next}
   # get the bids
   tissue_bids = sapply(tissue_vials,substring,1,5)
@@ -237,11 +228,13 @@ for(tissue_name in unique(pheno$tissue)){
     for(bid in curr_shared_bids){
       tissue_df[tissue_df$bid==bid,"mtdna"] = currmt_data[bid,"Level"]
     }
+    tissue_df$mtdna = log2(tissue_df$mtdna)
   }
   
   tissue_df$clPC1 = NA
   tissue_df$clPC2 = NA
   tissue_df$clPC3 = NA
+  for(cl in selected_cls){tissue_df[[cl]] = NA}
   curr_cl_data = NULL
   if(sum(cl_fdata$tissue == tissue_name)>0){
     curr_shared_bids = intersect(tissue_df$bid,colnames(cl_data))
@@ -267,8 +260,11 @@ for(tissue_name in unique(pheno$tissue)){
     }
     
     if(!is.null(curr_cl_data) && nrow(curr_cl_data)>0){
+      # log2 transform
+      curr_cl_data = log2(curr_cl_data)
       cl_pca = prcomp(curr_cl_data)
       num_cols = min(3,ncol(curr_cl_data))
+      curr_cl_data_raw = curr_cl_data
       curr_cl_data = as.matrix(cl_pca$x[,1:num_cols],ncol=num_cols)
       colnames(curr_cl_data) = paste0("clPC",1:num_cols)
       for(pc in colnames(curr_cl_data)){
@@ -276,78 +272,197 @@ for(tissue_name in unique(pheno$tissue)){
           tissue_df[tissue_df$bid==bid,pc] = curr_cl_data[bid,pc]
         }
       }
+      # Add selected CLs
+      for(cl in selected_cls){
+        if(!cl %in% colnames(curr_cl_data_raw)){next}
+        for(bid in curr_shared_bids){
+          tissue_df[tissue_df$bid==bid,cl] = curr_cl_data_raw[bid,cl]
+        }
+      }
     }
   }
   
-  # add sex and group
+  # add sex and group, save the df
   tissue_df$group = pheno[tissue_df$viallabel,"group"]
   tissue_df$sex = pheno[tissue_df$viallabel,"sex"]
-  curr_tissue_biomarker_zs = c()
-  curr_tissue_biomarker_ps = c()
-  curr_tissue_biomarker_kw_ps = c()
+  mt_biomarkers[[gsub("-","",tissue_name)]] = tissue_df
+}
+
+```
+
+## Compute statistics
+
+```{r,eval=T}
+#' Helper function: compute corr matrix from data with NAs
+get_corrmat<-function(x){
+  n = ncol(x)
+  m = matrix(NA,ncol=n,nrow=n,dimnames=list(colnames(x),colnames(x)))
+  for(i in 1:n){
+    inds1 = !is.na(x[,i])
+    if(sum(inds1)<3){next}
+    for(j in 1:i){
+      inds2 = !is.na(x[,j])
+      if(sum(inds2)<3){next}
+      inds = inds1 & inds2
+      m[i,j] = cor(as.numeric(x[inds,i]),as.numeric(x[inds,j]))
+      m[j,i] = m[i,j]
+    }
+  }
+  return(m)
+}
+#' Helper function for the statistics
+library(multcomp)
+compute_biomarker_dea_res<-function(x,group){
+  kw_p = kruskal.test(x,group)$p.value
+  df = data.frame(x=x,group=group)
+  m = lm(x~0+group,data=df)
+  coeffs = coefficients(m)
+  curr_groups = gsub("group","",names(coeffs))
+  curr_groups = sort(curr_groups[!grepl("control",curr_groups)])
+  cons = matrix(0,nrow=length(curr_groups),ncol=length(coeffs),
+                dimnames = list(curr_groups,names(coeffs)))
+  cons[,which(grepl("control",colnames(cons)))] = -1
+  for(r in rownames(cons)){cons[r,grepl(r,colnames(cons))]=1}
+  cons_res = glht(m, linfct = cons)
+  cons_res = summary(cons_res)
+  cons_coeffs = cons_res$test$coefficients
+  cons_tstats = cons_res$test$tstat
+  cons_names = names(cons_coeffs)
+  cons_ps = as.numeric(cons_res$test$pvalues)
+  names(cons_coeffs) = paste0("fc_",cons_names)
+  names(cons_ps) = paste0("pval_",cons_names)
+  names(cons_tstats) = paste0("tstat_",cons_names)
+  v = rep(NA,13)
+  names(v) = c("kw_p",paste0("fc_",c("1w","2w","4w","8w")),
+               paste0("pval_",c("1w","2w","4w","8w")),
+               paste0("tstat_",c("1w","2w","4w","8w")))
+  v["kw_p"] = kw_p
+  v[names(cons_coeffs)] = cons_coeffs
+  v[names(cons_ps)] = cons_ps
+  v[names(cons_tstats)] = cons_tstats
+  return(data.frame(t(v)))
+}
+
+### Stat computations
+mt_biomarker_correlations = c()
+mt_biomarker_dea = list()
+for(tissue_name in names(mt_biomarkers)){
+  tissue_df = mt_biomarkers[[tissue_name]]
   for(s in c("female","male")){
     x = tissue_df[tissue_df$sex==s,]
-    # perform KW test
-    kw_res_v = rep(NA,5)
-    names(kw_res_v) = c("mt_reads","mtdna","clPC1","clPC2","clPC3")
-    for(nn in names(kw_res_v)){
-      if(all(is.na(x[,nn]))){next}
-      try({
-        kw_res_v[nn] = kruskal.test(x[,nn],x$group)$p.value
-      })
+    biomarkers = setdiff(names(tissue_df),c("viallabel","bid","group","sex"))
+    for(biomarker in biomarkers){
+      currx = x[,biomarker]
+      currg = x[,"group"]
+      if(all(is.na(currx))){next}
+      inds=!is.na(currx)
+      currx = currx[inds];currg=currg[inds]
+      dea_res = compute_biomarker_dea_res(currx,currg)
+      dea_res$tissue = tissue_name
+      dea_res$sex = s
+      dea_res$biomarker = biomarker
+      mt_biomarker_dea = rbind(mt_biomarker_dea,dea_res)
     }
-    names(kw_res_v) = paste0(names(kw_res_v),"_",s)
-    curr_tissue_biomarker_kw_ps = c(
-      curr_tissue_biomarker_kw_ps,kw_res_v
-    )
-    
-    # perform t-test for week 8
-    x$mtdna = log2(x$mtdna)
-    x_8w = x[x$group=="8w",]
-    x_control = x[x$group=="control",]
-    effs = rep(NA,5)
-    names(effs) = c("mt_reads","mtdna","clPC1","clPC2","clPC3")
-    ps = rep(NA,5)
-    names(ps) = names(effs)
-    for(col in names(effs)){
-      if(all(is.na(x[,col]))){next}
-      if(sum(!is.na(x_8w[,col]))<2){next}
-      if(sum(!is.na(x_control[,col]))<2){next}
-      tres = t.test(x_8w[,col],x_control[,col])
-      effs[col] = tres$statistic
-      ps[col] = tres$p.value
-    }
-    names(effs) = paste0(names(effs),"_",s)
-    names(ps) = names(effs)
-    curr_tissue_biomarker_zs = c(
-      curr_tissue_biomarker_zs,effs
-    )
-    curr_tissue_biomarker_ps = c(
-      curr_tissue_biomarker_ps,ps
-    )
   }
-  mt_biomarker_8wfc = rbind(mt_biomarker_8wfc,curr_tissue_biomarker_zs)
-  rownames(mt_biomarker_8wfc)[nrow(mt_biomarker_8wfc)] = tissue_name
-  mt_biomarker_8wp = rbind(mt_biomarker_8wp,curr_tissue_biomarker_ps)
-  rownames(mt_biomarker_8wp)[nrow(mt_biomarker_8wp)] = tissue_name
-  mt_group_kw = rbind(mt_group_kw,curr_tissue_biomarker_kw_ps)
-  rownames(mt_group_kw)[nrow(mt_group_kw)] = tissue_name
-  curr_cols = c("mt_reads","mtdna","clPC1","clPC2","clPC3")
-  curr_corrs = get_corrmat(tissue_df[,curr_cols])
+  curr_corrs = get_corrmat(tissue_df[,biomarkers])
   rhos = c()
   rhos["reads-mtdna"] = curr_corrs["mtdna","mt_reads"]
   for(cl in c("clPC1","clPC2","clPC3")){
     rhos[paste0("reads-",cl)] = curr_corrs["mt_reads",cl]
     rhos[paste0("mtdna-",cl)] = curr_corrs["mtdna",cl]
   }
-  mt_biomarker_correlations2 = rbind(mt_biomarker_correlations2,rhos)
-  rownames(mt_biomarker_correlations2)[
-      nrow(mt_biomarker_correlations2)] = tissue_name
-  mt_biomarkers[[gsub("-","",tissue_name)]] = tissue_df
+  rhos_cls = c()
+  cls = biomarkers[grepl("CL",biomarkers)]
+  for(clpc in c("clPC1","clPC2","clPC3")){
+    for(cl in cls){
+      rhos_cls[paste(clpc,cl,sep="-")] = curr_corrs[clpc,cl]
+    }
+  }
+  mt_biomarker_correlations = rbind(mt_biomarker_correlations,c(rhos,rhos_cls))
+  rownames(mt_biomarker_correlations)[
+      nrow(mt_biomarker_correlations)] = tissue_name
 }
-ggcorrplot(mt_biomarker_correlations2,method = "circle")
-ggcorrplot(abs(mt_biomarker_correlations2),method = "circle")
 
+save(mt_biomarkers,
+     mt_biomarker_correlations,
+     mt_biomarker_dea,
+     file=paste0(data_dir,"mt_biomarkers.RData"))
+
+```
+
+Load the data instead of recomputing:
+```{r}
+load(paste0(data_dir,"mt_biomarkers.RData"))
+biomarkers = setdiff(names(mt_biomarkers[[1]]),c("viallabel","bid","group","sex"))
+```
+
+## Examine the Adrenal data
+
+Fold changes and p-values:
+```{r}
+mt_biomarker_dea[mt_biomarker_dea$tissue=="ADRNL" & mt_biomarker_dea$biomarker=="mt_reads",]
+```
+
+Simple boxplots:
+```{r}
+df = mt_biomarkers$ADRNL
+df$group = factor(df$group,levels = c("control","1w","2w","4w","8w"))
+par(mar=c(5,4,1,1),mfrow=c(1,2))
+boxplot(mt_reads~group,data=df[df$sex=="male",],las=2,xlab="",
+        main="Mito reads, males",ylab="Percent reads")
+boxplot(mt_reads~group,data=df[df$sex=="female",],las=2,xlab="",
+        main="Mito reads, females",ylab="Percent reads")
+
+```
+
+## Examine other tissues
+
+```{r}
+for(tissue in names(mt_biomarkers)){
+  df = mt_biomarkers[[tissue]]
+  if(all(is.na(df$mtdna))){next}
+  df$group = factor(df$group,levels = c("control","1w","2w","4w","8w"))
+  par(mar=c(5,4,1,1),mfrow=c(2,2))
+  boxplot(mtdna~group,data=df[df$sex=="male",],las=2,xlab="",
+        main=paste(tissue,"mtDNA, males",sep=","),ylab="mtDNA level")
+  boxplot(mtdna~group,data=df[df$sex=="female",],las=2,xlab="",
+        main=paste(tissue,"mtDNA, females",sep=","),ylab="mtDNA level")
+  boxplot(mt_reads~group,data=df[df$sex=="male",],las=2,xlab="",
+        main=paste(tissue,"mito reads, males",sep=","),ylab="Percent reads")
+  boxplot(mt_reads~group,data=df[df$sex=="female",],las=2,xlab="",
+        main=paste(tissue,"mito reads, females",sep=","),ylab="Percent reads")
+}
+
+```
+
+## Visualizations
+
+```{r}
+get_stat_matrix<-function(mt_biomarker_dea,stat_name,biomarkers,tissues){
+  m = matrix(NA,nrow=length(tissues),ncol=2*length(biomarkers),
+             dimnames = list(tissues,c(paste0(biomarkers,"-male"),paste0(biomarkers,"-female"))))
+  for(tissue in tissues){
+    for(biomarker in biomarkers){
+      for(sex in c("male","female")){
+        curr_ind = mt_biomarker_dea$tissue==tissue & mt_biomarker_dea$sex==sex &
+             mt_biomarker_dea$biomarker==biomarker
+        if(sum(curr_ind)!=1){next}
+        m[tissue,paste(biomarker,sex,sep="-")] = mt_biomarker_dea[curr_ind,stat_name]
+      }
+    }
+  }
+  return(m)
+}
+tissues = sort(unique(mt_biomarker_dea$tissue))
+cls = biomarkers[grepl("CL",biomarkers)]
+non_cls = setdiff(biomarkers,cls)
+tissues = setdiff(tissues,c("OVARY","TESTES"))
+
+ggcorrplot(mt_biomarker_correlations[tissues,c(1:7)],method = "circle")
+ggcorrplot(abs(mt_biomarker_correlations[tissues,c(1:7)]),method = "circle")
+ggcorrplot(mt_biomarker_correlations[tissues,-c(1:7)],method = "circle")
+
+mt_group_kw = get_stat_matrix(mt_biomarker_dea,"kw_p",non_cls,tissues)
 corrplot(t(-log10(mt_group_kw)),is.corr = F,method = "circle",
          p.mat = t(mt_group_kw),sig.level = 0.05)
 par(mar=c(8,8,8,8))
@@ -361,11 +476,12 @@ tissue_counts_kw = tissue_counts_kw[-which(cl_inds1|cl_inds2)]
 barplot(sort(tissue_counts_kw,decreasing = T),las=2,col="white",
         ylab = "Num tissues with p<0.05")
 
-tstats = mt_biomarker_8wfc
-corrplot(t(tstats),method = "circle",is.corr = F,
-         p.mat = t(mt_biomarker_8wp),sig.level = 0.05)
+fc8w = get_stat_matrix(mt_biomarker_dea,"fc_8w",non_cls,tissues)
+p8w = get_stat_matrix(mt_biomarker_dea,"pval_8w",non_cls,tissues)
+tstats = get_stat_matrix(mt_biomarker_dea,"tstat_8w",non_cls,tissues)
+corrplot(t(tstats),method = "circle",is.corr = F,p.mat = t(p8w),sig.level = 0.05)
 par(mar=c(8,8,8,8))
-tissue_counts_8w = colSums(mt_biomarker_8wp<0.05,na.rm=T)
+tissue_counts_8w = colSums(p8w<0.05,na.rm=T)
 cl_inds1 = grepl("clPC",names(tissue_counts_8w)) & 
   grepl("female",names(tissue_counts_8w))
 cl_inds2 = grepl("clPC",names(tissue_counts_8w)) & !cl_inds1
@@ -375,52 +491,37 @@ tissue_counts_8w = tissue_counts_8w[-which(cl_inds1|cl_inds2)]
 barplot(sort(tissue_counts_8w,decreasing = T),las=2,col="white",
         ylab = "Num tissues with p<0.05")
 
-mt_biomarker_8wfc = as.data.frame(mt_biomarker_8wfc)
-mt_biomarker_8wfc$tissue = rownames(mt_biomarker_8wfc)
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_female, y = mtdna_female, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) +
-  xlim(c(-2.5,5)) + geom_abline(slope=1) + ggtitle("Female fold changes")
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_male, y = mtdna_male, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) + 
-  xlim(-7,6) + geom_abline(slope=1) + ggtitle("Male fold changes")
+cl_tissues = c("HEART","KIDNEY","LIVER","LUNG","SKMGN","WATSC")
+fc8w_cls = get_stat_matrix(mt_biomarker_dea,"fc_8w",cls,cl_tissues)
+p8w_cls = get_stat_matrix(mt_biomarker_dea,"pval_8w",cls,cl_tissues)
+tstats_cls = get_stat_matrix(mt_biomarker_dea,"tstat_8w",cls,cl_tissues)
+corrplot(t(fc8w_cls),method = "circle",is.corr = F,p.mat = t(p8w_cls),sig.level = 0.05)
 
+fc1w = get_stat_matrix(mt_biomarker_dea,"fc_1w",non_cls,tissues)
+p1w = get_stat_matrix(mt_biomarker_dea,"pval_1w",non_cls,tissues)
+tstats1w = get_stat_matrix(mt_biomarker_dea,"tstat_1w",non_cls,tissues)
+corrplot(t(tstats1w),method = "circle",is.corr = F,p.mat = t(p1w),sig.level = 0.05)
+par(mar=c(8,8,8,8))
+tissue_counts_1w = colSums(p1w<0.05,na.rm=T)
+cl_inds1 = grepl("clPC",names(tissue_counts_1w)) & 
+  grepl("female",names(tissue_counts_1w))
+cl_inds2 = grepl("clPC",names(tissue_counts_1w)) & !cl_inds1
+tissue_counts_1w["clPCs-male"] = sum(tissue_counts_1w[cl_inds2])
+tissue_counts_1w["clPCs-female"] = sum(tissue_counts_1w[cl_inds1])
+tissue_counts_1w = tissue_counts_1w[-which(cl_inds1|cl_inds2)]
+barplot(sort(tissue_counts_1w,decreasing = T),las=2,col="white",
+        ylab = "Num tissues with p<0.05")
 
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_female, y = clPC1_female, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) +
-  xlim(c(-2.5,5)) + geom_abline(slope=1) + ggtitle("Female fold changes")
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_male, y = clPC1_male, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) + 
-  xlim(-7,6) + geom_abline(slope=1) + ggtitle("Male fold changes")
-
-
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_female, y = clPC2_female, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) +
-  xlim(c(-2.5,5)) + geom_abline(slope=1) + ggtitle("Female fold changes")
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_male, y = clPC2_male, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) + 
-  xlim(-7,6) + geom_abline(slope=1) + ggtitle("Male fold changes")
-
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_female, y = clPC3_female, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) +
-  xlim(c(-2.5,5)) + geom_abline(slope=1) + ggtitle("Female fold changes")
-ggplot(mt_biomarker_8wfc,aes(
-  x = mt_reads_male, y = clPC3_male, label=tissue
-)) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) + 
-  xlim(-7,6) + geom_abline(slope=1) + ggtitle("Male fold changes")
-
-
-save(mt_biomarkers,
-     mt_biomarker_correlations2,
-     mt_biomarker_8wfc,mt_biomarker_8wp,
-     mt_group_kw,
-     file=paste0(data_dir,"mt_biomarkers.RData"))
+# mt_biomarker_8wfc = as.data.frame(mt_biomarker_8wfc)
+# mt_biomarker_8wfc$tissue = rownames(mt_biomarker_8wfc)
+# ggplot(mt_biomarker_8wfc,aes(
+#   x = mt_reads_female, y = mtdna_female, label=tissue
+# )) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) +
+#   xlim(c(-2.5,5)) + geom_abline(slope=1) + ggtitle("Female fold changes")
+# ggplot(mt_biomarker_8wfc,aes(
+#   x = mt_reads_male, y = mtdna_male, label=tissue
+# )) + geom_point() + geom_text(hjust=-0.1, vjust=0,size=4) + 
+#   xlim(-7,6) + geom_abline(slope=1) + ggtitle("Male fold changes")
 
 ```
 

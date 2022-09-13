@@ -23,7 +23,7 @@ library(MotrpacRatTraining6moData)
 mawg_repo = "~/Desktop/repos/motrpac-mawg/"
 source(paste0(mawg_repo,'pass1b-06/integrative/clustering/cluster_viz_fx.R'))
 
-gsutil = '~/google-cloud-sdk/bin/gsutil'
+# gsutil = '~/google-cloud-sdk/bin/gsutil'
 data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
 scratch = data_dir
 knitr::opts_knit$set(root.dir = data_dir)
@@ -34,12 +34,12 @@ setwd(data_dir)
 
 Load mito biomarker data (see `mito_biomarker_analysis.Rmd`)
 ```{r}
-load(paste0(scratch,"mt_biomarkers.RData"))
+load("~/Desktop/repos/motrpac-rat-training-mitochondria/data/mt_biomarkers.RData")
 ```
 
 Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
 ```{r}
-load(paste0(scratch,"mito_gene_annotation.RData"))
+load("~/Desktop/repos/motrpac-rat-training-mitochondria/data/mito_gene_annotation.RData")
 ```
 
 Load DEA results from prot and RNA-seq
@@ -64,52 +64,57 @@ gc()
 FEATURE_TO_GENE$is_mito = FEATURE_TO_GENE$gene_symbol %in% mt_symbols
 mito_features = FEATURE_TO_GENE$feature_ID[FEATURE_TO_GENE$is_mito]
   
-# Initial comparison: do mt genes tend to have better robustness to adjustment?
-mt_enrichment_training_level = c()
-for (ome in names(dea_combined)){
-  for(tissue in unique(dea_combined[[ome]]$training_dea$tissue_abbr)){
-    unadjusted = dea_combined[[ome]]$training_dea[
-      dea_combined[[ome]]$training_dea$tissue_abbr == tissue,
-    ]
-    adjusted = dea_combined[[ome]]$training_dea_mt_adjusted[
-      dea_combined[[ome]]$training_dea_mt_adjusted$tissue_abbr == tissue,
-    ]
-    unadjusted$is_mito = unadjusted$feature_ID %in% mito_features
-    adjusted$is_mito = adjusted$feature_ID %in% mito_features
-    rownames(adjusted) = adjusted$feature_ID
-    rownames(unadjusted) = unadjusted$feature_ID
-    adjusted = adjusted[rownames(unadjusted),]
-    training_summary_df = data.frame(
-      before = unadjusted$ihw_q < 0.05,
-      after = adjusted$ihw_q < 0.05,
-      is_mito = adjusted$is_mito
-    )
-    training_summary_df$robust = training_summary_df$before & training_summary_df$after
-    training_summary_df$not_robust = training_summary_df$before & !training_summary_df$after
-    training_summary_df$new = !training_summary_df$before & training_summary_df$after
-    
-    enrichment_res = c()
-    for(cc in c("robust","not_robust","new")){
-      enrichment_res[cc] = 1
-      tb = table(training_summary_df$is_mito,
-                training_summary_df[[cc]])
-      if(is.null(dim(tb)) || length(tb)<3){next}
-      enrichment_res[cc] = fisher.test(tb,alternative = "g")$p.value
-    }
-    enrichment_res = data.frame(t(enrichment_res))
-    enrichment_res$tissue = tissue
-    enrichment_res$ome = ome
-    mt_enrichment_training_level = rbind(mt_enrichment_training_level,enrichment_res)
-  }
-}
-print(mt_enrichment_training_level)
+# TODO: think of another enrichment analysis as this may be biased
+# # Initial comparison: do mt genes tend to have better robustness to adjustment?
+# # TODO: add a conditional test, this test is biased by the underlying
+# # number of mito genes in both sets (robust and not)
+# mt_enrichment_training_level = c()
+# for (ome in names(dea_combined)){
+#   for(tissue in unique(dea_combined[[ome]]$training_dea$tissue_abbr)){
+#     unadjusted = dea_combined[[ome]]$training_dea[
+#       dea_combined[[ome]]$training_dea$tissue_abbr == tissue,
+#     ]
+#     adjusted = dea_combined[[ome]]$training_dea_mt_adjusted[
+#       dea_combined[[ome]]$training_dea_mt_adjusted$tissue_abbr == tissue,
+#     ]
+#     unadjusted$is_mito = unadjusted$feature_ID %in% mito_features
+#     adjusted$is_mito = adjusted$feature_ID %in% mito_features
+#     rownames(adjusted) = adjusted$feature_ID
+#     rownames(unadjusted) = unadjusted$feature_ID
+#     adjusted = adjusted[rownames(unadjusted),]
+#     training_summary_df = data.frame(
+#       before = unadjusted$ihw_q < 0.05,
+#       after = adjusted$ihw_q < 0.05,
+#       is_mito = adjusted$is_mito
+#     )
+#     training_summary_df$robust = training_summary_df$before & training_summary_df$after
+#     training_summary_df$not_robust = 
+#       training_summary_df$before & !training_summary_df$after
+#     training_summary_df$new = !training_summary_df$before & training_summary_df$after
+#     
+#     enrichment_res = c()
+#     for(cc in c("robust","not_robust","new")){
+#       enrichment_res[cc] = 1
+#       tb = table(training_summary_df$is_mito,
+#                 training_summary_df[[cc]])
+#       if(is.null(dim(tb)) || length(tb)<3){next}
+#       enrichment_res[cc] = fisher.test(tb,alternative = "g")$p.value
+#     }
+#     enrichment_res = data.frame(t(enrichment_res))
+#     enrichment_res$tissue = tissue
+#     enrichment_res$ome = ome
+#     mt_enrichment_training_level = rbind(mt_enrichment_training_level,enrichment_res)
+#   }
+# }
+# print(mt_enrichment_training_level)
 ```
 
 ## Merge the data from tissues with mito biomarker effects
 
 ```{r}
-tissues_for_adjustment_comparisons = 
-  rownames(mt_group_kw)[rowSums(mt_group_kw<0.05,na.rm=T)>0]
+tissues_for_adjustment_comparisons = unique(
+  mt_biomarker_dea$tissue[mt_biomarker_dea$kw_p < 0.05]
+)
 tissues_for_adjustment_comparisons = setdiff(
   tissues_for_adjustment_comparisons,
   c("TESTES","OVARY","VENACV")
@@ -224,33 +229,24 @@ ggplot(
 ```{r}
 z_diffs = zmat[,1:8] - zmat[,9:16]
 par(mfrow = c(2,4))
-for(j in 1:8){hist(abs(z_diffs[,j]),breaks=50,xlim=c(0,8),
-                   main=colnames(zmat)[j])}
-z_diff_features = apply(abs(z_diffs)>2,1,any)
+for(j in 1:8){hist(abs(z_diffs[,j]),breaks=50,xlim=c(0,8),main=colnames(zmat)[j])}
+z_diff_features = apply(abs(z_diffs)>3,1,any)
 table(z_diff_features)
 table(z_diff_features) / length(z_diff_features)
 ```
 
 ```{r}
-
-binary_clustering_wrapper<-function(zmat,zthr=2,...){
-  xmat = zmat > zthr
-  mode(xmat) = "numeric"
-  xmat[zmat < -zthr] = -1
-  return(kmeans(xmat,...))
-}
-
 k_res = list()
+set.seed(123)
 for(k in 1:20){
-  k_res[[k]] = kmeans(zmat[z_diff_features,],k,nstart = 10,iter.max = 500)
-  # k_res[[k]] = binary_clustering_wrapper(zmat,3,centers=k,nstart = 10,iter.max = 500)
+  k_res[[k]] = kmeans(zmat[z_diff_features,],k,nstart = 50,iter.max = 500)
 }
 within_rss = sapply(k_res,function(x)sum(x$withinss))
 plot(within_rss,type="b")
 arrs = strsplit(rownames(zmat)[z_diff_features],split=";")
 arrs = t(sapply(arrs,function(x)x))
 
-cluster_obj = k_res[[3]]$cluster
+cluster_obj = k_res[[5]]$cluster
 # cluster_obj = spsol$assignments
 cluster_res = data.frame(
   cluster = cluster_obj,
@@ -276,30 +272,117 @@ pls = list()
 for(i in 1:length(pls_before[[2]])){
   pls = c(pls,list(pls_before[[2]][[i]],pls_after[[2]][[i]]))
 }
-grid.arrange(grobs = pls, ncol=2)
+grid.arrange(grobs = pls, ncol=4)
 
 table(cluster_res$cluster,cluster_res$tissue)
 features_per_cluster(cluster_res)
 
-# # create a clustering solution by tissue for downstream analysis
-# selected_sets = list()
-# for(cl in unique(cluster_obj)){
-#   cl_features = names(cluster_obj)[cluster_obj==cl]
-#   arrs = strsplit(cl_features,split=",")
-#   ens_ids = sapply(arrs,function(x)x[1])
-#   tissues = sapply(arrs,function(x)x[2])
-#   tissue_size = table(tissues)
-#   curr_tissues = names(tissue_size)[tissue_size>9]
-#   for(tissue in curr_tissues){
-#     curr_name = paste(tissue,cl,sep="_")
-#     curr_genes = ens_ids[tissues==tissue]
-#     selected_sets[[curr_name]] = curr_genes
-#   }
-# }
-# sort(sapply(selected_sets,length))
+# create a clustering solution by tissue for downstream analysis
+selected_sets = list()
+for(cl in unique(cluster_obj)){
+  cl_features = names(cluster_obj)[cluster_obj==cl]
+  arrs = strsplit(cl_features,split=";")
+  cl_ome = sapply(arrs,function(x)x[1])
+  cl_tissue = sapply(arrs,function(x)x[2])
+  cl_f_ids = sapply(arrs,function(x)x[3])
+  tissue_size = table(cl_tissue)
+  curr_tissues = names(tissue_size)[tissue_size>9]
+  for(tissue in curr_tissues){
+    curr_name = paste(tissue,cl,sep="_")
+    curr_features = cl_f_ids[cl_tissue==tissue]
+    curr_genes = FEATURE_TO_GENE[
+      FEATURE_TO_GENE$feature_ID %in% curr_features,"gene_symbol"]
+    selected_sets[[curr_name]] = curr_genes
+  }
+}
+sort(sapply(selected_sets,length))
 
 ```
 
+## Run enrichment analysis
+
+```{r}
+
+simple_enrichment_analysis<-function(s,univ,pathways,min_size=5,setname=""){
+  s = intersect(s,univ)
+  if(length(s)<min_size){
+    print("Warning: input set is smaller than min_size, returning NULL")
+    return(NULL)
+  }
+  v1 = univ %in% s
+  enrichment_results = c()
+  for(pname in names(pathways)){
+    pg = pathways[[pname]]
+    pg = intersect(pg,univ)
+    if(length(pg)<min_size){next}
+    v2 = univ %in% pg
+    fisher_res = fisher.test(table(v1,v2),alternative = "g")
+    overlap_set = intersect(s,pg)
+    res = data.frame(
+        setname=setname,
+        pathway = pname,
+        setsize = length(s),pathwaysize=length(pg),
+        overlap = length(overlap_set),
+        p = fisher_res$p.value,
+        genes = paste(overlap_set,collapse=",")
+    )
+    enrichment_results = rbind(enrichment_results,res)
+  }
+  return(enrichment_results)
+}
+
+enrichment_results = c()
+for (setname in names(selected_sets)){
+  tissue = strsplit(setname,split="_")[[1]][1]
+  if(tissue=="WATSC"){tissue="WAT-SC"}
+  if(tissue=="SKMGN"){tissue="SKM-GN"}
+  if(tissue=="SKMVL"){tissue="SKM-VL"}
+  univ = GENE_UNIVERSES$gene_symbol$TRNSCRPT[[tissue]]
+  univ = univ[univ %in% mt$gene_symbol]
+  enr_res =  simple_enrichment_analysis(
+              selected_sets[[setname]],univ,
+              mitocarta_pathways,setname = setname)
+  if(!is.null(enr_res)){
+    enrichment_results=rbind(enrichment_results,enr_res)
+  }
+}
+enrichment_results$q = p.adjust(enrichment_results$p,method="fdr")
+selected_enrichment_results = enrichment_results[enrichment_results$q < 0.1 &
+  enrichment_results$overlap > 1 & enrichment_results$pathwaysize < 200,]
+dim(selected_enrichment_results)
+
+selected_enrichment_results[,c("setname","pathway","q","genes")]
+
+
+```
+
+```{r}
+# Standard enrichment (not mitocarta)
+library(gprofiler2)
+res = gost(selected_sets,
+    organism='rnorvegicus',
+    significant=FALSE, # return all results
+    correction_method='fdr', # it will not return unadjusted p-values. 
+    sources=c('KEGG','REAC'),
+    custom_bg=mt$gene_symbol,
+    domain_scope='custom',
+    evcodes=T)
+pathway_enrichments = res$result
+pathway_enrichments$q = p.adjust(pathway_enrichments$p_value,method="fdr")
+table(pathway_enrichments$q < 0.1)
+selected_pathway_enrichment_results = pathway_enrichments[
+  pathway_enrichments$q < 0.1 &
+  pathway_enrichments$intersection_size > 1 & pathway_enrichments$term_size < 200,]
+dim(selected_pathway_enrichment_results)
+selected_pathway_enrichment_results$term_name[
+  grepl(
+    "Respiratory electron transport, ATP synthesis by chemiosmotic coupling,",
+    selected_pathway_enrichment_results$term_name
+  )
+] = "Electron transport,ATP synthesis,heat production"
+
+selected_pathway_enrichment_results[,c("query","term_name","q","intersection")]
+```
 
 
 

@@ -19,12 +19,12 @@ scratch = data_dir
 
 Load mito biomarker data (see `mito_biomarker_analysis.Rmd`)
 ```{r}
-load(paste0(scratch,"mt_biomarkers.RData"))
+load("~/Desktop/repos/motrpac-rat-training-mitochondria/data/mt_biomarkers.RData")
 ```
 
 Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
 ```{r}
-load(paste0(scratch,"mito_gene_annotation.RData"))
+load("~/Desktop/repos/motrpac-rat-training-mitochondria/data/mito_gene_annotation.RData")
 ```
 
 Define the mito-associated features across omes
@@ -37,7 +37,9 @@ FEATURE_TO_GENE = FEATURE_TO_GENE[
   !grepl("^chr\\d",FEATURE_TO_GENE$feature_ID,perl=T),]
 gc()
 FEATURE_TO_GENE$is_mito = FEATURE_TO_GENE$gene_symbol %in% mt_symbols
+FEATURE_TO_GENE$is_oxphos = FEATURE_TO_GENE$gene_symbol %in% mitocarta_pathways$`OXPHOS subunits`
 mito_features = FEATURE_TO_GENE$feature_ID[FEATURE_TO_GENE$is_mito]
+oxphos_features = FEATURE_TO_GENE$feature_ID[FEATURE_TO_GENE$is_oxphos]
 ```
 
 Add outliers and phenotypic data
@@ -113,7 +115,7 @@ for(ome in omes){
 ```{r}
 baseline_df = c()
 for(tissue in tissues){
-  norm_data_name = paste0("TRNSCRPT_",gsub("-","",tissue),"_NORM_DATA")
+  norm_data_name = paste0("TRNSCRPT_",gsub("-","",tissue),"_RAW_COUNTS")
   if(tissue %in% c("PLASMA","TESTES","OVARY")){next}
   print(tissue)
   norm_data = get(norm_data_name)
@@ -121,9 +123,10 @@ for(tissue in tissues){
   norm_data_vials = colnames(norm_data)[-c(1:4)]
   curr_meta = pheno[norm_data_vials,c("sex","group")]
   curr_meta$group = paste(curr_meta$sex,curr_meta$group,sep=",")
-  is_mito = norm_data$feature_ID %in% mito_features
-  norm_data_mito = norm_data[is_mito,norm_data_vials]
-  norm_data_nonmito = norm_data[!is_mito,norm_data_vials]
+  is_oxphos = norm_data$feature_ID %in% oxphos_features
+  norm_data_mito = norm_data[is_oxphos,norm_data_vials]
+  norm_data_nonmito = norm_data[!is_oxphos,norm_data_vials]
+  norm_data_nonmito = norm_data_nonmito[sample(1:nrow(norm_data_nonmito))[1:1000],]
   tmp = aggregate(t(norm_data_mito),list(curr_meta$group),mean)
   rownames(tmp) = tmp[,1]
   tmp = tmp[,-1]
@@ -136,11 +139,11 @@ for(tissue in tissues){
   tmp = t(tmp)
   tmp = as.data.frame(tmp)
   norm_data_nonmito = tmp
-  norm_data_mito$is_mito = T
-  norm_data_nonmito$is_mito = F
+  norm_data_mito$is_oxphos = T
+  norm_data_nonmito$is_oxphos = F
   curr_data = rbind(
-    norm_data_nonmito[,c("female,control","male,control","is_mito")],
-    norm_data_mito[,c("female,control","male,control","is_mito")]
+    norm_data_nonmito[,c("female,control","male,control","is_oxphos")],
+    norm_data_mito[,c("female,control","male,control","is_oxphos")]
   )
   curr_data$tissue = tissue
   baseline_df = rbind(baseline_df,curr_data)
@@ -148,7 +151,12 @@ for(tissue in tissues){
 
 # add boxplots
 colnames(baseline_df) = gsub(",control","",colnames(baseline_df))
-ggplot(baseline_df,aes(x=tissue,y=male,fill=is_mito)) +
+
+# for counts only
+baseline_df$female = log2(1+baseline_df$female)
+baseline_df$male = log2(1+baseline_df$male)
+
+ggplot(baseline_df,aes(x=tissue,y=male,fill=is_oxphos)) +
   geom_boxplot() +
   theme(axis.text.x = 
           element_text(angle = 90, vjust = 0.5, hjust=1))
