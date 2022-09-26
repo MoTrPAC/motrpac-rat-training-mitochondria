@@ -119,8 +119,10 @@ tissues_for_adjustment_comparisons = setdiff(
 )
 tissues_for_adjustment_comparisons = gsub("-","",tissues_for_adjustment_comparisons)
 
-get_zmat<-function(timewise){
-  timewise_col = "zscore"
+get_zmat<-function(timewise,timewise_col=NULL){
+  if(is.null(timewise_col)){
+    timewise_col = "zscore"
+  }
   if(!timewise_col %in% colnames(timewise)){
     timewise_col = "tscore"
   }
@@ -142,9 +144,12 @@ get_zmat<-function(timewise){
 
 tissue_adj_stats = c()
 zmat = c()
+fcmat = c()
+adj_selected_sets = c()
 for(ome in names(dea_combined)){
   for(tissue in tissues_for_adjustment_comparisons){
-    if(!tissue %in% unique(dea_combined[[ome]]$training_dea$tissue_abbr)){next}
+    if(!tissue %in% 
+       unique(dea_combined[[ome]]$training_dea$tissue_abbr)){next}
     tr_before = dea_combined[[ome]]$training_dea[
       dea_combined[[ome]]$training_dea$tissue_abbr == tissue,
     ]
@@ -159,6 +164,15 @@ for(ome in names(dea_combined)){
     
     curr_features = union(tr_after$feature_ID,tr_before$feature_ID)
     if(length(curr_features)==0){next}
+    feature_df = data.frame(
+      feature_ID = curr_features,
+      tissue = tissue,
+      ome = ome,
+      in_unadjusted = curr_features %in% tr_before$feature_ID,
+      in_adjusted = curr_features %in% tr_after$feature_ID,
+      multiomic_name = paste(ome,tissue,curr_features,sep=";")
+    )
+    adj_selected_sets = rbind(adj_selected_sets,feature_df)
     
     stats_df = data.frame(
       ome=ome,
@@ -182,6 +196,8 @@ for(ome in names(dea_combined)){
     ]
     z_before = get_zmat(timewise_before)
     colnames(z_before) = paste(colnames(z_before),"before",sep=",")
+    fc_before = get_zmat(timewise_before,"logFC")
+    colnames(fc_before) = paste(colnames(fc_before),"before",sep=",")
     
     timewise_after = dea_combined[[ome]]$timewise_dea_mt_adjusted[
       dea_combined[[ome]]$timewise_dea_mt_adjusted$tissue_abbr == tissue,
@@ -191,19 +207,25 @@ for(ome in names(dea_combined)){
     ]
     z_after = get_zmat(timewise_after)
     colnames(z_after) = paste(colnames(z_after),"after",sep=",")
+    fc_after = get_zmat(timewise_after,"logFC")
+    colnames(fc_after) = paste(colnames(fc_after),"before",sep=",")
     
     if(nrow(z_before)>1){
       merged_zs = cbind(z_before,z_after[rownames(z_before),])
+      merged_fc = cbind(fc_before,fc_after[rownames(fc_before),])
     }
     else{
       merged_zs = cbind(z_before,z_after)
+      merged_fc = cbind(fc_before,fc_after)
     }
     
     rownames(merged_zs) = paste(ome,tissue,rownames(merged_zs),sep=";")
     zmat = rbind(zmat,merged_zs)
+    rownames(merged_fc) = paste(ome,tissue,rownames(merged_fc),sep=";")
+    fcmat = rbind(fcmat,merged_fc)
   }
 }
-
+rownames(adj_selected_sets) = adj_selected_sets$multiomic_name
 
 tissue_adj_stats = tissue_adj_stats[order(tissue_adj_stats$jaccard),]
 tissue_adj_stats$col = tissue_cols[tissue_adj_stats$tissue]
@@ -215,8 +237,8 @@ ggplot(
     aes(y=log10(1+n_before), 
     x=log10(1+n_after),label=tissue,col=jaccard,shape=ome)) + 
     geom_point(size=2) + 
-    ylab("Unadjusted") + 
-    xlab("Adjusted") + geom_abline(slope=1) + 
+    ylab("log10 selected, 5% FDR, unadjusted") + 
+    xlab("log10 selected, 5% FDR, adjusted") + geom_abline(slope=1) + 
     xlim(0,0.2+max(log10(1+tissue_adj_stats$n_after))) +
     geom_text(hjust=-0.1, vjust=0,size=4)
 
@@ -227,21 +249,29 @@ ggplot(
 ```{r}
 z_diffs = zmat[,1:8] - zmat[,9:16]
 par(mfrow = c(2,4))
-for(j in 1:8){hist(abs(z_diffs[,j]),breaks=50,xlim=c(0,8),main=colnames(zmat)[j])}
+for(j in 1:8){hist(abs(z_diffs[,j]),
+  breaks=50,xlim=c(0,8),
+  main=gsub(",before","",colnames(zmat)[j]))}
 z_diff_features = apply(abs(z_diffs)>3,1,any)
 table(z_diff_features)
 table(z_diff_features) / length(z_diff_features)
+table(adj_selected_sets[names(which(z_diff_features)),"in_adjusted"])
+table(adj_selected_sets[names(which(z_diff_features)),"in_unadjusted"])
+
 ```
 
 ```{r}
 k_res = list()
 set.seed(123)
+clustering_analysis_matrix = zmat
 for(k in 1:20){
-  k_res[[k]] = kmeans(zmat[z_diff_features,],k,nstart = 50,iter.max = 500)
+  k_res[[k]] = kmeans(clustering_analysis_matrix[z_diff_features,],
+                      k,nstart = 50,iter.max = 500)
 }
 within_rss = sapply(k_res,function(x)sum(x$withinss))
 plot(within_rss,type="b",ylab = "Within cluster SS",xlab="Number of clusters",col="blue")
-arrs = strsplit(rownames(zmat)[z_diff_features],split=";")
+arrs = strsplit(rownames(clustering_analysis_matrix)[z_diff_features],
+                split=";")
 arrs = t(sapply(arrs,function(x)x))
 
 cluster_obj = k_res[[4]]$cluster
@@ -255,15 +285,19 @@ cluster_res$feature = gsub("SKMVL","SKM-VL",cluster_res$feature)
 cluster_res$tissue =gsub("SKMGN","SKM-GN",cluster_res$tissue)
 cluster_res$tissue = gsub("SKMVL","SKM-VL",cluster_res$tissue)
 
-zmat1 = zmat[z_diff_features,1:8]
-zmat1_cols = t(sapply(strsplit(colnames(zmat1),split=","),function(x)x))
-colnames(zmat1) = paste(zmat1_cols[,1],zmat1_cols[,2],sep="_")
-pls_before = plot_cluster_trajectories(zmat1[,1:8],cluster_res)
+clustering_analysis_matrix1 = clustering_analysis_matrix[z_diff_features,1:8]
+clustering_analysis_matrix1_cols = t(sapply(
+  strsplit(colnames(clustering_analysis_matrix1),split=","),function(x)x))
+colnames(clustering_analysis_matrix1) = 
+  paste(clustering_analysis_matrix1_cols[,1],clustering_analysis_matrix1_cols[,2],sep="_")
+pls_before = plot_cluster_trajectories(clustering_analysis_matrix1[,1:8],cluster_res)
 
-zmat2 = zmat[z_diff_features,9:16]
-zmat2_cols = t(sapply(strsplit(colnames(zmat2),split=","),function(x)x))
-colnames(zmat2) = paste(zmat2_cols[,1],zmat2_cols[,2],sep="_")
-pls_after = plot_cluster_trajectories(zmat2[,1:8],cluster_res)
+clustering_analysis_matrix2 = clustering_analysis_matrix[z_diff_features,9:16]
+clustering_analysis_matrix2_cols = 
+  t(sapply(strsplit(colnames(clustering_analysis_matrix2),split=","),function(x)x))
+colnames(clustering_analysis_matrix2) = 
+  paste(clustering_analysis_matrix2_cols[,1],clustering_analysis_matrix2_cols[,2],sep="_")
+pls_after = plot_cluster_trajectories(clustering_analysis_matrix2[,1:8],cluster_res)
 library(gridExtra)
 pls = list()
 for(i in 1:length(pls_before[[2]])){
@@ -271,7 +305,7 @@ for(i in 1:length(pls_before[[2]])){
 }
 grid.arrange(grobs = pls, ncol=4)
 
-table(cluster_res$cluster,cluster_res$tissue)
+table(cluster_res$cluster,cluster_res$ome)
 features_per_cluster(cluster_res)
 
 # create a clustering solution by tissue for downstream analysis

@@ -120,7 +120,7 @@ selected_cls = c(
 
 # Get mito gene annotation
 
-```{r,eval=T}
+```{r,eval=F}
 # Add mito gene annotations
 mt = fread(paste0(data_dir,
         "external-datasets_gene-sets_Mitocarta_Rat.MitoCarta3.0.genes_only.txt"),
@@ -167,6 +167,8 @@ load(paste0(data_dir,"mito_gene_annotation.RData"))
 
 # Tissue comparison at baseline
 
+## RNA-Seq
+
 ```{r}
 control_vials = rownames(pheno)[pheno$intervention=="control"]
 control_vials = intersect(control_vials,names(pct_mito_reads))
@@ -182,14 +184,39 @@ baseline_pct_mito_female = baseline_pct_mito[baseline_pct_mito$sex == "female",]
 currdf = baseline_pct_mito_male
 tissue_med = tapply(currdf$pct_mito_reads,currdf$tissue,median)
 tissue_med = sort(tissue_med,decreasing = T)
+currdf$color = TISSUE_COLORS[currdf$tissue]
 currdf$tissue = factor(currdf$tissue,levels = names(tissue_med))
-boxplot(pct_mito_reads ~ tissue,data=currdf,las=2,xlab="")
+currdf_male = currdf
+currdf_male$sex = "Male"
 
 currdf = baseline_pct_mito_female
 tissue_med = tapply(currdf$pct_mito_reads,currdf$tissue,median)
 tissue_med = sort(tissue_med,decreasing = T)
+currdf$color = TISSUE_COLORS[currdf$tissue]
 currdf$tissue = factor(currdf$tissue,levels = names(tissue_med))
-boxplot(pct_mito_reads ~ tissue,data=currdf,las=2,xlab="")
+currdf_female = currdf
+currdf_female$sex = "Female"
+
+baseline_pct_mito = rbind(currdf_male,currdf_female)
+
+ggplot(baseline_pct_mito, aes(x=tissue, y=pct_mito_reads,fill=as.character(tissue))) + 
+  geom_boxplot() + facet_wrap(~sex) + xlab("") + 
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) + 
+  scale_fill_manual(
+    labels = sort(as.character(unique(baseline_pct_mito$tissue))),
+    values = TISSUE_COLORS[sort(as.character(unique(baseline_pct_mito$tissue)))])
+
+mt_dna_copy = mt_data[mt_data$Group=="Ctrl",]
+mt_dna_copy$sex = ifelse(mt_dna_copy$sex == "M","Male","Femlae")
+tissue_med = tapply(mt_dna_copy$Level,mt_dna_copy$Tissue,median)
+tissue_med = sort(tissue_med,decreasing = T)
+mt_dna_copy$Tissue = factor(mt_dna_copy$Tissue,levels = names(tissue_med))
+ggplot(mt_dna_copy, aes(x=Tissue, y=Level,fill=as.character(Tissue))) + 
+  geom_boxplot() + facet_wrap(~sex) + xlab("") + 
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) + 
+  scale_fill_manual(
+    labels = sort(as.character(unique(mt_dna_copy$Tissue))),
+    values = TISSUE_COLORS[sort(as.character(unique(mt_dna_copy$Tissue)))])
 
 ```
 
