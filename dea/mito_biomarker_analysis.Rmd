@@ -19,6 +19,8 @@ library(dplyr)
 # Load MoTrPAC data:
 library(MotrpacRatTraining6moData)
 data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/"
+output_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/results/"
+dir.create(output_dir,showWarnings = F)
 ```
 
 # Download and process the additional mitochondria biomarker data
@@ -370,9 +372,40 @@ compute_biomarker_dea_res<-function(x,group){
   return(data.frame(t(v)))
 }
 
+library(multcomp)
+compute_lm_dea<-function(x,g){
+  glevels = sort(unique(g))
+  missing_groups = setdiff(c("1w","2w","4w","8w"),glevels)
+  df = data.frame(x=x,g=factor(g,levels = glevels))
+  m0 = lm(x~1,data=df)
+  m1 = lm(x~1+g,data=df)
+  training_p = anova(m0,m1)$`Pr(>F)`[2]
+  m = lm(x~0+g,data=df)
+  K = diag(length(glevels)-1)
+  K = cbind(K,-1)
+  rownames(K) = glevels[1:nrow(K)]
+  pairwise_res = summary(glht(m, linfct = K))$test
+  names(pairwise_res$coefficients) = paste0("beta_",names(pairwise_res$coefficients))
+  names(pairwise_res$pvalues) = paste0("pvalue_",names(pairwise_res$tstat))
+  names(pairwise_res$tstat) = paste0("tscore_",names(pairwise_res$tstat))
+  if(length(missing_groups)>0){
+    pairwise_res$coefficients[paste0("beta_",missing_groups)]=NA
+    pairwise_res$pvalues[paste0("pvalue_",missing_groups)]=NA
+    pairwise_res$tstat[paste0("tscore_",missing_groups)]=NA
+  }
+  v = c(
+    training_p = training_p,
+    pairwise_res$coefficients,
+    pairwise_res$tstat,
+    pairwise_res$pvalues
+  )
+  return(data.frame(t(v),check.names = F))
+}
+
 ### Stat computations
 mt_biomarker_correlations = c()
-mt_biomarker_dea = list()
+mt_biomarker_dea = c()
+mt_biomarker_dea_lm = c()
 for(tissue_name in names(mt_biomarkers)){
   tissue_df = mt_biomarkers[[tissue_name]]
   for(s in c("female","male")){
@@ -389,6 +422,17 @@ for(tissue_name in names(mt_biomarkers)){
       dea_res$sex = s
       dea_res$biomarker = biomarker
       mt_biomarker_dea = rbind(mt_biomarker_dea,dea_res)
+      dea_res = compute_lm_dea(currx,currg)
+      dea_res$tissue = tissue_name
+      dea_res$sex = s
+      dea_res$biomarker = biomarker
+      if(length(mt_biomarker_dea_lm)==0){
+        mt_biomarker_dea_lm = rbind(mt_biomarker_dea_lm,dea_res)
+      }else{
+        mt_biomarker_dea_lm = rbind(mt_biomarker_dea_lm,
+                      dea_res[,colnames(mt_biomarker_dea_lm)])
+      }
+      
     }
   }
   curr_corrs = get_corrmat(tissue_df[,biomarkers])
@@ -410,9 +454,19 @@ for(tissue_name in names(mt_biomarkers)){
       nrow(mt_biomarker_correlations)] = tissue_name
 }
 
+write.csv(
+  mt_biomarker_dea,
+  file = paste0(output_dir,"mt_biomarker_dea_ttest_pw.csv"),
+  row.names = F,quote = F)
+write.csv(
+  mt_biomarker_dea_lm,
+  file = paste0(output_dir,"mt_biomarker_dea_lm.csv"),
+  row.names = F,quote = F)
+
 save(mt_biomarkers,
      mt_biomarker_correlations,
      mt_biomarker_dea,
+     mt_biomarker_dea_lm,
      file=paste0(data_dir,"mt_biomarkers.RData"))
 
 ```
