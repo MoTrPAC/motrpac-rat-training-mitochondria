@@ -298,6 +298,7 @@ for(k in 1:20){
 within_rss = sapply(k_res,function(x)sum(x$withinss))
 plot(within_rss,type="b",ylab = "Within cluster SS",xlab="Number of clusters",col="blue")
 cluster_obj = k_res[[4]]$cluster
+table(cluster_obj)
 for(cl in unique(cluster_obj)){
   cl_features = names(cluster_obj)[cluster_obj==cl]
   cl_genes = FEATURE_TO_GENE[FEATURE_TO_GENE$feature_ID %in% cl_features,"gene_symbol"]

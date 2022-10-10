@@ -26,6 +26,7 @@ data_dir = "~/Desktop/MoTrPAC/data/pass1b_6m/"
 scratch = data_dir
 knitr::opts_knit$set(root.dir = data_dir)
 setwd(data_dir)
+output_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/results/"
 ```
 
 # Load datasets
@@ -308,6 +309,12 @@ grid.arrange(grobs = pls, ncol=4)
 table(cluster_res$cluster,cluster_res$ome)
 features_per_cluster(cluster_res)
 
+write.csv(
+  cluster_res,
+  file = paste0(output_dir,"clustering_results.csv"),
+  row.names = F,quote = F
+)
+
 # create a clustering solution by tissue for downstream analysis
 selected_sets = list()
 for(cl in unique(cluster_obj)){
@@ -383,7 +390,10 @@ selected_enrichment_results = enrichment_results[enrichment_results$q < 0.1 &
 dim(selected_enrichment_results)
 
 selected_enrichment_results[,c("setname","pathway","q","genes")]
-
+write.table(
+  selected_enrichment_results,
+  file = paste0(output_dir,"selected_mitocarta_enrichment_results.tsv"),
+  row.names = F,quote = F,sep="\t")
 
 ```
 
@@ -413,6 +423,15 @@ selected_pathway_enrichment_results$term_name[
 ] = "Electron transport,ATP synthesis,heat production"
 
 selected_pathway_enrichment_results[,c("query","term_name","q","intersection")]
+pathway_enrichment_columns = c(
+  "query","term_name","p_value","q",
+  "term_size","query_size","intersection_size","precision","recall",
+  "effective_domain_size","source","term_id","intersection"
+)
+write.table(
+  selected_pathway_enrichment_results[,pathway_enrichment_columns],
+  file = paste0(output_dir,"selected_pathway_enrichment_results.tsv"),
+  row.names = F,quote = F,sep="\t")
 ```
 
 

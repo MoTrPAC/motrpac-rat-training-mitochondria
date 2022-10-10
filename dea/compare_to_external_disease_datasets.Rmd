@@ -1,0 +1,425 @@
+---
+title: "Comparison to external datasets"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+library(MotrpacRatTraining6moData)
+library(gprofiler2)
+disease_datasets_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/disease_datasets/"
+data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/"
+```
+
+Some useful functions
+
+```{r}
+simple_enrichment_analysis<-function(s,univ,pathways,min_size=5,setname=""){
+  s = intersect(s,univ)
+  pathways = lapply(pathways,intersect,y=univ)
+  if(length(s)<min_size){
+    print("Warning: input set is smaller than min_size, returning NULL")
+    return(NULL)
+  }
+  v1 = univ %in% s
+  enrichment_results = c()
+  for(pname in names(pathways)){
+    pg = pathways[[pname]]
+    pg = intersect(pg,univ)
+    if(length(pg)<min_size){next}
+    v2 = univ %in% pg
+    fisher_res = fisher.test(table(v1,v2),alternative = "g")
+    overlap_set = intersect(s,pg)
+    res = data.frame(
+        setname = setname,
+        pathway = pname,
+        setsize = length(s),pathwaysize=length(pg),
+        overlap = length(overlap_set),
+        p = fisher_res$p.value,
+        genes = paste(overlap_set,collapse=",")
+    )
+    enrichment_results = rbind(enrichment_results,res)
+  }
+  return(enrichment_results)
+}
+```
+
+Get feature mappings and mitocarta annotation
+
+```{r}
+feature2gene = FEATURE_TO_GENE[!grepl("chr\\d",FEATURE_TO_GENE$feature_ID),]
+feature2gene = feature2gene[!grepl("cluster\\d",feature2gene$feature_ID),]
+feature2gene = feature2gene[!grepl("chrX",feature2gene$feature_ID),]
+feature2gene = merge(feature2gene,RAT_TO_HUMAN_GENE,by.x = "gene_symbol",by.y = "RAT_SYMBOL")
+feature2human_gene = split(feature2gene$HUMAN_ORTHOLOG_SYMBOL,feature2gene$feature_ID)
+feature2human_gene = lapply(feature2human_gene, unique)
+
+mt_pw = fread(paste0(data_dir,"Human.MitoCarta3.0.txt"),header = T,
+        stringsAsFactors = F,data.table = F)
+mt_genes = unique(unlist(strsplit(mt_pw$Genes,split=",\\s+")))
+mitocarta_pathways = strsplit(mt_pw$Genes,split=",\\s+")
+names(mitocarta_pathways) = mt_pw$MitoPathway
+```
+
+# Ohman et al.: proteomics in muscle
+
+```{r}
+ohman_d = fread(file=paste0(disease_datasets_dir,"ohman_2021_iscience.csv"),
+               data.table = F,stringsAsFactors = F)
+ohman_d$is_mito = ohman_d$`Gene name` %in% mt_genes
+ohman_d$t2d_fc = log2(ohman_d$SWATH_T2D/ohman_d$SWATH_NGT)
+table(ohman_d$is_mito)
+
+motrpac_d = PROT_SKMGN_DA
+motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
+motrpac_d$is_mt = motrpac_d$HUMAN_ORTHOLOG_SYMBOL %in% mt_genes
+length(intersect(ohman_d$`Gene name`,motrpac_d$HUMAN_ORTHOLOG_SYMBOL))
+
+# simple set comparisons
+set1 = ohman_d
+set2 = tapply(motrpac_d$selection_fdr,motrpac_d$HUMAN_ORTHOLOG_SYMBOL,FUN = min,na.rm=T)
+set1 = set1[set1$`Gene name` %in% names(set2),]
+set2 = set2[names(set2) %in% set1$`Gene name`]
+set2 = set2[set1$`Gene name`]
+tb = table(set2<0.1,set1$`ANOVA_q-value`<0.1)
+overall_test = fisher.test(tb,alternative = "g")$p.value
+# limit to mitocarta genes
+tb2 = table(set2[set1$is_mito]<0.1,set1$`ANOVA_q-value`[set1$is_mito]<0.1)
+mito_test = fisher.test(tb2,alternative = "g")$p.value
+
+# Compare fold change sign among significant genes
+set1 = ohman_d[ohman_d$`ANOVA_q-value` < 0.1,]
+set2_male = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "male",]
+set2_male = set2_male[set2_male$selection_fdr < 0.1,]
+set2_male = tapply(set2_male$logFC,set2_male$HUMAN_ORTHOLOG_SYMBOL,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+set2_female = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "female",]
+set2_female = set2_female[set2_female$selection_fdr < 0.1,]
+set2_female = tapply(set2_female$logFC,set2_female$HUMAN_ORTHOLOG_SYMBOL,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+plot(set2_male,set2_female);abline(0,1)
+fc1 = set1$t2d_fc
+names(fc1) = set1$`Gene name`
+
+fc2 = set2_male
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, males:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets = list(
+  male_up_disease_down = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0],
+  male_down_disease_up = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+)
+
+fc2 = set2_female
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, females:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets[["female_up_disease_down"]] = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0]
+selected_sets[["female_down_disease_up"]]  = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+
+mito_en_res = lapply(selected_sets, 
+    simple_enrichment_analysis,
+    s = selected_sets[[1]],
+    univ = shared_genes,
+    pathways = mitocarta_pathways,
+    min_size = 3
+)
+for(j in 1:length(mito_en_res)){mito_en_res[[j]]$setname=names(mito_en_res)[j]}
+mito_en_res = do.call(rbind,mito_en_res)
+mito_en_res$q = p.adjust(mito_en_res$p,method="fdr")
+mito_en_res = mito_en_res[order(mito_en_res$p),]
+print(mito_en_res[1:5,])
+
+motrpac_up_t2d_down_GO = gost(
+    selected_sets,
+    organism='hsapiens',
+    significant=FALSE, # return all results
+    correction_method='fdr', # it will not return unadjusted p-values. 
+    sources=c('KEGG','REAC'),
+    custom_bg=shared_genes,
+    domain_scope='custom',
+    evcodes=T)
+motrpac_up_t2d_down_GO$result$q_value = p.adjust(
+  motrpac_up_t2d_down_GO$result$p_value,method="fdr") 
+motrpac_up_t2d_down_GO$result[1:5,]
+
+```
+
+# Chae et al.: proteomics in muscle
+
+```{r}
+chae_d = fread(file=paste0(disease_datasets_dir,"chae_2018_emm_stat.csv"),
+               data.table = F,stringsAsFactors = F)
+chae_d$is_mito = chae_d$Symbol %in% mt_genes
+chae_d$t2d_fc = chae_d$`log2-Fold change (T2DM / NGT)`
+table(chae_d$is_mito)
+
+motrpac_d = PROT_SKMGN_DA
+motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
+motrpac_d$is_mt = motrpac_d$HUMAN_ORTHOLOG_SYMBOL %in% mt_genes
+length(intersect(chae_d$Symbol,motrpac_d$HUMAN_ORTHOLOG_SYMBOL))
+
+# simple set comparisons
+set1 = chae_d
+set2 = tapply(motrpac_d$selection_fdr,motrpac_d$HUMAN_ORTHOLOG_SYMBOL,FUN = min,na.rm=T)
+set1 = set1[set1$Symbol %in% names(set2),]
+set2 = set2[names(set2) %in% set1$Symbol]
+set2 = set2[set1$Symbol]
+
+# Compare fold change sign among significant genes
+set1 = chae_d[chae_d$FDR < 0.1,]
+set2_male = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "male",]
+set2_male = set2_male[set2_male$selection_fdr < 0.1,]
+set2_male = tapply(set2_male$logFC,set2_male$HUMAN_ORTHOLOG_SYMBOL,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+set2_female = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "female",]
+set2_female = set2_female[set2_female$selection_fdr < 0.1,]
+set2_female = tapply(set2_female$logFC,set2_female$HUMAN_ORTHOLOG_SYMBOL,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+plot(set2_male,set2_female);abline(0,1)
+fc1 = set1$t2d_fc
+names(fc1) = set1$Symbol
+
+fc2 = set2_male
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, males:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets = list(
+  male_up_disease_down = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0],
+  male_down_disease_up = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+)
+
+fc2 = set2_female
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, females:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets[["female_up_disease_down"]] = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0]
+selected_sets[["female_down_disease_up"]]  = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+
+mito_en_res = lapply(selected_sets, 
+    simple_enrichment_analysis,
+    s = selected_sets[[1]],
+    univ = shared_genes,
+    pathways = mitocarta_pathways,
+    min_size = 3
+)
+for(j in 1:length(mito_en_res)){mito_en_res[[j]]$setname=names(mito_en_res)[j]}
+mito_en_res = do.call(rbind,mito_en_res)
+mito_en_res$q = p.adjust(mito_en_res$p,method="fdr")
+mito_en_res = mito_en_res[order(mito_en_res$p),]
+print(mito_en_res[1:5,])
+
+motrpac_up_t2d_down_GO = gost(
+    selected_sets,
+    organism='hsapiens',
+    significant=FALSE, # return all results
+    correction_method='fdr', # it will not return unadjusted p-values. 
+    sources=c('KEGG','REAC'),
+    custom_bg=shared_genes,
+    domain_scope='custom',
+    evcodes=T)
+motrpac_up_t2d_down_GO$result$q_value = p.adjust(
+  motrpac_up_t2d_down_GO$result$p_value,method="fdr") 
+motrpac_up_t2d_down_GO$result[1:5,]
+
+```
+
+# Zhang.: proteomics in liver, high fat diet in rat
+
+
+```{r}
+zhang_d = fread(file=paste0(disease_datasets_dir,"zhang_2010_hepatology.csv"),
+               data.table = F,stringsAsFactors = F)
+
+ipi_db = fread(paste0(data_dir,"ipi.genes.RAT.xrefs"),data.table = F,stringsAsFactors = F)
+gene2ipi = strsplit(ipi_db$V10,split=";")
+names(gene2ipi) = ipi_db$V7
+gene_ipi_mat = unique(cbind(
+  rep(names(gene2ipi),sapply(gene2ipi,length)),
+  unname(unlist(gene2ipi))
+))
+gene_ipi_mat = as.data.frame(gene_ipi_mat)
+names(gene_ipi_mat) = c("entrez","ipi")
+gene_ipi_mat = merge(gene_ipi_mat,feature2gene[,c("feature_ID","gene_symbol")],
+                     by.x = "entrez",by.y ="feature_ID")
+zhang_d = merge(zhang_d,gene_ipi_mat,by.x = "Accession Number",by.y="ipi")
+zhang_d$hfd_fc = log2(as.numeric(zhang_d$HFD_vs_control_ratio_24w))
+
+motrpac_d = PROT_LIVER_DA
+motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
+length(intersect(zhang_d$gene_symbol,motrpac_d$gene_symbol))
+
+# Compare fold change sign among significant genes
+set1 = zhang_d
+set2_male = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "male",]
+set2_male = set2_male[set2_male$selection_fdr < 0.1,]
+set2_male = tapply(set2_male$logFC,set2_male$gene_symbol,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+set2_female = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "female",]
+set2_female = set2_female[set2_female$selection_fdr < 0.1,]
+set2_female = tapply(set2_female$logFC,set2_female$gene_symbol,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+plot(set2_male,set2_female);abline(0,1)
+fc1 = set1$hfd_fc
+names(fc1) = set1$gene_symbol
+
+fc2 = set2_male
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, males:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets = list(
+  male_up_disease_down = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0],
+  male_down_disease_up = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+)
+
+fc2 = set2_female
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, females:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets[["female_up_disease_down"]] = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0]
+selected_sets[["female_down_disease_up"]]  = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+
+```
+
+# Yuan et al.: proteomics in liver
+
+As of Oct 2022, the full dataset is not available, as mentioned in the ProteomeXchange website:"ProteomeXchange dataset PXD016405 has been reserved by the PRIDE repository for a dataset that has been deposited, but is not yet publicly".
+
+```{r}
+yuan_d = fread(file=paste0(disease_datasets_dir,"yuan_2020_jproteomics.csv"),
+               data.table = F,stringsAsFactors = F)
+yuan_d$is_mito = yuan_d$`GENE name` %in% mt_genes
+yuan_d$nafld_fc = log2(yuan_d$`Fold changed (NAFLD/MHO)`)
+
+motrpac_d = PROT_LIVER_DA
+motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
+motrpac_d$is_mt = motrpac_d$HUMAN_ORTHOLOG_SYMBOL %in% mt_genes
+length(intersect(yuan_d$`GENE name`,motrpac_d$HUMAN_ORTHOLOG_SYMBOL))
+
+# Compare fold change sign among significant genes
+set1 = yuan_d
+set2_male = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "male",]
+set2_male = set2_male[set2_male$selection_fdr < 0.1,]
+set2_male = tapply(set2_male$logFC,set2_male$HUMAN_ORTHOLOG_SYMBOL,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+set2_female = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "female",]
+set2_female = set2_female[set2_female$selection_fdr < 0.1,]
+set2_female = tapply(set2_female$logFC,set2_female$HUMAN_ORTHOLOG_SYMBOL,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+plot(set2_male,set2_female);abline(0,1)
+fc1 = set1$nafld_fc
+names(fc1) = set1$`GENE name`
+
+fc2 = set2_male
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, males:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets = list(
+  male_up_disease_down = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0],
+  male_down_disease_up = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+)
+
+fc2 = set2_female
+fc2 = fc2[!is.na(fc2)]
+shared_genes = intersect(names(fc1),names(fc2))
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, females:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets[["female_up_disease_down"]] = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0]
+selected_sets[["female_down_disease_up"]]  = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+
+mito_en_res = lapply(selected_sets, 
+    simple_enrichment_analysis,
+    s = selected_sets[[1]],
+    univ = shared_genes,
+    pathways = mitocarta_pathways,
+    min_size = 3
+)
+for(j in 1:length(mito_en_res)){mito_en_res[[j]]$setname=names(mito_en_res)[j]}
+mito_en_res = do.call(rbind,mito_en_res)
+mito_en_res$q = p.adjust(mito_en_res$p,method="fdr")
+mito_en_res = mito_en_res[order(mito_en_res$p),]
+print(mito_en_res[1:5,])
+
+
+motrpac_up_t2d_down_GO = gost(
+    selected_sets,
+    organism='hsapiens',
+    significant=FALSE, # return all results
+    correction_method='fdr', # it will not return unadjusted p-values. 
+    sources=c('KEGG','REAC'),
+    custom_bg=shared_genes,
+    domain_scope='custom',
+    evcodes=T)
+motrpac_up_t2d_down_GO$result$q_value = p.adjust(
+  motrpac_up_t2d_down_GO$result$p_value,method="fdr") 
+motrpac_up_t2d_down_GO$result[1:5,]
+
+```
