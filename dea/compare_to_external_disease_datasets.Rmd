@@ -88,6 +88,8 @@ set2 = set2[names(set2) %in% set1$`Gene name`]
 set2 = set2[set1$`Gene name`]
 tb = table(set2<0.1,set1$`ANOVA_q-value`<0.1)
 overall_test = fisher.test(tb,alternative = "g")$p.value
+print("Overall test for overlap of selected genes in the studies:")
+print(overall_test)
 # limit to mitocarta genes
 tb2 = table(set2[set1$is_mito]<0.1,set1$`ANOVA_q-value`[set1$is_mito]<0.1)
 mito_test = fisher.test(tb2,alternative = "g")$p.value
@@ -260,6 +262,109 @@ motrpac_up_t2d_down_GO$result$q_value = p.adjust(
 motrpac_up_t2d_down_GO$result[1:5,]
 
 ```
+
+# Stocks: proteomics in liver, high fat diet in rat
+
+
+```{r}
+stocks_d = fread(file=paste0(disease_datasets_dir,"stocks_2022_molcellproteomics_stat.csv"),
+               data.table = F,stringsAsFactors = F)
+
+l = strsplit(stocks_d$`Gene names`,split=";")
+names(l) = stocks_d$`Protein IDs`
+stocks_gene_mat = unique(cbind(
+  rep(names(l),sapply(l,length)),
+  unname(unlist(l))
+))
+stocks_gene_mat = as.data.frame(stocks_gene_mat)
+names(stocks_gene_mat) = c("id","symbol")
+stocks_d = merge(stocks_d,stocks_gene_mat,by.x = "Protein IDs",by.y="id")
+stocks_d$ob_fc = stocks_d$`Student's T-test Test statistic ob_lean`
+stocks_d$q = stocks_d$`Student's T-test q-value ob_lean`
+
+motrpac_d = PROT_LIVER_DA
+motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
+length(intersect(stocks_d$symbol,motrpac_d$gene_symbol))
+
+# Compare fold change sign among significant genes
+set1 = stocks_d
+set2_male = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "male",]
+set2_male = set2_male[set2_male$selection_fdr < 0.1,]
+set2_male = tapply(set2_male$logFC,set2_male$gene_symbol,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+set2_female = motrpac_d[motrpac_d$comparison_group == "8w" & motrpac_d$sex == "female",]
+set2_female = set2_female[set2_female$selection_fdr < 0.1,]
+set2_female = tapply(set2_female$logFC,set2_female$gene_symbol,
+    FUN = function(x)x[abs(x)==max(abs(x))][1])
+plot(set2_male,set2_female);abline(0,1)
+fc1 = set1$ob_fc
+names(fc1) = set1$symbol
+
+all_shared_genes = intersect(stocks_d$symbol,unique(motrpac_d$gene_symbol))
+selection1 = all_shared_genes %in% stocks_d[!is.na(stocks_d$q) & stocks_d$q < 0.1,"symbol"]
+selection2 = all_shared_genes %in% motrpac_d[!is.na(motrpac_d$selection_fdr) & 
+                                           motrpac_d$selection_fdr<0.1,"gene_symbol"]
+tb = table(selection1,selection2)
+overall_test = fisher.test(tb,alternative = "g")$p.value
+print("Overall test for overlap of selected genes in the studies:")
+print(overall_test)
+
+fc2 = set2_male
+fc2 = fc2[!is.na(fc2)]
+shared_genes = all_shared_genes[selection1 & selection2]
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, males:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets = list(
+  male_up_disease_down = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0],
+  male_down_disease_up = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+)
+
+fc2 = set2_female
+fc2 = fc2[!is.na(fc2)]
+shared_genes = all_shared_genes[selection1 & selection2]
+sign_table = table(
+  fc1[shared_genes] > 0,fc2[shared_genes] > 0
+)
+print("Significance of lack of overlap in FC sign, females:")
+print(fisher.test(sign_table,alt="l"))
+plot(fc1[shared_genes],fc2[shared_genes])
+
+selected_sets[["female_up_disease_down"]] = shared_genes[
+  fc1[shared_genes] < 0 & fc2[shared_genes] > 0]
+selected_sets[["female_down_disease_up"]]  = shared_genes[
+  fc1[shared_genes] > 0 & fc2[shared_genes] < 0]
+
+selected_sets[["ex_up_disease_down"]] = union(
+  selected_sets$male_up_disease_down,
+  selected_sets$female_up_disease_down
+)
+selected_sets[["ex_down_disease_up"]] = union(
+  selected_sets$male_down_disease_up,
+  selected_sets$female_down_disease_up
+)
+
+# Enrichment analysis using GO
+res = gost(selected_sets[5:6],
+    organism='rnorvegicus',
+    significant=FALSE, # return all results
+    correction_method='fdr', # it will not return unadjusted p-values. 
+    sources=c('KEGG','REAC'),
+    custom_bg = all_shared_genes,
+    domain_scope='custom',
+    evcodes=T)
+res$result$q_value = p.adjust(res$result$p_value,method="fdr")
+res$result = res$result[order(res$result$q_value),]
+res$result[1:5,]
+
+```
+
 
 # Zhang.: proteomics in liver, high fat diet in rat
 
