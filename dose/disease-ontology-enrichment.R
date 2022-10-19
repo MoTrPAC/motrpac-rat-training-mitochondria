@@ -1,5 +1,5 @@
 #!/bin/R
-# David Amar, Nicole Gay
+# David Amar
 
 library(data.table)
 library(dplyr)
@@ -10,6 +10,8 @@ repo_local_dir = "~/Desktop/repos/"
 source(paste0(repo_local_dir,"motrpac-mawg/pass1b-06/integrative/clustering/cluster_viz_fx.R"))
 library(DO.db)
 library(DOSE)
+library(MotrpacRatTraining6moData)
+data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/"
 
 #####################################################################
 # DO preprocessing
@@ -53,18 +55,6 @@ for(j in 1:max_slim_dist){
     classlist[[d]] = Term(doterms[[d]])
   }
 }
-
-#BiocManager::install("org.Hs.eg.db")
-library(org.Hs.eg.db)
-symb2eg = as.list(org.Hs.egSYMBOL2EG)
-human_feature_to_gene = data.frame(
-  feature_ID = names(unlist(symb2eg)),
-  entrez_gene = as.character(unlist(symb2eg)),
-  stringsAsFactors = F
-)
-human_feature_to_gene$gene_symbol = human_feature_to_gene$feature_ID
-human_feature_to_gene$ensembl_gene = NA
-human_feature_to_gene$kegg_id = NA
 
 # map genes to DO terms:
 data(DO2ALLEG)
@@ -115,7 +105,7 @@ for(tissue in names(gtex2motrpac_tissue)){
   gtex_set = unique(unname(unlist(ens2entrez[gtex_set])))
   for(dterm in names(do2gene)){
     curr_p = simple_hyper_test(do2gene[[dterm]],gtex_set,gtex_bg)
-    if(curr_p < 0.001){
+    if(curr_p < 0.01){
       tissue2do_terms[[motrpac_tissue]] = c(tissue2do_terms[[motrpac_tissue]],dterm)
     }
   }
@@ -125,162 +115,181 @@ sapply(tissue2do_terms,length)
 
 #####################################################################
 # Add MoTrPAC data
-scratch = "~/Desktop/MoTrPAC/data/pass1b_6m/"
-data = load_graph_vis_data('gsutil',scratch)
-# load(paste0(scratch,"graphical_analysis_results_20220126.RData"))
-# load(paste0(scratch,"cluster-viz-inputs_20211116.RData"))
-rdg_mapping = fread(
-  sprintf("%s/gencode.v39.RGD.20201001.human.rat.gene.ids.txt",scratch),
-  stringsAsFactors=F,data.table=F
-)
-
-feature_to_gene = as.data.frame(data$feature_to_gene)
-rat_feature_to_gene = split(feature_to_gene$gene_symbol,feature_to_gene$feature_ID)
-rat_symb_to_human_entrez = split(rdg_mapping$HUMAN_ORTHOLOG_NCBI_GENE_ID,
-                                 rdg_mapping$RAT_SYMBOL)
+feature2gene = FEATURE_TO_GENE[!grepl("chr\\d",FEATURE_TO_GENE$feature_ID),]
+feature2gene = feature2gene[!grepl("cluster\\d",feature2gene$feature_ID),]
+feature2gene = feature2gene[!grepl("chrX",feature2gene$feature_ID),]
+feature2gene = merge(feature2gene,RAT_TO_HUMAN_GENE,by.x = "gene_symbol",by.y = "RAT_SYMBOL")
+feature2human_gene = split(feature2gene$HUMAN_ORTHOLOG_SYMBOL,feature2gene$feature_ID)
+feature2human_gene = lapply(feature2human_gene, unique)
 
 # Add mito annotations
-load(paste0(scratch,"mito_gene_annotation.RData"))
-mt_symbols = mt$gene_symbol
-mt_entrez_human = unlist(rat_symb_to_human_entrez[mt_symbols])
+load(paste0(data_dir,"mito_gene_annotation.RData"))
+# Human MitoCarta
+mt_pw = fread(paste0(data_dir,"Human.MitoCarta3.0.txt"),header = T,
+              stringsAsFactors = F,data.table = F)
+mt_genes = unique(unlist(strsplit(mt_pw$Genes,split=",\\s+")))
+mitocarta_pathways = strsplit(mt_pw$Genes,split=",\\s+")
+names(mitocarta_pathways) = mt_pw$MitoPathway
+symb2enter = as.list(org.Hs.egALIAS2EG)
+mt_entrez_gene = unique(unlist(symb2enter[mt_genes]))
+graph_nodes = merge(GRAPH_STATES,feature2gene,by.x="feature_ID",by.y="feature_ID")
+graph_nodes = graph_nodes[!is.na(graph_nodes$state_8w) & graph_nodes$state_8w!="F0_M0",]
+graph_nodes = graph_nodes[graph_nodes$tissue %in% gtex2motrpac_tissue,]
 
-min_set_size = 20
-nodes_df = c()
-nodes_for_analysis = names(data$node_sets)[grepl("8w",names(data$node_sets))]
-nodes_for_analysis = setdiff(nodes_for_analysis,"8w_F0_M0")
-for(node in nodes_for_analysis){
-  feature_set = data$node_sets[[node]]
-  arrs = strsplit(feature_set,split=";")
-  omes = sapply(arrs,function(x)x[1])
-  tissues = sapply(arrs,function(x)x[2])
-  f_ids = sapply(arrs,function(x)x[3])
-  for(ome in unique(omes)){
-    for(tissue in unique(tissues)){
-      curr_analysis_set = f_ids[tissues==tissue & omes==ome]
-      if(length(curr_analysis_set) < min_set_size){next}
-      table(curr_analysis_set %in% feature_to_gene$feature_ID)
-      table(curr_analysis_set %in% names(rat_feature_to_gene))
-      curr_rat_genes = unlist(rat_feature_to_gene[curr_analysis_set])
-      curr_rat_genes = unique(na.omit(curr_rat_genes))
-      curr_human_genes = unlist(rat_symb_to_human_entrez[curr_rat_genes])
-      curr_human_genes = unique(na.omit(curr_human_genes))
-      if(length(curr_human_genes) < min_set_size){next}
-      set_name = paste(node,ome,tissue,sep=";")
-      print(set_name)
-      df = data.frame("set_name" = set_name,"genes"=curr_human_genes)
-      nodes_df = rbind(nodes_df,df)
-    }
-  }
-}
+# # OPTIONAL: merge female and male data
+# # first, remove sex discordant clusters
+# sex_discordant_sets = grepl("F-1_M1",nodes_df$set_name) | grepl("F1_M-1",nodes_df$set_name)
+# nodes_df = nodes_df[!sex_discordant_sets,]
+# newsets = strsplit(nodes_df$set_name,split=";")
+# da_direction = sapply(newsets,function(x)x[1])
+# da_tissue = sapply(newsets,function(x)x[2])
+# da_direction[grepl("M1",da_direction)] = "Up"
+# da_direction[grepl("F1",da_direction)] = "Up"
+# da_direction[grepl("M-1",da_direction)] = "Down"
+# da_direction[grepl("F-1",da_direction)] = "Down"
+# nodes_df$sex_direction_set = nodes_df$set_name
+# nodes_df$set_name = paste(da_direction,da_tissue,sep=";")
+# table(nodes_df$set_name)
 
-# OPTIONAL: remove the ome component
-newsets = strsplit(nodes_df$set_name,split=";")
-newsets = sapply(newsets,function(x)paste(x[1],x[3],sep=";"))
-nodes_df$set_name = newsets
-dim(nodes_df)
-nodes_df = unique(nodes_df)
-dim(nodes_df)
-
-# OPTIONAL: merge female and male data
-# first, remove sex discordant clusters
-sex_discordant_sets = grepl("F-1_M1",nodes_df$set_name) | grepl("F1_M-1",nodes_df$set_name)
-nodes_df = nodes_df[!sex_discordant_sets,]
-newsets = strsplit(nodes_df$set_name,split=";")
-da_direction = sapply(newsets,function(x)x[1])
-da_tissue = sapply(newsets,function(x)x[2])
-da_direction[grepl("M1",da_direction)] = "Up"
-da_direction[grepl("F1",da_direction)] = "Up"
-da_direction[grepl("M-1",da_direction)] = "Down"
-da_direction[grepl("F-1",da_direction)] = "Down"
-nodes_df$sex_direction_set = nodes_df$set_name
-nodes_df$set_name = paste(da_direction,da_tissue,sep=";")
-table(nodes_df$set_name)
 
 # Go over each set and run the enrichment analysis with the proper
 # background set
-all_sets = unique(nodes_df$set_name)
+min_set_size = 10
 do_enrichment_analysis_results = c()
-use_expression_bg=T
-for(sname in all_sets){
-  arr = strsplit(sname,split=";")[[1]]
-  
-  curr_tissue = arr[length(arr)]
-  if(! curr_tissue %in% names(tissue2do_terms)){next}
-  curr_do_terms = tissue2do_terms[[curr_tissue]]
-  curr_genes = nodes_df[nodes_df$set_name==sname,2]
-  
-  curr_bg = data$universes_list$gene_symbol[[arr[2]]][[arr[3]]]
-  curr_gene_bg = unlist(rat_symb_to_human_entrez[curr_bg])
-  curr_gene_bg = unique(na.omit(curr_gene_bg))
-  
-  expression_bg = data$universes_list$gene_symbol$TRNSCRPT[[curr_tissue]]
-  curr_expression_bg_gene_bg = unlist(rat_symb_to_human_entrez[expression_bg])
-  curr_expression_bg_gene_bg = unique(na.omit(curr_expression_bg_gene_bg))
-  
-  # if set name does not have the "ome" component:
-  if(use_expression_bg){
-    curr_gene_bg = curr_expression_bg_gene_bg
+for(sname in unique(graph_nodes$state_8w)){
+  curr_df = graph_nodes[graph_nodes$state_8w==sname,]
+  for(tissue in unique(curr_df$tissue)){
+    curr_do_terms = tissue2do_terms[[tissue]]
+    cross_ome_genes = c()
+    cross_ome_bg = c()
+    for(ome in unique(curr_df$ome)){
+      curr_genes = curr_df[curr_df$tissue==tissue & curr_df$ome==ome,
+                           "HUMAN_ORTHOLOG_NCBI_GENE_ID"]
+      if(length(curr_genes)<min_set_size){next}
+      print(paste(sname,tissue,ome))
+      curr_gene_bg = GENE_UNIVERSES$entrez_gene[[ome]][[tissue]]
+      curr_gene_bg = unique(feature2gene[
+        feature2gene$entrez_gene %in% curr_gene_bg,"HUMAN_ORTHOLOG_NCBI_GENE_ID"])
+      do_term_bg_overlap = sapply(do2gene,
+          function(x,y)length(intersect(x,y))/length(x),
+          y = curr_gene_bg)
+      
+      curr_DO_res = enrichDO(
+        curr_genes,
+        ont = "DO",
+        pvalueCutoff = 1,
+        pAdjustMethod = "none",
+        universe = curr_gene_bg,
+        minGSSize = 10,
+        maxGSSize = 500,
+        qvalueCutoff = 1,
+        readable = T)
+      if(is.null(curr_DO_res)){next}
+      curr_DO_res = curr_DO_res@result
+      curr_DO_res = curr_DO_res[curr_DO_res$ID %in% curr_do_terms,]
+      if(length(curr_DO_res)==0 || nrow(curr_DO_res)==0){next}
+      curr_DO_res$do_term_bg_overlap = do_term_bg_overlap[curr_DO_res$ID]
+      curr_DO_res$set_mito_overlap_p = mito_overlap_p
+      curr_DO_res$set_mito_overlap = mito_overlap
+      curr_DO_res$setname = sname
+      curr_DO_res$tissue = tissue
+      curr_DO_res$ome = ome
+      
+      # Add enrichment of mito genes in the overlap
+      curr_DO_res$mito_overlap_p = 1
+      for(ii in 1:nrow(curr_DO_res)){
+        curr_overlap_genes = unlist(symb2eg[strsplit(curr_DO_res$geneID[ii],split="\\/")[[1]]])
+        curr_overlap_genes = unique(unname(curr_overlap_genes))
+        mito_tb = table(
+          curr_gene_bg %in% curr_overlap_genes,
+          curr_gene_bg %in% mt_entrez_gene
+        )
+        if(length(mito_tb)>2){
+          curr_DO_res$mito_overlap_p[ii] = fisher.test(mito_tb,alt="g")$p.value
+        }
+      }
+      
+      do_enrichment_analysis_results = rbind(do_enrichment_analysis_results,curr_DO_res)
+      cross_ome_genes = union(cross_ome_genes,curr_genes)
+      cross_ome_bg = union(cross_ome_bg,curr_gene_bg)
+    }
+    
+    curr_DO_res = enrichDO(
+      cross_ome_genes,
+      ont = "DO",
+      pvalueCutoff = 1,
+      pAdjustMethod = "none",
+      universe = cross_ome_bg,
+      minGSSize = 10,
+      maxGSSize = 500,
+      qvalueCutoff = 1,
+      readable = T
+    )
+    if(is.null(curr_DO_res)){next}
+    curr_DO_res = curr_DO_res@result
+    curr_DO_res = curr_DO_res[curr_DO_res$ID %in% curr_do_terms,]
+    if(length(curr_DO_res)==0 || nrow(curr_DO_res)==0){next}
+    curr_DO_res$do_term_bg_overlap = do_term_bg_overlap[curr_DO_res$ID]
+    curr_DO_res$set_mito_overlap_p = mito_overlap_p
+    curr_DO_res$set_mito_overlap = mito_overlap
+    curr_DO_res$setname = sname
+    curr_DO_res$tissue = tissue
+    curr_DO_res$ome = "cross_ome"
+    print(paste(c(sname,curr_DO_res[1,c(2,5)]),collapse="      "))
+    
+    # Add mito overlap
+    curr_DO_res$mito_overlap_p = 1
+    for(ii in 1:nrow(curr_DO_res)){
+      curr_overlap_genes = unlist(symb2eg[strsplit(curr_DO_res$geneID[ii],split="\\/")[[1]]])
+      curr_overlap_genes = unique(unname(curr_overlap_genes))
+      mito_tb = table(
+        cross_ome_bg %in% curr_overlap_genes,
+        cross_ome_bg %in% mt_entrez_gene
+      )
+      if(length(mito_tb)>2){
+        curr_DO_res$mito_overlap_p[ii] = fisher.test(mito_tb,alt="g")$p.value
+      }
+    }
+    do_enrichment_analysis_results = rbind(do_enrichment_analysis_results,curr_DO_res)
   }
-  
-  do_term_bg_overlap = sapply(do2gene,
-    function(x,y)length(intersect(x,y))/length(x),
-    y = curr_expression_bg_gene_bg
-  )
-  
-  # Limit the data to mito genes and proceed
-  curr_genes = intersect(mt_entrez_human,curr_genes)
-  curr_gene_bg = intersect(mt_entrez_human,curr_gene_bg)
-  if(length(curr_genes)<3){next}
-  
-  curr_DO_res = enrichDO(
-    curr_genes,
-    ont = "DO",
-    pvalueCutoff = 1,
-    pAdjustMethod = "none",
-    universe = curr_gene_bg,
-    minGSSize = 10,
-    maxGSSize = 500,
-    qvalueCutoff = 1,
-    readable = T
-  )
-  if(is.null(curr_DO_res)){next}
-  curr_DO_res = curr_DO_res@result
-  curr_DO_res = curr_DO_res[curr_DO_res$ID %in% curr_do_terms,]
-  if(length(curr_DO_res)==0 || nrow(curr_DO_res)==0){next}
-  curr_DO_res$do_term_bg_overlap = do_term_bg_overlap[curr_DO_res$ID]
-  curr_DO_res$setname = sname
-  print(paste(c(sname,curr_DO_res[1,c(2,5)]),collapse="      "))
-  do_enrichment_analysis_results = rbind(do_enrichment_analysis_results,curr_DO_res)
 }
 
-is_up = grepl("Up",do_enrichment_analysis_results$setname)
-par(mfrow=c(2,1))
-hist(do_enrichment_analysis_results$pvalue[is_up],
-     main = "Up-regulated sets",col="red")
-hist(do_enrichment_analysis_results$pvalue[!is_up],
-     main = "Down-regulated sets",col="blue")
-qqplot(
-  -log10(do_enrichment_analysis_results$pvalue[is_up]),
-  -log10(do_enrichment_analysis_results$pvalue[!is_up]),
-  xlab = "Up-regulated sets (-log10 p-values)",
-  ylab = "Down-regulated sets (-log10 p-values)",
-  pch=20,col="gray",cex=1.2
-);abline(0,1,col="red",lty=2)
-# arrs = strsplit(do_enrichment_analysis_results$setname,split=";")
-# do_enrichment_analysis_results$tp = sapply(arrs,function(x)x[1])
-# do_enrichment_analysis_results$ome = sapply(arrs,function(x)x[2])
-# do_enrichment_analysis_results$tissue = sapply(arrs,function(x)x[3])
-# do_enrichment_analysis_results$week = sapply(
-#   do_enrichment_analysis_results$tp,function(x)strsplit(x,split="_")[[1]][1])
-# do_enrichment_analysis_results = do_enrichment_analysis_results[
-#   do_enrichment_analysis_results$week != "0w",]
+# is_up = grepl("Up",do_enrichment_analysis_results$setname)
+# par(mfrow=c(2,1))
+# hist(do_enrichment_analysis_results$pvalue[is_up],
+#      main = "Up-regulated sets",col="red")
+# hist(do_enrichment_analysis_results$pvalue[!is_up],
+#      main = "Down-regulated sets",col="blue")
+# qqplot(
+#   -log10(do_enrichment_analysis_results$pvalue[is_up]),
+#   -log10(do_enrichment_analysis_results$pvalue[!is_up]),
+#   xlab = "Up-regulated sets (-log10 p-values)",
+#   ylab = "Down-regulated sets (-log10 p-values)",
+#   pch=20,col="gray",cex=1.2
+# );abline(0,1,col="red",lty=2)
 
-# Use IHW (requires many p-values)
-# o = ihw(do_enrichment_analysis_results$pvalue,
-#         as.factor(do_enrichment_analysis_results$tissue),alpha=0.05)
-# do_enrichment_analysis_results$qvalue = adj_pvalues(o)
+# Adjust p-values
 do_enrichment_analysis_results$qvalue = p.adjust(
    do_enrichment_analysis_results$pvalue,method="BH")
+do_enrichment_analysis_results = do_enrichment_analysis_results[
+  order(do_enrichment_analysis_results$pvalue),]
+
+selected_resuls = do_enrichment_analysis_results[
+  do_enrichment_analysis_results$qvalue < 0.05,
+]
+selected_resuls = selected_resuls[
+  order(selected_resuls$set_mito_overlap_p),
+]
+selected_resuls = selected_resuls[
+  selected_resuls$set_mito_overlap_p < 0.01,
+]
+dim(selected_resuls)
+selected_resuls[,c("Description","tissue","ome","setname","qvalue","set_mito_overlap_p")]
+write.table(
+  selected_resuls,
+  file=paste(data_dir,"supp_fig_disease_enrichment.tsv"),
+  sep="\t",row.names = F,col.names = T,quote=F
+)
 
 # Add columns to fit what enrichment_network_vis needs
 do_enrichment_analysis_results$adj_p_value = do_enrichment_analysis_results$qvalue
@@ -300,8 +309,8 @@ supp_table_columns = c("setname","term_id","term_name","query_size","term_size",
                        "qvalue","intersection")
 do_supp_table = do_enrichment_analysis_results[,supp_table_columns]
 do_supp_table = do_supp_table[order(do_supp_table$qvalue),]
-write.table(do_supp_table,file="supp_table_disease_ontology_enrichment.txt",
-            row.names = F,col.names = T,quote = F,sep="\t")
+# write.table(do_supp_table,file="supp_table_disease_ontology_enrichment.txt",
+#             row.names = F,col.names = T,quote = F,sep="\t")
 
 # select the significant and meaningful results
 significant_results = do_enrichment_analysis_results[
@@ -432,163 +441,3 @@ write.table(edges,file="DO_res_edges.txt",sep="\t",quote = F,row.names = F,col.n
 write.table(nodes,file="DO_res_nodes.txt",sep="\t",quote = F,row.names = F,col.names = T)
 
 
-# greedy_top_results<-function(m,jacc_thr = 0.5){
-#   if(length(m)==0 || is.null(m) || is.null(dim(m))){return(NA)}
-#   m = m[order(m$computed_p_value),]
-#   selected_inds = c(1)
-#   sets = strsplit(m$intersection,split=",")
-#   for(j in 2:nrow(m)){
-#     add_j = T
-#     for(j2 in selected_inds){
-#       curr_j = length(intersect(sets[[j]],sets[[j2]]))/length(union(sets[[j]],sets[[j2]]))
-#       if(curr_j > jacc_thr){
-#         add_j = F
-#         break
-#       }
-#     }
-#     if(add_j){selected_inds = c(selected_inds,j)}
-#   }
-#   return(m[selected_inds,])
-# }
-# 
-# greedy_reduced_sig_results = c()
-# for(sname in unique(significant_results$setname)){
-#   m = significant_results[significant_results$setname==sname,]
-#   if(nrow(m)>2){
-#     m = greedy_top_results(m,jacc_thr = 0.2)
-#   }
-#   greedy_reduced_sig_results = rbind(greedy_reduced_sig_results,m)
-# }
-
-# #####################################################################################
-# # Plot enrichments by state, overall tissues
-# df = data.frame(counts = sort(table(significant_results$tp)),stringsAsFactors = F)
-# names(df) = c("sname","count")
-# df$sname = as.character(df$sname)
-# df$state =  sapply(df$sname,function(x)strsplit(x,split="w_")[[1]][2])
-# df$x = 1:nrow(df)
-# df$week = sapply(df$sname,function(x)strsplit(x,split="_")[[1]][1])
-# p<-ggplot(data=df, aes(x=state, y=count,fill=week)) +
-#   geom_bar(stat="identity",position="dodge") +
-#   #geom_text(aes(label=sname), vjust=1.6, color="white", size=3.5)+
-#   theme_minimal()
-# p
-# #####################################################################################
-# # show a summary matrix per tissue
-# tissue = "SMLINT"
-# tp = "8w_F-1_M-1"
-# 
-# # network of enrichment results 
-# curr_df = significant_results[
-#   significant_results$tissue == tissue &
-#     significant_results$tp == tp,]
-# xx = enrichment_network_vis(curr_df,human_feature_to_gene,classlist,
-#                             include_metab = F)
-# 
-# curr_df = significant_results[significant_results$tissue == tissue,]
-# curr_dos = unique(curr_df$Description)
-# curr_omes = unique(curr_df$ome)
-# curr_tps = unique(curr_df$tp)
-# 
-# q_df = c()
-# for(ome in curr_omes){
-#   for(tp in curr_tps){
-#     curr_ps = rep(NA,length(curr_dos))
-#     names(curr_ps) = curr_dos
-#     curr_df_subset = curr_df[curr_df$tp==tp & curr_df$ome==ome,]
-#     curr_ps[curr_df_subset$Description] = curr_df_subset$qvalue
-#     df = data.frame("q"=curr_ps)
-#     if(length(q_df)==0){
-#       q_df = df
-#     }
-#     else{
-#       q_df = cbind(q_df,df)
-#     }
-#     colnames(q_df)[ncol(q_df)] = paste(ome,tp,sep=",")
-#   }
-# }
-# 
-# to_rem = rowSums(q_df<0.05,na.rm=T) == 0
-# q_df = q_df[!to_rem,]
-# to_rem2 = colSums(q_df<0.05,na.rm=T) == 0
-# q_df = q_df[,!to_rem2]
-# dim(q_df)
-# q_df[is.na(q_df)] = 1
-# library(gplots)
-# heatmap.2(t(-log10(as.matrix(q_df))),scale="none",trace = "none",mar=c(18,20),
-#           key.title = "-log10(q-value)",key.xlab = "",col=bluered(100),
-#           main=tissue,cexRow = 1.5,cexCol = 0.5)
-# 
-# #####################################################################################
-# tp = "8w_F-1_M-1"
-# curr_df = significant_results[significant_results$tp == tp,]
-# curr_dos = unique(curr_df$Description)
-# curr_omes = unique(curr_df$ome)
-# curr_tissues = unique(curr_df$tissue)
-# q_df = c()
-# for(ome in curr_omes){
-#   for(tissue in curr_tissues){
-#     curr_ps = rep(NA,length(curr_dos))
-#     names(curr_ps) = curr_dos
-#     curr_df_subset = curr_df[curr_df$tissue==tissue & curr_df$ome==ome,]
-#     curr_ps[curr_df_subset$Description] = curr_df_subset$qvalue
-#     df = data.frame("q"=curr_ps)
-#     if(length(q_df)==0){
-#       q_df = df
-#     }
-#     else{
-#       q_df = cbind(q_df,df)
-#     }
-#     colnames(q_df)[ncol(q_df)] = paste(tissue,ome,sep=",")
-#   }
-# }
-# 
-# to_rem = rowSums(q_df<0.05,na.rm=T) == 0
-# q_df = q_df[!to_rem,]
-# to_rem2 = colSums(q_df<0.05,na.rm=T) == 0
-# q_df = q_df[,!to_rem2]
-# dim(q_df)
-# q_df[is.na(q_df)] = 1
-# library(gplots)
-# heatmap.2(t(-log10(as.matrix(q_df))),scale="none",trace = "none",mar=c(15,10),
-#           key.title = "-log10(q-value)",key.xlab = "",col=bluered(100),
-#           main=tp,cexRow = 0.6)
-
-
-# ####################################################################
-# # Play around with visualization of enrichment results 
-# library(ggplot2)
-# library(data.table)
-# 
-# head(significant_results)
-# sigresults_dt = data.table(significant_results)
-# sigresults_dt[,parent := classlist[term_id]] 
-# sigresults_dt[,single_parent := sapply(parent, function(x) x[1])] # just take the first parent category in the list for now
-# table(sigresults_dt[,single_parent])
-# table(sigresults_dt[,tp])
-# 
-# # what if we just plot everything in the "8w_F-1_M-1"?
-# ig = enrichment_network_vis(sigresults_dt[tp=="8w_F-1_M-1"],
-#                       human_feature_to_gene,
-#                       classlist,
-#                       corr_thresh = 0.375,
-#                       adj_pval_cutoff = 0.05,
-#                       title = "8w_F-1_M-1",
-#                       add_group_label_nodes = FALSE,
-#                       intersection_id_type='gene_symbol',
-#                       return_graph_for_cytoscape = TRUE)
-# 
-# # export to look at it in Cytoscape
-# save(ig, file="~/DO_8w_F-1_M-1_igraph.RData")
-# 
-# # what if we plot all sex-consistent enrichments?
-# enrichment_network_vis(sigresults_dt[tp %in% c("8w_F1_M1","8w_F-1_M-1")],
-#                        human_feature_to_gene,
-#                        classlist,
-#                        corr_thresh = 0.375,
-#                        adj_pval_cutoff = 0.05,
-#                        title = "Sex-consistent",
-#                        add_group_label_nodes = FALSE,
-#                        intersection_id_type='gene_symbol')
-# 
-# ####################################################################
