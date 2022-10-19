@@ -57,7 +57,7 @@ add_overlap_tests_and_enrichments<-function(
   dataset_gene_col = "symbol",
   datasetname,tissue,
   min_size_for_sign_analysis = 10,
-  fdr_motrpac=0.1,fdr_external=0.1,
+  fdr_motrpac=0.2,fdr_external=0.2,
   enrichment_species = "hsapiens"){
   
   # Compare fold change sign among significant genes
@@ -116,10 +116,16 @@ add_overlap_tests_and_enrichments<-function(
   sign_table = table(
     fc1[shared_genes] > 0,fc2[shared_genes] > 0
   )
-  dataset_overlap_stats = rbind(dataset_overlap_stats,
-    data.frame(dataset=datasetname,test = "sign_test_male",tissue=tissue,
-    bg_size = sum(sign_table),overlap=sign_table["TRUE","TRUE"],
-    p=fisher.test(sign_table,alt="l")$p.value))
+  if(length(sign_table)>2){
+    dataset_overlap_stats = rbind(dataset_overlap_stats,
+      data.frame(dataset=datasetname,test = "sign_test_male",tissue=tissue,
+      bg_size = sum(sign_table),overlap=sign_table["TRUE","TRUE"],
+      p=fisher.test(sign_table,alt="l")$p.value))
+  }else{
+    dataset_overlap_stats = rbind(dataset_overlap_stats,
+      data.frame(dataset=datasetname,test = "sign_test_male",tissue=tissue,
+      bg_size = sum(sign_table),overlap=0,p=NA))
+  }
   
   bg = shared_genes
   selected_sets = list(
@@ -140,10 +146,17 @@ add_overlap_tests_and_enrichments<-function(
   sign_table = table(
     fc1[shared_genes] > 0,fc2[shared_genes] > 0
   )
-  dataset_overlap_stats = rbind(dataset_overlap_stats,
-      data.frame(dataset = datasetname,test = "sign_test_female",tissue=tissue,
+  if(length(sign_table)>2){
+    dataset_overlap_stats = rbind(dataset_overlap_stats,
+      data.frame(dataset=datasetname,test = "sign_test_female",tissue=tissue,
       bg_size = sum(sign_table),overlap=sign_table["TRUE","TRUE"],
       p=fisher.test(sign_table,alt="l")$p.value))
+  }else{
+    dataset_overlap_stats = rbind(dataset_overlap_stats,
+      data.frame(dataset=datasetname,test = "sign_test_female",tissue=tissue,
+      bg_size = sum(sign_table),overlap=0,p=NA))
+  }
+  
   assign("dataset_overlap_stats", dataset_overlap_stats, envir = .GlobalEnv)
   
   selected_sets[["female_up_disease_down"]] = shared_genes[
