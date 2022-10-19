@@ -50,6 +50,7 @@ simple_enrichment_analysis<-function(s,univ,pathways,min_size=5,setname=""){
 
 add_overlap_tests_and_enrichments<-function(
   dataset_d,motrpac_d,
+  dataset_d_gene_set = NULL, # if we have the set of tested genes in another supp table
   motrpac_gene_col="HUMAN_ORTHOLOG_SYMBOL",
   dataset_qval_col = "q",
   dataset_fc_col = "fc",
@@ -81,6 +82,11 @@ add_overlap_tests_and_enrichments<-function(
   # Test for overall overlap among the selected gene sets from the two studies
   all_shared_genes = intersect(unique(dataset_d[[dataset_gene_col]]),
                                unique(motrpac_d[[motrpac_gene_col]]))
+  if(!is.null(dataset_d_gene_set)){
+      all_shared_genes = union(all_shared_genes,
+        intersect(dataset_d_gene_set,unique(motrpac_d[[motrpac_gene_col]])))
+  }
+
   selection1 = all_shared_genes %in% set1[[dataset_gene_col]]
   selection2 = all_shared_genes %in% motrpac_d[!is.na(motrpac_d$selection_fdr) & 
       motrpac_d$selection_fdr<fdr_motrpac,motrpac_gene_col]
@@ -90,8 +96,10 @@ add_overlap_tests_and_enrichments<-function(
     overall_test = fisher.test(tb,alternative = "g")$p.value
     dataset_overlap_stats = rbind(dataset_overlap_stats,
         data.frame(dataset=datasetname,test = "selection_overlap_p",
-        bg_size = sum(tb),
+        bg_size = sum(tb),overlap=tb["TRUE","TRUE"],
         p=overall_test,tissue=tissue))
+  }else{
+    print("Skipping overlap test, dataset may have selected features only")
   }
   
   # FC2: male or female MoTrPAC fold changes
@@ -110,7 +118,7 @@ add_overlap_tests_and_enrichments<-function(
   )
   dataset_overlap_stats = rbind(dataset_overlap_stats,
     data.frame(dataset=datasetname,test = "sign_test_male",tissue=tissue,
-    bg_size = sum(sign_table),
+    bg_size = sum(sign_table),overlap=sign_table["TRUE","TRUE"],
     p=fisher.test(sign_table,alt="l")$p.value))
   
   bg = shared_genes
@@ -134,7 +142,7 @@ add_overlap_tests_and_enrichments<-function(
   )
   dataset_overlap_stats = rbind(dataset_overlap_stats,
       data.frame(dataset = datasetname,test = "sign_test_female",tissue=tissue,
-      bg_size = sum(sign_table),
+      bg_size = sum(sign_table),overlap=sign_table["TRUE","TRUE"],
       p=fisher.test(sign_table,alt="l")$p.value))
   assign("dataset_overlap_stats", dataset_overlap_stats, envir = .GlobalEnv)
   
@@ -183,6 +191,38 @@ mt_pw = fread(paste0(data_dir,"Human.MitoCarta3.0.txt"),header = T,
 mt_genes = unique(unlist(strsplit(mt_pw$Genes,split=",\\s+")))
 mitocarta_pathways = strsplit(mt_pw$Genes,split=",\\s+")
 names(mitocarta_pathways) = mt_pw$MitoPathway
+
+# Get uniprot to gene name mapping
+library(org.Mm.eg.db)
+list_to_mat<-function(l){
+  l = as.list(l)
+  lengths = sapply(l,length)
+  l = l[lengths>0]
+  lengths = lengths[lengths>0]
+  v = unlist(l)
+  s = rep(names(l),lengths)
+  d = unique(as.data.frame(cbind(v,s),stringsAsFactors=F))
+  rownames(d) = NULL
+  return(d)
+}
+enz_uni = list_to_mat(org.Mm.egUNIPROT)
+names(enz_uni) = c("uniprot","entrez")
+enz_uni = enz_uni[!is.na(enz_uni$uniprot),]
+enz_symb = list_to_mat(org.Mm.egALIAS2EG)
+names(enz_symb) = c("entrez","symbol")
+uni2symb = merge(enz_uni,enz_symb,by="entrez")
+uni2symb = unique(uni2symb[,c("uniprot","symbol")])
+dim(uni2symb)
+# same for human
+library(org.Hs.eg.db)
+enz_uni_human = list_to_mat(org.Hs.egUNIPROT)
+names(enz_uni_human) = c("uniprot","entrez")
+enz_uni_human = enz_uni_human[!is.na(enz_uni_human$uniprot),]
+enz_symb_human = list_to_mat(org.Hs.egALIAS2EG)
+names(enz_symb_human) = c("entrez","symbol")
+uni2symb_human = merge(enz_uni_human,enz_symb_human,by="entrez")
+uni2symb_human = unique(uni2symb_human[,c("uniprot","symbol")])
+dim(uni2symb_human)
 ```
 
 Define the stats to keep over the datasets:
@@ -239,11 +279,27 @@ chae_d = fread(file=paste0(disease_datasets_dir,"chae_2018_emm_stat.csv"),
                data.table = F,stringsAsFactors = F)
 chae_d$t2d_fc = chae_d$`log2-Fold change (T2DM / NGT)`
 
+# get the bg gene set
+chae_d_set = fread(file=paste0(disease_datasets_dir,"chae_2018_emm_set.csv"),
+               data.table = F,stringsAsFactors = F)
+chae_d_uni_ids = sapply(
+  strsplit(chae_d_set$`UniProt ID`,split="\\%"),
+  function(x){
+    arr = strsplit(x,split="\\|")[[1]]
+    arr[seq(from=2,to=length(arr),by=2)]
+  }
+)
+chae_d_gene_set = merge(
+  data.frame(uniprot = chae_d_uni_ids),
+  uni2symb_human,by="uniprot"
+)
+
 motrpac_d = PROT_SKMGN_DA
 motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
 
 add_overlap_tests_and_enrichments(
   chae_d,motrpac_d,
+  dataset_d_gene_set = unique(chae_d_gene_set$symbol),
   motrpac_gene_col = "HUMAN_ORTHOLOG_SYMBOL",
   dataset_gene_col = "Symbol",
   dataset_qval_col = "FDR",
@@ -271,11 +327,15 @@ ubaida_d = merge(ubaida_d,ubaida_d_genes,by="GenePrimary")
 ubaida_d$fc = ubaida_d$AgeBeta
 ubaida_d$q = p.adjust(ubaida_d$`BH Adjusted Pvalue`)
 
+ubaida_set = fread(file=paste0(disease_datasets_dir,"uniprot2gene_name_ubaida.tsv"),
+               data.table = F,stringsAsFactors = F)
+
 motrpac_d = PROT_SKMGN_DA
 motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
 
 add_overlap_tests_and_enrichments(
   ubaida_d,motrpac_d,
+  dataset_d_gene_set = unique(ubaida_set$To),
   motrpac_gene_col = "HUMAN_ORTHOLOG_SYMBOL",
   dataset_gene_col = "symbol",
   dataset_qval_col = "q",
@@ -438,6 +498,7 @@ niu_d$cir_fc = as.numeric(as.character(niu_d$cir_fc))
 
 add_overlap_tests_and_enrichments(
   niu_d,motrpac_d,
+  dataset_d_gene_set = unique(niu_prot_genes$gene),
   motrpac_gene_col = "HUMAN_ORTHOLOG_SYMBOL",
   dataset_gene_col = "Gene name",
   dataset_qval_col = "nash_q",
@@ -447,6 +508,7 @@ add_overlap_tests_and_enrichments(
 )
 add_overlap_tests_and_enrichments(
   niu_d,motrpac_d,
+  dataset_d_gene_set = unique(niu_prot_genes$gene),
   motrpac_gene_col = "HUMAN_ORTHOLOG_SYMBOL",
   dataset_gene_col = "Gene name",
   dataset_qval_col = "cirr_q",
@@ -467,28 +529,7 @@ park_d = fread(file=paste0(disease_datasets_dir,"park_2019_celldeathdis.csv"),
 park_d$mi_fc = log2(park_d$`FC (MI 8W/Sham)`)
 park_d$p = park_d$`p-value`
 park_d$q = p.adjust(park_d$p,method="fdr")
-
-# Get uniprot to gene name mapping
-library(org.Mm.eg.db)
-list_to_mat<-function(l){
-  l = as.list(l)
-  lengths = sapply(l,length)
-  l = l[lengths>0]
-  lengths = lengths[lengths>0]
-  v = unlist(l)
-  s = rep(names(l),lengths)
-  d = unique(as.data.frame(cbind(v,s),stringsAsFactors=F))
-  rownames(d) = NULL
-  return(d)
-}
-enz_uni = list_to_mat(org.Mm.egUNIPROT)
-names(enz_uni) = c("uniprot","entrez")
-enz_uni = enz_uni[!is.na(enz_uni$uniprot),]
-enz_symb = list_to_mat(org.Mm.egALIAS2EG)
-names(enz_symb) = c("entrez","symbol")
-uni2symb = merge(enz_uni,enz_symb,by="entrez")
-uni2symb = unique(uni2symb[,c("uniprot","symbol")])
-dim(uni2symb)
+# merge data using the uniprot mouse mapping from ncbi
 park_d = merge(park_d,uni2symb,by.x="Accession",by.y="uniprot")
 park_d = park_d[!is.na(park_d$symbol),]
 
@@ -526,8 +567,13 @@ coats_d$q = coats_d$`q Value`
 motrpac_d = PROT_HEART_DA
 motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
 
+coats_gene_bg = fread(file=paste0(disease_datasets_dir,"uniprot2gene_name_coats_bg.tsv"),
+               data.table = F,stringsAsFactors = F)
+
+
 add_overlap_tests_and_enrichments(
   coats_d,motrpac_d,
+  dataset_d_gene_set = unique(coats_gene_bg$To),
   motrpac_gene_col = "HUMAN_ORTHOLOG_SYMBOL",
   dataset_gene_col = "symbol",
   dataset_qval_col = "q",
@@ -578,18 +624,24 @@ dataset_overlap_stats$name = paste(dataset_overlap_stats$tissue,
 dataset_overlap_stats$name2 = paste(dataset_overlap_stats$tissue,
       dataset_overlap_stats$dataset,dataset_overlap_stats$sex,sep=",")
 
+dataset_overlap_stats$tissue[
+  dataset_overlap_stats$tissue=="SKMGN"
+] = "SKM-GN"
+
 par(mar=c(12,5,2,2))
+currinds = dataset_overlap_stats$sex=="p"
 barplot(
-  dataset_overlap_stats[dataset_overlap_stats$sex=="p","log10P"],
-  col = TISSUE_COLORS[c("SKM-GN","LIVER","LIVER","LIVER")],
-  names.arg = gsub(" et al.","",dataset_overlap_stats[dataset_overlap_stats$sex=="p","name"]),
+  dataset_overlap_stats[currinds,"log10P"],
+  col = TISSUE_COLORS[dataset_overlap_stats$tissue[currinds]],
+  names.arg = gsub(" et al.","",dataset_overlap_stats[currinds,"name"]),
   ylab = "Overlap -log10 p-value",las=2
 );abline(h=-log10(0.05),lty=2,col="red")
 
 par(mar=c(12,5,2,2))
+currinds = dataset_overlap_stats$sex!="p"
 barplot(
-  dataset_overlap_stats[dataset_overlap_stats$sex!="p","log10P"],
-  col = TISSUE_COLORS[c(rep("SKM-GN",4),rep("LIVER",10))],
+  dataset_overlap_stats[currinds,"log10P"],
+  col = TISSUE_COLORS[dataset_overlap_stats$tissue[currinds]],
   las=2,
   names.arg = gsub(" et al.","",dataset_overlap_stats[dataset_overlap_stats$sex!="p","name2"]),
   ylab = "Discordant FC sign -log10 p-value"
