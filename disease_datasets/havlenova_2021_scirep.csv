@@ -1,0 +1,1373 @@
+﻿Accession,Protein Name,Coverage [%],# Peptides,# PSMs,# Unique Peptides,Gene Symbol,RV Fold-change,RV Adj. P-Value,LV Fold-change,LV Adj. P-Value,Tissue,Ome,Species
+Q00972,"[3-methyl-2-oxobutanoate dehydrogenase [lipoamide]] kinase, mitochondrial ",20,6,17,6,Bckdk,0.75,0.27,0.99,1.00,HEART,PROT,RAT
+Q63065,"[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 1, mitochondrial ",51,17,82,15,Pdk1,0.85,0.72,1.09,0.44,HEART,PROT,RAT
+Q64536,"[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 2, mitochondrial ",37,11,35,9,Pdk2,0.75,0.29,1.00,1.00,HEART,PROT,RAT
+P26772,"10 kDa heat shock protein, mitochondrial ",75,10,100,10,Hspe1,0.91,0.76,0.93,1.00,HEART,PROT,RAT
+P35213,14-3-3 protein beta/alpha ,52,12,63,5,Ywhab,1.08,1.00,1.40,0.19,HEART,PROT,RAT
+P62260,14-3-3 protein epsilon ,60,14,88,11,Ywhae,1.11,0.17,1.15,0.29,HEART,PROT,RAT
+P68511,14-3-3 protein eta ,49,12,73,7,Ywhah,1.06,0.13,1.16,0.06,HEART,PROT,RAT
+P61983,14-3-3 protein gamma ,49,12,98,6,Ywhag,1.26,0.08,1.33,0.09,HEART,PROT,RAT
+P68255,14-3-3 protein theta ,39,10,47,4,Ywhaq,1.55,0.47,1.45,0.62,HEART,PROT,RAT
+A0A0G2JV65,14-3-3 protein zeta/delta ,48,13,83,7,Ywhaz,1.24,0.02,1.27,0.01,HEART,PROT,RAT
+Q64591,"2,4-dienoyl-CoA reductase, mitochondrial ",31,9,37,9,Decr1,0.27,<0.01,0.44,<0.01,HEART,PROT,RAT
+G3V8B6,26S proteasome non-ATPase regulatory subunit 1 ,23,17,52,17,Psmd1,1.07,0.64,1.26,<0.01,HEART,PROT,RAT
+B0BN93,26S proteasome non-ATPase regulatory subunit 13 ,23,8,16,8,Psmd13,1.05,1.00,1.20,0.74,HEART,PROT,RAT
+Q4FZT9,26S proteasome non-ATPase regulatory subunit 2 ,24,15,44,15,Psmd2,1.23,0.96,1.20,0.95,HEART,PROT,RAT
+P62193,26S proteasome regulatory subunit 4 ,37,13,21,12,Psmc1,1.16,0.29,1.17,0.77,HEART,PROT,RAT
+Q6P6U2,26S proteasome regulatory subunit 6A ,33,10,32,10,Psmc3,1.12,0.02,1.11,0.07,HEART,PROT,RAT
+Q63570,26S proteasome regulatory subunit 6B ,35,12,38,11,Psmc4,1.22,0.29,1.24,0.19,HEART,PROT,RAT
+G3V7L6,26S proteasome regulatory subunit 7 ,27,10,23,10,Psmc2,1.06,1.00,1.33,0.61,HEART,PROT,RAT
+P62198,26S proteasome regulatory subunit 8 ,38,13,27,12,Psmc5,1.29,0.36,1.17,0.77,HEART,PROT,RAT
+Q62785,28 kDa heat- and acid-stable phosphoprotein ,13,3,4,3,Pdap1,1.16,0.63,1.37,0.15,HEART,PROT,RAT
+Q5I0K8,"28S ribosomal protein S7, mitochondrial ",16,3,5,3,Mrps7,0.75,0.20,0.93,1.00,HEART,PROT,RAT
+Q4G064,"2-methoxy-6-polyprenyl-1,4-benzoquinol methylase, mitochondrial ",43,10,45,10,Coq5,0.79,<0.01,0.83,0.01,HEART,PROT,RAT
+Q5XI78,"2-oxoglutarate dehydrogenase, mitochondrial ",47,37,428,37,Ogdh; LOC103693780,0.87,<0.01,0.91,<0.01,HEART,PROT,RAT
+F7EV94,2-oxoisovalerate dehydrogenase subunit alpha ,49,15,61,15,Bckdha,0.83,0.01,0.90,0.27,HEART,PROT,RAT
+A0A0A0MXW1,"2-oxoisovalerate dehydrogenase subunit beta, mitochondrial ",27,6,71,6,Bckdhb,0.76,0.03,1.03,1.00,HEART,PROT,RAT
+A0A0G2K0V3,"3'(2'),5'-bisphosphate nucleotidase 1 ",19,5,13,5,Bpnt1,1.20,0.02,1.21,0.04,HEART,PROT,RAT
+O70351,3-hydroxyacyl-CoA dehydrogenase type-2 ,77,14,166,14,Hsd17b10,0.84,<0.01,0.84,<0.01,HEART,PROT,RAT
+D4A1J4,3-hydroxybutyrate dehydrogenase type 2 ,16,3,3,3,Bdh2,0.91,1.00,1.38,0.65,HEART,PROT,RAT
+P29266,"3-hydroxyisobutyrate dehydrogenase, mitochondrial ",34,9,63,9,Hibadh,1.02,0.85,0.97,0.85,HEART,PROT,RAT
+Q5XIE6,"3-hydroxyisobutyryl-CoA hydrolase, mitochondrial ",44,15,87,15,Hibch,0.96,0.05,0.89,<0.01,HEART,PROT,RAT
+G3V9U2,"3-ketoacyl-CoA thiolase, mitochondrial ",61,18,252,18,Acaa2,0.76,<0.01,0.76,<0.01,HEART,PROT,RAT
+P97532,3-mercaptopyruvate sulfurtransferase ,45,11,74,10,Mpst,0.94,0.68,1.03,0.92,HEART,PROT,RAT
+G3V6R7,"3-oxoacyl-[acyl-carrier-protein] synthase, mitochondrial ",38,10,41,10,Oxsm,0.83,0.92,1.01,1.00,HEART,PROT,RAT
+P63326,40S ribosomal protein S10 ,29,5,14,5,Rps10; Rps10l1,0.78,0.48,0.92,1.00,HEART,PROT,RAT
+P62282,40S ribosomal protein S11 ,26,5,8,5,Rps11,0.99,1.00,1.09,1.00,HEART,PROT,RAT
+P63324,40S ribosomal protein S12 ,14,2,9,2,Rps12,0.93,0.87,1.01,1.00,HEART,PROT,RAT
+P62278,40S ribosomal protein S13 ,29,4,20,4,Rps13; LOC684988,0.88,0.69,0.95,1.00,HEART,PROT,RAT
+Q6PDV6,40S ribosomal protein S14 ,14,2,6,2,Rps14; LOC100911847,0.78,0.40,0.94,0.82,HEART,PROT,RAT
+D3ZLL8,40S ribosomal protein S15a-like ,24,3,8,3,Rps15a-ps7; Rps15al4; LOC100909878,1.11,1.00,1.03,1.00,HEART,PROT,RAT
+D3ZFA8,40S ribosomal protein S17-like ,47,4,8,4,LOC100362366,0.92,1.00,1.16,0.77,HEART,PROT,RAT
+P62909,40S ribosomal protein S3 ,56,11,30,11,Rps3,0.86,1.00,1.25,0.94,HEART,PROT,RAT
+P49242,40S ribosomal protein S3a ,25,6,12,6,Rps3a,1.07,0.86,1.09,0.71,HEART,PROT,RAT
+X1WI37,40S ribosomal protein S4 ,31,8,19,8,Rps4x,0.93,1.00,1.03,1.00,HEART,PROT,RAT
+P62083,40S ribosomal protein S7 ,41,5,25,5,Rps7; LOC100362830,1.03,0.76,1.00,1.00,HEART,PROT,RAT
+D3ZIE1,40S ribosomal protein S8 ,15,3,17,3,RGD1566369,0.89,1.00,0.97,1.00,HEART,PROT,RAT
+P29314,40S ribosomal protein S9 ,23,5,11,5,Rps9; LOC100909466; LOC103689992,0.98,0.81,1.10,1.00,HEART,PROT,RAT
+P38983,40S ribosomal protein SA ,44,10,45,10,Rpsa,1.11,0.09,1.04,0.41,HEART,PROT,RAT
+Q9JLJ3,4-trimethylaminobutyraldehyde dehydrogenase ,28,12,68,12,Aldh9a1,1.04,1.00,1.09,0.38,HEART,PROT,RAT
+Q66HL0,"5' nucleotidase, ecto ",10,5,10,5,Nt5e,1.52,0.92,0.95,0.94,HEART,PROT,RAT
+Q09137,5'-AMP-activated protein kinase catalytic subunit alpha-2 ,8,4,10,4,Prkaa2,0.77,0.70,1.11,1.00,HEART,PROT,RAT
+P80386,5'-AMP-activated protein kinase subunit beta-1 ,44,6,9,6,Prkab1,0.73,0.55,0.91,1.00,HEART,PROT,RAT
+P80385,5'-AMP-activated protein kinase subunit gamma-1 ,12,3,14,3,Prkag1,0.84,1.00,1.03,1.00,HEART,PROT,RAT
+G3V879,"5-demethoxyubiquinone hydroxylase, mitochondrial ",63,10,45,10,Coq7 COQ7,0.67,<0.01,0.70,0.01,HEART,PROT,RAT
+D3ZMY7,"5'-nucleotidase, cytosolic II ",10,4,17,4,Nt5c2,2.07,<0.01,1.50,0.05,HEART,PROT,RAT
+P63039,"60 kDa heat shock protein, mitochondrial ",64,28,1020,28,Hspd1,0.94,0.35,0.91,0.03,HEART,PROT,RAT
+P19945,60S acidic ribosomal protein P0 ,27,8,46,8,Rplp0,1.08,0.71,1.15,0.62,HEART,PROT,RAT
+P02401,60S acidic ribosomal protein P2 ,67,4,36,4,Rplp2; LOC100911575,0.96,1.00,1.11,1.00,HEART,PROT,RAT
+Q4V8I6,60S ribosomal protein L11 ,18,3,15,3,Rpl11,0.90,1.00,0.96,0.87,HEART,PROT,RAT
+P24049,60S ribosomal protein L17 ,21,3,8,3,Rpl17,0.85,0.70,1.23,0.49,HEART,PROT,RAT
+P62718,60S ribosomal protein L18a ,9,2,3,2,Rpl18a,1.09,0.66,0.86,0.25,HEART,PROT,RAT
+Q6PDV8,60S ribosomal protein L22 ,19,2,7,2,LOC100363800; LOC100360057; Rpl22,1.13,1.00,1.05,1.00,HEART,PROT,RAT
+Q6P3V9,60S ribosomal protein L4 ,11,3,7,3,Rpl4,1.04,1.00,0.85,1.00,HEART,PROT,RAT
+Q6P790,60S ribosomal protein L6 (Fragment) ,23,6,16,6,Rpl6,0.99,1.00,1.09,0.82,HEART,PROT,RAT
+P05426,60S ribosomal protein L7 ,20,5,14,5,Rpl7,0.81,0.01,1.04,0.78,HEART,PROT,RAT
+P62919,60S ribosomal protein L8 ,13,3,12,3,Rpl8; LOC100910370; LOC100360117; LOC108348142,1.17,0.81,1.07,0.69,HEART,PROT,RAT
+Q7TP11,"6-phosphogluconate dehydrogenase, decarboxylating ",14,12,36,12,,1.77,<0.01,1.41,0.01,HEART,PROT,RAT
+G3V8D5,6-phosphogluconolactonase ,33,6,27,6,Pgls,1.20,0.42,1.10,0.88,HEART,PROT,RAT
+D4A9M6,"A kinase (PRKA) anchor protein 1, isoform CRA_b ",9,6,12,6,Akap1,0.98,1.00,0.93,0.50,HEART,PROT,RAT
+Q7TMB9,Ab1-021 ,34,15,97,10,LOC299282,0.96,1.00,1.08,0.55,HEART,PROT,RAT
+D3ZXK4,Abhydrolase domain-containing 11 ,38,7,20,7,Abhd11,0.96,1.00,0.94,1.00,HEART,PROT,RAT
+Q7TQ90,Ac1002 ,9,6,17,6,Adh4 Adh5,0.89,1.00,1.07,0.62,HEART,PROT,RAT
+Q7TQ70,Ac1873 ,19,13,42,13,Fga,1.11,0.30,0.76,<0.01,HEART,PROT,RAT
+P17764,"Acetyl-CoA acetyltransferase, mitochondrial ",47,16,218,16,Acat1,0.84,0.04,0.93,0.25,HEART,PROT,RAT
+D3ZZN3,Acetyl-coenzyme A synthetase ,36,19,108,19,Acss1,0.76,<0.01,0.93,0.11,HEART,PROT,RAT
+D4AA35,Acetylserotonin O-methyltransferase-like ,13,2,2,2,Asmtl,0.72,0.82,0.81,1.00,HEART,PROT,RAT
+A0A0G2K8T0,Acid ceramidase ,36,11,43,11,Asah1,1.16,0.02,1.11,0.15,HEART,PROT,RAT
+Q4FZU0,"Acid phosphatase 6, lysophosphatidic ",17,5,15,5,Acp6,0.89,0.36,1.03,1.00,HEART,PROT,RAT
+F7EL36,Acidic leucine-rich nuclear phosphoprotein 32 family member A ,10,4,8,2,Anp32a,1.05,1.00,1.24,0.35,HEART,PROT,RAT
+Q5XIE0,Acidic leucine-rich nuclear phosphoprotein 32 family member E ,19,3,8,3,Anp32e,0.92,0.78,1.16,0.58,HEART,PROT,RAT
+Q9ER34,"Aconitate hydratase, mitochondrial ",48,36,710,36,Aco2,0.91,0.89,0.89,0.24,HEART,PROT,RAT
+P68136,"Actin, alpha skeletal muscle ",65,24,1405,2,Acta1,1.06,0.06,0.97,0.78,HEART,PROT,RAT
+A0A0G2K4M6,"Actin, aortic smooth muscle ",65,24,1697,3,Acta2,0.96,1.00,0.89,0.97,HEART,PROT,RAT
+A0A0G2K3K2,"Actin, cytoplasmic 1 ",53,20,1013,6,Actb,1.33,<0.01,1.40,0.01,HEART,PROT,RAT
+Q3KR72,Actin-binding LIM protein 1 ,49,17,82,12,Ablim1,1.03,1.00,0.96,0.52,HEART,PROT,RAT
+D3ZCV0,Actinin alpha 2 ,66,54,1082,38,Actn2,1.11,0.02,1.09,0.07,HEART,PROT,RAT
+Q5M7U6,Actin-related protein 2 ,13,5,19,4,Actr2,1.28,0.36,1.39,0.21,HEART,PROT,RAT
+Q99PD4,Actin-related protein 2/3 complex subunit 1A ,6,2,4,2,Arpc1a,0.91,1.00,1.33,0.66,HEART,PROT,RAT
+P85970,Actin-related protein 2/3 complex subunit 2 ,27,6,13,6,Arpc2,1.01,1.00,1.09,0.71,HEART,PROT,RAT
+B2RZ72,Actin-related protein 2/3 complex subunit 4 ,23,4,6,4,Arpc4,1.39,0.24,1.19,0.44,HEART,PROT,RAT
+A1L108,Actin-related protein 2/3 complex subunit 5-like protein ,36,4,16,4,Arpc5l; Arpc5l-ps1,1.12,1.00,1.10,0.83,HEART,PROT,RAT
+A0A0G2K1C0,Actin-related protein 3 ,26,8,40,8,Actr3,1.27,0.07,1.46,0.02,HEART,PROT,RAT
+B0BN63,Activator of Hsp90 ATPase activity 1 ,22,6,14,6,Ahsa1; LOC681996,0.93,0.03,1.03,0.30,HEART,PROT,RAT
+D3ZF13,Acyl carrier protein ,10,2,16,2,Ndufab1,0.89,0.89,0.88,1.00,HEART,PROT,RAT
+G3V9E4,Acylamino-acid-releasing enzyme ,20,7,11,7,Apeh,1.19,0.09,1.28,0.02,HEART,PROT,RAT
+M0RDK9,"Acyl-CoA dehydrogenase family, member 8 ",10,4,15,4,Acad8,1.07,1.00,1.03,1.00,HEART,PROT,RAT
+D3ZUX7,Acyl-CoA synthetase family member 3 ,28,11,30,11,Acsf3,0.59,<0.01,0.78,0.08,HEART,PROT,RAT
+F1LX28,Acyl-CoA thioesterase 11 ,9,4,5,4,Acot11,0.53,0.18,0.95,1.00,HEART,PROT,RAT
+D3ZA93,Acyl-CoA thioesterase 13 ,16,2,21,2,Acot13,0.53,<0.01,0.58,<0.01,HEART,PROT,RAT
+Q6IMX8,Acyl-CoA thioesterase 2 ,49,16,143,16,Acot2,0.57,<0.01,0.68,<0.01,HEART,PROT,RAT
+Q5U2X8,Acyl-CoA thioesterase 9 ,26,10,31,10,Acot9,1.00,1.00,1.10,0.26,HEART,PROT,RAT
+Q6TXF3,Acyl-CoA-binding protein ,6,2,19,2,Dbi,1.00,1.00,1.23,1.00,HEART,PROT,RAT
+Q5M9H2,"Acyl-Coenzyme A dehydrogenase, very long chain ",59,29,331,29,Acadvl,0.56,<0.01,0.60,<0.01,HEART,PROT,RAT
+D3Z9L0,Acylglycerol kinase ,13,5,14,5,Agk,1.01,1.00,1.02,1.00,HEART,PROT,RAT
+D4A6X4,Acylphosphatase ,55,5,23,5,Acyp1,1.15,0.88,1.17,0.98,HEART,PROT,RAT
+P35745,Acylphosphatase-2 ,22,2,13,2,Acyp2,0.84,0.37,1.03,1.00,HEART,PROT,RAT
+P70470,Acyl-protein thioesterase 1 ,35,5,36,5,Lypla1,0.94,1.00,0.85,1.00,HEART,PROT,RAT
+Q9QYL8,Acyl-protein thioesterase 2 ,18,3,10,3,Lypla2,0.97,0.80,1.01,1.00,HEART,PROT,RAT
+Q6AYQ8,"Acylpyruvase FAHD1, mitochondrial ",28,5,23,5,Fahd1,0.65,<0.01,0.71,0.01,HEART,PROT,RAT
+Q63768,Adapter molecule crk ,23,5,15,5,Crk,1.08,0.89,1.01,1.00,HEART,PROT,RAT
+P36972,Adenine phosphoribosyltransferase ,31,6,26,6,Aprt,0.72,0.04,0.89,0.66,HEART,PROT,RAT
+Q920P6,Adenosine deaminase ,13,3,5,3,Ada,1.14,1.00,1.02,1.00,HEART,PROT,RAT
+A0A0G2JSL8,Adenosine kinase ,49,13,33,13,Adk,0.73,0.36,1.02,1.00,HEART,PROT,RAT
+P10760,Adenosylhomocysteinase ,35,13,35,13,Ahcy,1.18,0.88,1.30,0.05,HEART,PROT,RAT
+A0A0G2JSG6,"Adenylate kinase 2, mitochondrial ",47,9,84,9,Ak2,0.95,1.00,0.91,1.00,HEART,PROT,RAT
+Q9WUS0,"Adenylate kinase 4, mitochondrial ",66,11,47,11,Ak4,0.66,0.03,0.87,0.98,HEART,PROT,RAT
+P39069,Adenylate kinase isoenzyme 1 ,56,11,272,11,Ak1,0.90,0.65,0.91,0.68,HEART,PROT,RAT
+D3ZW08,Adenylosuccinate lyase ,32,9,29,9,Adsl,0.70,0.19,0.96,1.00,HEART,PROT,RAT
+M0R629,Adenylosuccinate synthetase isozyme 1 ,47,15,76,15,Adssl1,0.37,<0.01,0.57,<0.01,HEART,PROT,RAT
+Q08163,Adenylyl cyclase-associated protein 1 ,19,5,28,5,Cap1,1.31,0.08,1.42,0.02,HEART,PROT,RAT
+P52481,Adenylyl cyclase-associated protein 2 ,33,12,36,12,Cap2,1.47,<0.01,1.42,<0.01,HEART,PROT,RAT
+Q9R290,Adipocyte lipid-binding protein ,38,6,65,6,Fabp4,0.70,<0.01,0.89,0.22,HEART,PROT,RAT
+D3ZZQ4,"Adipogenesis-associated, Mth938 domain-containing ",27,3,9,3,Aamdc,0.64,0.20,0.79,1.00,HEART,PROT,RAT
+A0A0G2K845,"Adiponectin, C1Q and collagen domain-containing ",17,3,14,3,Adipoq,1.34,0.01,1.25,0.08,HEART,PROT,RAT
+Q6P9Y4,ADP/ATP translocase 1 ,41,14,340,5,Slc25a4,0.77,0.04,0.88,0.55,HEART,PROT,RAT
+Q09073,ADP/ATP translocase 2 ,38,13,174,4,Slc25a5,1.44,<0.01,1.41,<0.01,HEART,PROT,RAT
+Q8K4G6,ADP-ribose glycohydrolase MACROD1 (Fragment) ,26,6,26,6,Macrod1,0.45,<0.01,0.55,<0.01,HEART,PROT,RAT
+P61206,ADP-ribosylation factor 3 ,54,7,56,3,Arf3,1.19,<0.01,1.24,<0.01,HEART,PROT,RAT
+P61751,ADP-ribosylation factor 4 ,47,6,34,3,Arf4,1.70,0.26,1.29,0.82,HEART,PROT,RAT
+P37996,ADP-ribosylation factor-like protein 3 ,32,4,9,4,Arl3,1.17,1.00,1.17,1.00,HEART,PROT,RAT
+Q66HA6,ADP-ribosylation factor-like protein 8B ,34,6,26,6,Arl8b,1.09,0.85,1.03,1.00,HEART,PROT,RAT
+P36953,Afamin ,18,9,28,9,Afm,0.83,<0.01,1.12,0.02,HEART,PROT,RAT
+F1LN92,AFG3-like matrix AAA peptidase subunit 2 ,30,22,63,21,Afg3l2,0.91,0.55,1.04,1.00,HEART,PROT,RAT
+Q8CG45,Aflatoxin B1 aldehyde reductase member 2 ,23,7,32,7,Akr7a2,0.80,0.07,0.89,0.42,HEART,PROT,RAT
+Q38PG1,AHNAK 1 (Fragment) ,24,12,45,2,Ahnak,1.14,0.95,1.49,0.21,HEART,PROT,RAT
+A0A0G2JUA5,AHNAK nucleoprotein ,58,127,443,117,Ahnak,1.31,0.01,1.28,0.02,HEART,PROT,RAT
+F1LPQ9,A-kinase anchor protein 2 ,6,5,6,5,Akap2,0.98,1.00,1.40,0.34,HEART,PROT,RAT
+Q5XI97,Alanyl-tRNA editing protein Aarsd1 ,22,7,11,7,Aarsd1,0.75,0.21,0.95,1.00,HEART,PROT,RAT
+G3V7J0,"Aldehyde dehydrogenase family 6, subfamily A1, isoform CRA_b ",49,23,279,23,Aldh6a1,0.80,<0.01,0.87,0.01,HEART,PROT,RAT
+P51635,Aldo-keto reductase family 1 member A1 ,44,11,36,11,Akr1a1,1.41,<0.01,1.29,0.01,HEART,PROT,RAT
+P07943,Aldo-keto reductase family 1 member B1 ,45,13,120,12,Akr1b1,1.00,1.00,0.95,0.08,HEART,PROT,RAT
+D3ZF77,Aldo-keto reductase family 1 member C15 ,50,15,53,15,Akr1cl,1.14,0.19,1.25,0.07,HEART,PROT,RAT
+F7EMK8,Aldose reductase-related protein 1-like ,24,4,9,3,LOC100910708,1.02,1.00,1.19,1.00,HEART,PROT,RAT
+A0A0G2K0X8,Alkaline phosphatase ,5,2,5,2,Alpl,1.92,0.15,1.59,0.34,HEART,PROT,RAT
+Q63910,Alpha globin ,57,5,24,5,LOC287167; Hba-a1,1.37,<0.01,1.54,<0.01,HEART,PROT,RAT
+D3ZAN3,Alpha glucosidase 2 alpha neutral subunit (Predicted) ,14,8,14,8,Ganab,1.22,0.88,1.34,0.62,HEART,PROT,RAT
+G3V8V3,"Alpha-1,4 glucan phosphorylase ",51,41,449,31,Pygm,0.86,<0.01,0.92,0.01,HEART,PROT,RAT
+P02764,Alpha-1-acid glycoprotein ,16,4,12,4,Orm1,0.97,1.00,1.19,0.37,HEART,PROT,RAT
+A0A0G2JZ73,Alpha-1-antiproteinase ,46,15,115,15,Serpina1,1.37,<0.01,1.54,<0.01,HEART,PROT,RAT
+P14046,Alpha-1-inhibitor 3 ,27,34,190,9,A1i3; LOC297568,0.77,<0.01,0.79,<0.01,HEART,PROT,RAT
+Q63041,Alpha-1-macroglobulin ,32,37,159,37,Pzp,1.22,<0.01,1.11,0.05,HEART,PROT,RAT
+Q6T487,Alpha-actinin-1 ,44,35,338,15,Actn1,1.10,0.67,1.26,0.08,HEART,PROT,RAT
+A0A0G2K013,Alpha-actinin-4 ,51,37,345,23,Actn4,1.40,<0.01,1.60,<0.01,HEART,PROT,RAT
+Q64057,Alpha-aminoadipic semialdehyde dehydrogenase ,35,15,82,15,Aldh7a1,1.11,0.01,1.13,<0.01,HEART,PROT,RAT
+P85515,Alpha-centractin ,32,9,40,4,Actr1a,1.23,0.56,1.25,0.41,HEART,PROT,RAT
+P23928,Alpha-crystallin B chain ,75,9,217,9,Cryab,1.70,<0.01,1.35,<0.01,HEART,PROT,RAT
+Q5M9I2,Alpha-mannosidase 2C1 ,5,4,8,4,Man2c1,0.79,0.37,0.96,1.00,HEART,PROT,RAT
+Q66H12,Alpha-N-acetylgalactosaminidase ,11,4,17,4,Naga,1.19,1.00,1.18,0.82,HEART,PROT,RAT
+P54921,Alpha-soluble NSF attachment protein ,19,4,11,4,Napa,1.10,1.00,1.21,1.00,HEART,PROT,RAT
+Q7TP38,Amine oxidase ,6,9,19,9,,0.82,1.00,1.01,1.00,HEART,PROT,RAT
+B2GV33,Amine oxidase ,41,19,253,19,Maoa,5.50,<0.01,3.38,<0.01,HEART,PROT,RAT
+Q4G079,Aminoacyl tRNA synthetase complex-interacting multifunctional protein 1 ,26,5,16,5,Aimp1,1.06,1.00,1.07,1.00,HEART,PROT,RAT
+Q6AYS7,Aminoacylase-1A ,42,13,29,13,Acy1,0.67,0.01,0.77,0.15,HEART,PROT,RAT
+F1M9V7,Aminopeptidase ,33,24,75,24,Npepps,1.43,<0.01,1.37,0.01,HEART,PROT,RAT
+O09175,Aminopeptidase B ,15,8,12,8,Rnpep,0.95,1.00,1.13,1.00,HEART,PROT,RAT
+D4AEH9,"Amylo-1, 6-glucosidase, 4-alpha-glucanotransferase (Glycogen debranching enzyme, glycogen storage disease type III) (Predicted), isoform CRA_a ",35,42,174,42,Agl,0.87,0.08,0.99,1.00,HEART,PROT,RAT
+Q5XID1,Anamorsin ,27,4,11,4,Ciapin1,1.00,1.00,1.03,1.00,HEART,PROT,RAT
+P01015,Angiotensinogen ,18,7,16,7,Agt,1.13,1.00,0.97,1.00,HEART,PROT,RAT
+F8WFT7,Anion exchange protein ,19,14,32,14,Slc4a1,1.66,<0.01,3.69,<0.01,HEART,PROT,RAT
+D3Z9Z0,Ankyrin 1 ,5,7,10,4,Ank1,1.00,1.00,1.22,0.66,HEART,PROT,RAT
+Q8R560,Ankyrin repeat domain-containing protein 1 ,32,9,22,9,Ankrd1,1.40,0.01,1.44,0.02,HEART,PROT,RAT
+A0A0G2K1Q7,Ankyrin-3 ,7,10,22,7,Ank3,0.76,0.64,0.89,1.00,HEART,PROT,RAT
+Q6IMZ3,Annexin ,55,36,193,36,Anxa6,1.21,<0.01,1.21,<0.01,HEART,PROT,RAT
+Q5XI77,Annexin ,28,13,49,12,Anxa11,0.77,0.10,0.80,0.35,HEART,PROT,RAT
+P07150,Annexin A1 ,45,12,52,12,Anxa1,1.93,<0.01,1.74,<0.01,HEART,PROT,RAT
+Q07936,Annexin A2 ,55,17,99,17,Anxa2,1.88,<0.01,1.82,<0.01,HEART,PROT,RAT
+P14669,Annexin A3 ,52,15,53,14,Anxa3,0.95,1.00,1.15,0.05,HEART,PROT,RAT
+P55260,Annexin A4 ,34,10,28,10,Anxa4,1.25,0.01,1.21,0.02,HEART,PROT,RAT
+P14668,Annexin A5 ,69,19,215,19,Anxa5,2.53,<0.01,2.10,<0.01,HEART,PROT,RAT
+Q3ZB97,AP complex subunit beta ,27,19,39,10,Ap2b1; LOC100912146,1.32,0.02,1.32,0.02,HEART,PROT,RAT
+D3ZUY8,AP-2 complex subunit alpha ,11,7,12,6,Ap2a1,1.27,0.49,1.34,0.35,HEART,PROT,RAT
+Q66HM2,AP-2 complex subunit alpha ,16,9,17,8,Ap2a2,1.13,1.00,1.17,0.97,HEART,PROT,RAT
+P84092,AP-2 complex subunit mu ,9,3,5,3,Ap2m1,1.15,0.72,1.38,0.19,HEART,PROT,RAT
+P04639,Apolipoprotein A-I ,53,11,44,11,Apoa1,1.06,0.19,0.97,0.92,HEART,PROT,RAT
+A0A0G2JVX7,Apolipoprotein A-IV ,23,9,19,9,Apoa4,0.98,1.00,1.32,0.16,HEART,PROT,RAT
+B4F789,"Apolipoprotein B editing complex 2 (Predicted), isoform CRA_a ",54,7,50,7,Apobec2,1.43,0.32,1.23,0.30,HEART,PROT,RAT
+Q6PAH0,Apolipoprotein E ,36,11,36,11,Apoe,1.45,0.54,1.39,0.27,HEART,PROT,RAT
+Q9JM53,"Apoptosis-inducing factor 1, mitochondrial ",42,21,143,21,Aifm1,0.98,1.00,1.04,0.59,HEART,PROT,RAT
+P29975,Aquaporin-1 ,14,3,9,3,Aqp1,0.66,0.02,0.84,0.28,HEART,PROT,RAT
+P40329,"Arginine--tRNA ligase, cytoplasmic ",14,7,12,7,Rars,1.30,0.86,1.55,0.41,HEART,PROT,RAT
+B0BN83,Armadillo repeat-containing protein 1 ,20,4,6,4,Armc1,0.95,1.00,1.41,0.33,HEART,PROT,RAT
+Q4G022,Arsenical pump-driving ATPase (Fragment) ,20,6,15,6,Asna1,1.26,0.85,1.36,0.67,HEART,PROT,RAT
+P13221,"Aspartate aminotransferase, cytoplasmic ",62,22,252,22,Got1,0.69,<0.01,0.69,<0.01,HEART,PROT,RAT
+P00507,"Aspartate aminotransferase, mitochondrial ",44,20,339,20,Got2,0.75,<0.01,0.80,0.01,HEART,PROT,RAT
+Q4V8H5,Aspartyl aminopeptidase ,43,16,48,16,Dnpep,1.92,<0.01,1.56,<0.01,HEART,PROT,RAT
+Q5XIH1,Asporin ,32,10,23,10,Aspn; NEWGENE_1549776; Aspnl1,0.87,0.39,1.28,0.08,HEART,PROT,RAT
+Q5U318,Astrocytic phosphoprotein PEA-15 ,55,5,14,5,Pea15; Pea15a,1.77,0.03,1.64,0.12,HEART,PROT,RAT
+P19511,"ATP synthase F(0) complex subunit B1, mitochondrial ",50,14,209,14,Atp5f1; LOC100911417,0.85,0.01,0.87,0.03,HEART,PROT,RAT
+Q9JJW3,"ATP synthase membrane subunit DAPIT, mitochondrial ",45,2,31,2,Usmg5; LOC100360002; LOC103693430,0.93,1.00,0.84,0.21,HEART,PROT,RAT
+Q5UAJ5,ATP synthase protein 8 ,46,3,25,3,ATP8 atp8,0.90,0.81,0.79,0.59,HEART,PROT,RAT
+Q549I0,ATP synthase subunit a ,8,2,8,2,atp6 ATP6,0.83,0.87,0.89,0.94,HEART,PROT,RAT
+P15999,"ATP synthase subunit alpha, mitochondrial ",61,34,1150,34,Atp5a1,0.91,0.85,0.83,0.18,HEART,PROT,RAT
+P10719,"ATP synthase subunit beta, mitochondrial ",74,29,2672,11,Atp5b,0.86,0.18,0.87,0.16,HEART,PROT,RAT
+P31399,"ATP synthase subunit d, mitochondrial ",68,10,205,10,Atp5h,0.92,0.13,0.78,<0.01,HEART,PROT,RAT
+G3V7Y3,"ATP synthase subunit delta, mitochondrial ",38,3,39,3,Atp5d,0.83,<0.01,0.83,0.01,HEART,PROT,RAT
+P29419,"ATP synthase subunit e, mitochondrial ",75,6,100,6,Atp5i,0.81,0.01,0.79,0.01,HEART,PROT,RAT
+D3ZAF6,"ATP synthase subunit f, mitochondrial ",24,2,28,2,Atp5j2,0.87,0.72,0.99,1.00,HEART,PROT,RAT
+Q6PDU7,"ATP synthase subunit g, mitochondrial ",47,4,66,4,Atp5l,0.81,0.01,0.88,0.05,HEART,PROT,RAT
+P35435,"ATP synthase subunit gamma, mitochondrial ",45,11,185,11,Atp5c1,0.88,0.85,0.84,0.37,HEART,PROT,RAT
+Q06647,"ATP synthase subunit O, mitochondrial ",54,10,149,10,Atp5o,0.76,<0.01,0.81,<0.01,HEART,PROT,RAT
+Q5XIM4,"ATP synthase subunit s, mitochondrial ",19,4,11,4,Atp5s,0.97,1.00,1.08,1.00,HEART,PROT,RAT
+P21571,"ATP synthase-coupling factor 6, mitochondrial ",50,6,50,6,Atp5j,0.84,1.00,0.97,1.00,HEART,PROT,RAT
+Q505J9,ATPase family AAA domain-containing protein 1 ,23,5,26,5,Atad1,0.90,0.56,1.10,0.83,HEART,PROT,RAT
+Q3KRE0,ATPase family AAA domain-containing protein 3 ,14,6,21,6,Atad3a,0.56,<0.01,0.86,0.57,HEART,PROT,RAT
+D4A133,ATPase H+-transporting V1 subunit A ,31,14,30,14,Atp6v1a,1.49,0.40,1.06,1.00,HEART,PROT,RAT
+Q03344,"ATPase inhibitor, mitochondrial ",14,2,6,2,Atpif1,0.74,0.70,1.08,1.00,HEART,PROT,RAT
+G3V7L8,"ATPase, H+ transporting, V1 subunit E isoform 1, isoform CRA_a ",29,6,11,6,Atp6v1e1,1.40,0.01,1.21,0.16,HEART,PROT,RAT
+A0A0G2K866,"ATP-binding cassette sub-family B member 7, mitochondrial ",12,5,12,5,Abcb7,0.97,1.00,1.28,0.77,HEART,PROT,RAT
+Q6MG08,ATP-binding cassette sub-family F member 1 ,8,5,9,5,Abcf1,1.28,0.38,0.97,1.00,HEART,PROT,RAT
+D3ZLK9,ATP-dependent (S)-NAD(P)H-hydrate dehydratase ,13,3,8,3,Carkd; Naxd,0.98,1.00,1.13,1.00,HEART,PROT,RAT
+Q52KS1,ATP-dependent 6-phosphofructokinase ,39,26,116,23,Pfkm,0.70,<0.01,0.81,0.03,HEART,PROT,RAT
+P30835,"ATP-dependent 6-phosphofructokinase, liver type ",16,10,24,7,Pfkl,1.61,0.06,1.73,0.05,HEART,PROT,RAT
+P47860,"ATP-dependent 6-phosphofructokinase, platelet type ",18,11,16,9,Pfkp,1.83,0.31,2.12,0.21,HEART,PROT,RAT
+Q5U2U0,"ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial ",7,4,5,4,Clpx,0.65,0.09,0.91,1.00,HEART,PROT,RAT
+M0RAD5,ATP-dependent Clp protease proteolytic subunit ,24,5,12,5,Clpp,0.82,0.03,0.96,0.80,HEART,PROT,RAT
+Q641Y8,ATP-dependent RNA helicase DDX1 ,24,12,36,12,Ddx1,1.30,0.07,1.18,0.18,HEART,PROT,RAT
+Q5BJQ0,"Atypical kinase COQ8A, mitochondrial ",39,16,103,16,Adck3; Coq8a,0.46,<0.01,0.53,0.01,HEART,PROT,RAT
+F1LQH9,BAG cochaperone 2 ,17,3,7,3,Bag2,1.49,0.60,1.09,1.00,HEART,PROT,RAT
+Q9R1T1,Barrier-to-autointegration factor ,40,2,15,2,Banf1,0.70,1.00,1.05,1.00,HEART,PROT,RAT
+Q9ESS6,Basal cell adhesion molecule ,31,11,34,11,Bcam,1.06,0.72,1.06,0.56,HEART,PROT,RAT
+Q9WTT7,Basic leucine zipper and W2 domain-containing protein 2 ,29,13,24,13,Bzw2,0.75,0.32,1.01,1.00,HEART,PROT,RAT
+Q6GT74,Basigin ,28,7,29,7,Bsg,1.33,<0.01,1.35,<0.01,HEART,PROT,RAT
+Q6AY58,B-cell receptor-associated protein 31 ,29,6,14,6,Bcap31,1.22,1.00,1.46,0.18,HEART,PROT,RAT
+D3ZT71,BCL2-like 13 ,21,6,26,6,Bcl2l13,1.29,0.51,1.22,0.57,HEART,PROT,RAT
+Q5XIM0,"BCS1 homolog, ubiquinol-cytochrome c reductase complex chaperone ",30,8,30,8,Bcs1l,0.97,0.48,1.17,0.27,HEART,PROT,RAT
+P26644,Beta-2-glycoprotein 1 ,6,2,5,2,Apoh,0.97,1.00,1.15,1.00,HEART,PROT,RAT
+P15429,Beta-enolase ,50,18,218,14,Eno3,0.60,<0.01,0.64,<0.01,HEART,PROT,RAT
+Q63067,Beta-globin chain ,12,2,5,2,Hbe2,1.00,1.00,0.88,1.00,HEART,PROT,RAT
+Q5RKK3,Bifunctional epoxide hydrolase 2 ,18,6,24,6,Ephx2,0.57,0.10,0.59,0.14,HEART,PROT,RAT
+O35567,Bifunctional purine biosynthesis protein PURH ,43,18,83,18,Atic,1.43,<0.01,1.25,0.01,HEART,PROT,RAT
+P47853,Biglycan ,27,9,23,8,Bgn,1.96,<0.01,1.82,<0.01,HEART,PROT,RAT
+B5DF65,Biliverdin reductase B ,65,8,48,8,Blvrb,0.93,0.71,0.96,0.59,HEART,PROT,RAT
+Q3B8N9,Biphenyl hydrolase-like ,25,5,22,5,Bphl,0.68,<0.01,0.80,0.02,HEART,PROT,RAT
+Q9JIX3,Bis(5'-adenosyl)-triphosphatase ,28,3,4,3,Fhit,0.95,1.00,0.86,1.00,HEART,PROT,RAT
+Q6PEC0,Bis(5'-nucleosyl)-tetraphosphatase [asymmetrical] ,47,4,14,4,Nudt2,0.74,0.59,0.90,0.60,HEART,PROT,RAT
+A1A5L1,Bleomycin hydrolase ,15,4,11,4,Blmh,1.19,1.00,1.05,1.00,HEART,PROT,RAT
+O35854,"Branched-chain-amino-acid aminotransferase, mitochondrial ",27,9,65,9,Bcat2,0.66,0.01,0.78,0.35,HEART,PROT,RAT
+Q5VLR5,BWK4 ,13,4,7,3,Erp44,1.16,0.18,1.56,0.01,HEART,PROT,RAT
+P27653,"C-1-tetrahydrofolate synthase, cytoplasmic ",11,9,16,4,Mthfd1,0.75,0.19,0.89,0.80,HEART,PROT,RAT
+Q8R490,Cadherin 13 ,19,10,46,10,Cdh13,1.41,<0.01,1.34,<0.01,HEART,PROT,RAT
+G3V803,Cadherin-2 ,27,13,52,13,LOC497718; Cdh2,1.52,<0.01,1.41,<0.01,HEART,PROT,RAT
+P15791,Calcium/calmodulin-dependent protein kinase type II subunit delta ,17,8,23,4,Camk2d,0.94,1.00,1.06,0.92,HEART,PROT,RAT
+Q9WU49,Calcium-regulated heat stable protein 1 ,41,3,9,3,Carhsp1,1.42,<0.01,1.20,0.08,HEART,PROT,RAT
+Q6AYK6,Calcyclin-binding protein ,28,5,10,4,Cacybp,1.27,0.59,1.21,0.77,HEART,PROT,RAT
+P0DP31,Calmodulin-3 ,56,9,39,9,Calm2; Calm3; Calm1,1.04,1.00,1.01,1.00,HEART,PROT,RAT
+P35565,Calnexin ,45,20,54,20,Canx,1.51,<0.01,1.54,<0.01,HEART,PROT,RAT
+Q07009,Calpain-2 catalytic subunit ,32,16,46,16,Capn2,1.33,0.52,1.44,0.58,HEART,PROT,RAT
+P18418,Calreticulin ,53,17,71,17,Calr,1.37,<0.01,1.38,<0.01,HEART,PROT,RAT
+F1M944,Calsequestrin ,40,12,199,12,Casq2,0.86,0.06,0.94,0.83,HEART,PROT,RAT
+G3V6S3,Calumenin ,57,12,47,12,Calu,2.07,<0.01,1.68,<0.01,HEART,PROT,RAT
+P09456,cAMP-dependent protein kinase type I-alpha regulatory subunit ,41,15,58,15,Prkar1a,0.88,0.02,0.94,0.16,HEART,PROT,RAT
+P12368,cAMP-dependent protein kinase type II-alpha regulatory subunit ,33,10,40,10,Prkar2a,1.03,1.00,1.03,1.00,HEART,PROT,RAT
+B0BNN3,Carbonic anhydrase 1 ,55,10,52,10,Ca1; Car1,1.58,<0.01,1.79,<0.01,HEART,PROT,RAT
+P27139,Carbonic anhydrase 2 ,45,8,46,8,Ca2; Car2,1.29,<0.01,1.49,<0.01,HEART,PROT,RAT
+P14141,Carbonic anhydrase 3 ,15,4,17,4,Car3,0.95,1.00,1.20,0.94,HEART,PROT,RAT
+P47727,Carbonyl reductase [NADPH] 1 ,56,13,56,12,Cbr1,0.62,<0.01,0.71,<0.01,HEART,PROT,RAT
+Q7TS56,Carbonyl reductase family member 4 ,33,5,8,5,Cbr4,0.50,0.01,0.77,0.78,HEART,PROT,RAT
+P10959,Carboxylesterase 1C ,23,9,18,8,Ces1c,0.76,0.47,0.73,0.41,HEART,PROT,RAT
+P16303,Carboxylesterase 1D ,31,13,50,13,Ces1d,0.89,0.27,1.00,1.00,HEART,PROT,RAT
+Q7TP52,Carboxymethylenebutenolidase homolog ,42,8,30,8,Cmbl,0.65,<0.01,0.69,0.01,HEART,PROT,RAT
+Q6AYS3,Carboxypeptidase ,4,2,6,2,Ctsa,1.24,0.39,1.50,0.10,HEART,PROT,RAT
+Q6IRK9,Carboxypeptidase Q ,21,6,18,6,Cpq,1.11,1.00,1.29,0.87,HEART,PROT,RAT
+Q7TMZ9,Cardiac titin N2B isoform (Fragment) ,49,49,380,41,Ttn,0.99,0.99,0.97,0.62,HEART,PROT,RAT
+Q7TN00,Cardiac titin N2BA isoform (Fragment) ,22,59,214,38,Ttn,1.16,0.01,1.04,0.55,HEART,PROT,RAT
+Q4PP99,Cardiac troponin C ,46,8,92,8,Tnnc1,0.87,0.67,0.92,1.00,HEART,PROT,RAT
+M0R557,Cardiomyopathy-associated 5 ,17,33,58,33,Cmya5,0.89,1.00,0.94,1.00,HEART,PROT,RAT
+Q704S8,Carnitine O-acetyltransferase ,37,23,97,23,Crat,0.52,<0.01,0.60,<0.01,HEART,PROT,RAT
+Q63704,"Carnitine O-palmitoyltransferase 1, muscle isoform ",20,14,59,14,Cpt1b,0.91,0.18,1.27,<0.01,HEART,PROT,RAT
+P18886,"Carnitine O-palmitoyltransferase 2, mitochondrial ",51,27,163,3,Cpt2,0.74,<0.01,0.85,0.01,HEART,PROT,RAT
+P19139,Casein kinase II subunit alpha ,24,6,16,6,Csnk2a1,0.97,1.00,1.11,0.60,HEART,PROT,RAT
+Q9WTT2,Caseinolytic peptidase B protein homolog ,8,4,9,4,Clpb,0.72,0.03,0.92,0.72,HEART,PROT,RAT
+P04762,Catalase ,49,19,82,19,Cat,1.34,<0.01,1.43,<0.01,HEART,PROT,RAT
+P22734,Catechol O-methyltransferase ,13,3,10,3,Comt,1.13,0.63,1.59,0.03,HEART,PROT,RAT
+Q5U302,"Catenin (Cadherin associated protein), alpha 1 ",44,32,138,31,Ctnna1,1.38,<0.01,1.24,<0.01,HEART,PROT,RAT
+D3ZZZ9,"Catenin (Cadherin associated protein), delta 1 (Predicted), isoform CRA_a ",9,7,13,7,Ctnnd1,0.88,1.00,1.43,0.54,HEART,PROT,RAT
+Q9WU82,Catenin beta-1 ,35,20,72,18,Ctnnb1,1.47,0.06,1.25,0.23,HEART,PROT,RAT
+Q6IN22,Cathepsin B ,8,2,9,2,Ctsb,1.26,0.14,1.59,0.03,HEART,PROT,RAT
+Q6P6T6,Cathepsin D ,18,6,32,6,Ctsd,0.80,0.03,0.80,0.02,HEART,PROT,RAT
+G3V8L9,Caveolae-associated protein 1 ,42,15,102,15,Ptrf; Cavin1,0.85,0.16,0.94,0.55,HEART,PROT,RAT
+Q66H98,Caveolae-associated protein 2 ,51,15,61,15,Sdpr; Cavin2,1.00,1.00,0.97,0.72,HEART,PROT,RAT
+Q9Z1H9,Caveolae-associated protein 3 ,45,10,25,10,Prkcdbp; Cavin3,0.90,0.08,1.05,1.00,HEART,PROT,RAT
+B1PRL5,Caveolae-associated protein 4 ,31,8,26,8,Murc; Cavin4,0.84,0.09,0.99,1.00,HEART,PROT,RAT
+P41350,Caveolin-1 ,46,7,62,6,Cav1,0.87,0.14,0.88,1.00,HEART,PROT,RAT
+Q9QZA6,CD151 antigen ,10,2,5,2,Cd151; LOC100911730,1.10,1.00,1.40,0.43,HEART,PROT,RAT
+P40241,CD9 antigen ,7,2,8,2,Cd9,0.82,0.50,1.02,1.00,HEART,PROT,RAT
+B0K020,CDGSH iron-sulfur domain-containing protein 1 ,44,4,61,4,Cisd1,0.99,1.00,0.97,1.00,HEART,PROT,RAT
+P70500,CDP-diacylglycerol--inositol 3-phosphatidyltransferase ,12,2,4,2,Cdipt,1.26,0.05,1.58,0.01,HEART,PROT,RAT
+P0C5I0,Cerebral dopamine neurotrophic factor ,10,2,4,2,Cdnf,0.73,0.07,0.84,0.33,HEART,PROT,RAT
+A0A0G2K9I6,Ceruloplasmin ,24,18,62,18,Cp,1.77,<0.01,1.72,<0.01,HEART,PROT,RAT
+Q5I0K3,"Citramalyl-CoA lyase, mitochondrial ",48,12,66,12,Clybl,0.81,0.01,0.86,0.07,HEART,PROT,RAT
+G3V936,Citrate synthase ,44,17,428,17,Cs rCG_42519,0.80,<0.01,0.84,0.01,HEART,PROT,RAT
+B0BNC0,Ckmt2 protein ,41,16,609,14,Ckmt2,0.49,<0.01,0.51,<0.01,HEART,PROT,RAT
+P11442,Clathrin heavy chain 1 ,39,49,222,49,Cltc,1.36,<0.01,1.45,<0.01,HEART,PROT,RAT
+P08082,Clathrin light chain B ,20,6,18,6,Cltb,1.44,0.08,1.20,0.15,HEART,PROT,RAT
+Q66WT9,Clathrin-assembly lymphoid myeloid leukemia protein ,14,5,18,4,Picalm,1.52,0.13,1.54,0.14,HEART,PROT,RAT
+A0A0U1RRV5,Clustered mitochondria protein homolog ,8,8,17,8,Cluh; RGD1307222,0.71,0.75,0.73,0.97,HEART,PROT,RAT
+G3V836,Clusterin ,23,9,26,9,Clu,1.80,<0.01,1.51,<0.01,HEART,PROT,RAT
+P16296,Coagulation factor IX ,4,2,5,2,F9,0.74,0.39,0.98,1.00,HEART,PROT,RAT
+D3ZTE0,Coagulation factor XII ,4,2,4,2,F12,1.15,1.00,1.06,1.00,HEART,PROT,RAT
+G3V811,Coagulation factor XIII A chain ,13,7,11,2,F13a1,1.25,0.63,1.90,0.09,HEART,PROT,RAT
+G3V6T1,Coatomer subunit alpha ,6,6,16,6,Copa,1.17,0.35,1.27,0.68,HEART,PROT,RAT
+P23514,Coatomer subunit beta ,12,8,12,8,Copb1,1.10,1.00,1.29,0.74,HEART,PROT,RAT
+Q66H80,Coatomer subunit delta ,15,7,13,7,Arcn1,1.17,0.22,1.18,0.46,HEART,PROT,RAT
+G3V8Q1,Coatomer subunit epsilon ,33,5,9,5,Cope,1.11,1.00,0.95,1.00,HEART,PROT,RAT
+Q4AEF8,Coatomer subunit gamma-1 ,11,6,10,5,Copg1,1.11,1.00,1.34,0.55,HEART,PROT,RAT
+A0A0G2JYY6,Coenzyme Q10A ,19,4,14,4,Coq10a,0.47,<0.01,0.50,<0.01,HEART,PROT,RAT
+M0RC65,Cofilin 2 ,59,10,76,6,Cfl2,1.27,<0.01,1.19,<0.01,HEART,PROT,RAT
+P45592,Cofilin-1 ,51,8,67,4,Cfl1,1.32,<0.01,1.18,0.02,HEART,PROT,RAT
+D3ZEY0,Coiled-coil domain-containing 141 ,24,28,67,28,Ccdc141; LOC311134,0.95,0.41,1.20,0.01,HEART,PROT,RAT
+F1LPD0,Collagen alpha-1(XV) chain-like ,12,12,33,12,LOC108348074,0.94,0.48,1.04,0.66,HEART,PROT,RAT
+A0A0G2KAN1,Collagen alpha-2(I) chain ,2,3,5,3,Col1a2,0.47,0.03,0.65,0.15,HEART,PROT,RAT
+F1M6Q3,Collagen type IV alpha 2 chain ,1,2,5,2,Col4a2,1.07,1.00,0.86,1.00,HEART,PROT,RAT
+D3ZUL3,Collagen type VI alpha 1 chain ,29,24,296,24,Col6a1,1.05,0.05,1.15,<0.01,HEART,PROT,RAT
+F1LNH3,Collagen type VI alpha 2 chain ,23,20,140,20,Col6a2,1.09,0.02,1.12,0.01,HEART,PROT,RAT
+M0RBF1,Complement C3 ,44,59,219,59,C3,1.17,<0.01,1.26,<0.01,HEART,PROT,RAT
+O35796,"Complement component 1 Q subcomponent-binding protein, mitochondrial ",37,6,63,6,C1qbp,1.16,0.30,1.03,0.70,HEART,PROT,RAT
+Q6MG79,"Complement component 4, gene 1 ",15,19,41,19,C4a,1.45,0.29,1.48,0.06,HEART,PROT,RAT
+Q62930,Complement component C9 ,26,13,29,13,C9,1.82,<0.01,2.11,<0.01,HEART,PROT,RAT
+G3V615,Complement factor B ,12,8,24,8,Cfb,1.26,0.59,1.42,0.15,HEART,PROT,RAT
+F1M983,Complement factor H ,6,6,13,6,Cfh,1.50,0.06,1.20,0.42,HEART,PROT,RAT
+B1WC61,"Complex I assembly factor ACAD9, mitochondrial ",48,24,99,24,Acad9,1.11,0.02,1.12,0.02,HEART,PROT,RAT
+B4F7A1,Complex III assembly factor LYRM7 ,28,2,4,2,Lyrm7,0.89,1.00,1.35,0.74,HEART,PROT,RAT
+Q4KM69,"COP9 (Constitutive photomorphogenic) homolog, subunit 5 (Arabidopsis thaliana) ",18,5,11,5,Cops5,1.17,0.15,1.10,0.44,HEART,PROT,RAT
+G3V8Z9,"COP9 (Constitutive photomorphogenic) homolog, subunit 7a (Arabidopsis thaliana) (Predicted) ",33,7,16,7,Cops7a,0.91,0.53,1.20,0.14,HEART,PROT,RAT
+P61203,COP9 signalosome complex subunit 2 ,22,8,22,8,Cops2,1.07,0.62,1.19,0.10,HEART,PROT,RAT
+Q68FW9,COP9 signalosome complex subunit 3 ,12,3,6,3,Cops3,0.91,0.79,1.32,0.13,HEART,PROT,RAT
+Q68FS2,COP9 signalosome complex subunit 4 ,21,6,18,6,Cops4,1.06,1.00,1.34,0.78,HEART,PROT,RAT
+D3ZLA3,Copine 3 ,11,6,12,6,Cpne3,0.92,0.91,1.14,0.79,HEART,PROT,RAT
+Q4G082,Coq3 protein (Fragment) ,20,6,15,6,Coq3,0.73,0.01,0.86,0.07,HEART,PROT,RAT
+G3V624,Coronin ,10,3,9,3,Coro1c,1.44,0.46,1.44,0.49,HEART,PROT,RAT
+Q920J3,Coronin-6 ,24,7,13,7,Coro6,0.90,0.87,1.10,0.68,HEART,PROT,RAT
+M0R959,Corrinoid adenosyltransferase ,16,3,11,3,LOC687861; Mmab,0.92,1.00,0.68,0.61,HEART,PROT,RAT
+B2RYT5,Cox7a2l protein ,54,5,35,5,Cox7a2l,1.07,0.05,1.15,<0.01,HEART,PROT,RAT
+P07335,Creatine kinase B-type ,57,15,209,14,Ckb,2.01,<0.01,1.52,<0.01,HEART,PROT,RAT
+A0A0G2JSP8,Creatine kinase M-type ,57,20,689,19,Ckm,0.78,0.01,0.75,<0.01,HEART,PROT,RAT
+Q5U2U2,Crk-like protein ,24,6,11,6,Crkl; LOC100911248,0.94,0.80,1.01,1.00,HEART,PROT,RAT
+Q6AZ26,C-terminal binding protein 1 ,25,7,13,7,Ctbp1,0.78,1.00,1.06,1.00,HEART,PROT,RAT
+B1WBY1,Cul1 protein ,3,2,3,2,Cul1,0.90,0.89,0.91,0.98,HEART,PROT,RAT
+Q9JJ31,Cullin-5 ,14,8,28,8,Cul5,0.90,0.66,1.12,0.71,HEART,PROT,RAT
+P97536,Cullin-associated NEDD8-dissociated protein 1 ,16,15,57,14,Cand1,1.23,0.01,1.35,<0.01,HEART,PROT,RAT
+D4AAI5,Cullin-associated NEDD8-dissociated protein 2 ,27,24,81,23,Cand2,1.14,0.15,1.13,0.10,HEART,PROT,RAT
+Q498R7,CXXC motif containing zinc binding protein ,28,3,6,3,RGD1559786,0.75,0.70,1.00,1.00,HEART,PROT,RAT
+P01041,Cystatin-B ,42,4,16,4,Cstb,1.58,0.05,1.45,0.10,HEART,PROT,RAT
+A0A447DUT9,Cysteine and glycine rich protein 3 N-terminal nuclear localization sequence ,27,5,51,5,Csrp3,2.07,<0.01,1.62,0.03,HEART,PROT,RAT
+P47875,Cysteine and glycine-rich protein 1 ,30,4,13,4,Csrp1,1.00,1.00,1.28,0.50,HEART,PROT,RAT
+P36201,Cysteine-rich protein 2 ,32,5,66,5,Crip2,1.36,0.04,1.16,0.25,HEART,PROT,RAT
+B2GV57,"Cysteinyl-tRNA synthetase 2, mitochondrial ",13,5,10,5,Cars2,0.80,0.21,1.02,1.00,HEART,PROT,RAT
+Q921A4,Cytoglobin ,44,10,22,10,Cygb,1.18,1.00,1.63,0.35,HEART,PROT,RAT
+P00173,Cytochrome b5 ,48,5,32,5,Cyb5a,1.00,1.00,0.99,0.91,HEART,PROT,RAT
+P04166,Cytochrome b5 type B ,50,5,23,5,Cyb5b,0.78,0.11,0.75,0.13,HEART,PROT,RAT
+Q68FY0,"Cytochrome b-c1 complex subunit 1, mitochondrial ",33,13,292,13,Uqcrc1,0.90,0.41,0.90,0.27,HEART,PROT,RAT
+P32551,"Cytochrome b-c1 complex subunit 2, mitochondrial ",56,22,315,22,Uqcrc2,0.92,0.02,0.88,0.01,HEART,PROT,RAT
+B2RYS2,Cytochrome b-c1 complex subunit 7 ,58,10,140,10,Uqcrb,0.90,0.29,0.85,0.23,HEART,PROT,RAT
+Q7TQ16,Cytochrome b-c1 complex subunit 8 ,27,3,21,3,Uqcrq,1.12,1.00,0.99,1.00,HEART,PROT,RAT
+P20788,"Cytochrome b-c1 complex subunit Rieske, mitochondrial ",55,13,115,13,Uqcrfs1,0.84,0.40,0.89,0.82,HEART,PROT,RAT
+D3ZL85,Cytochrome c heme lyase ,24,6,14,6,Hccs,0.80,0.03,1.12,0.74,HEART,PROT,RAT
+D3Z9I1,Cytochrome C oxidase assembly factor 3 ,18,2,3,2,Coa3,0.96,1.00,0.63,0.92,HEART,PROT,RAT
+D3ZD09,Cytochrome c oxidase subunit ,20,2,24,2,LOC688869; Cox6b1,0.87,0.03,0.84,0.04,HEART,PROT,RAT
+G3V8M4,Cytochrome c oxidase subunit ,42,2,25,2,Cox6a2,0.78,0.04,0.92,1.00,HEART,PROT,RAT
+Q8SEZ6,Cytochrome c oxidase subunit 1 ,8,3,22,3,COI CO1 COX1 COXI,0.93,0.84,1.04,1.00,HEART,PROT,RAT
+Q5UAJ6,Cytochrome c oxidase subunit 2 ,23,4,96,4,COX2 CO2,0.86,0.01,0.94,1.00,HEART,PROT,RAT
+P10888,"Cytochrome c oxidase subunit 4 isoform 1, mitochondrial ",53,10,195,10,Cox4i1,0.83,<0.01,0.79,<0.01,HEART,PROT,RAT
+P11240,"Cytochrome c oxidase subunit 5A, mitochondrial ",54,9,164,9,Cox5a,0.76,0.39,0.85,0.69,HEART,PROT,RAT
+P12075,"Cytochrome c oxidase subunit 5B, mitochondrial ",30,4,97,4,Cox5b,0.76,0.54,0.94,0.84,HEART,PROT,RAT
+P10818,"Cytochrome c oxidase subunit 6A1, mitochondrial ",59,3,36,3,Cox6a1,1.16,1.00,1.04,1.00,HEART,PROT,RAT
+P11951,Cytochrome c oxidase subunit 6C-2 ,38,4,32,4,Cox6c,0.83,0.02,0.94,0.85,HEART,PROT,RAT
+M0R5K3,Cytochrome c oxidase subunit 7A1 ,29,2,15,2,LOC687508; LOC100910772; Cox7a1,1.09,0.31,1.02,1.00,HEART,PROT,RAT
+P35171,"Cytochrome c oxidase subunit 7A2, mitochondrial ",28,2,39,2,Cox7a2l2; Cox7a2,0.81,<0.01,0.77,<0.01,HEART,PROT,RAT
+P80431,"Cytochrome c oxidase subunit 7B, mitochondrial ",10,2,12,2,Cox7b,0.79,0.17,0.93,1.00,HEART,PROT,RAT
+P80432,"Cytochrome c oxidase subunit 7C, mitochondrial ",29,2,21,2,Cox7c,0.86,0.24,0.79,0.01,HEART,PROT,RAT
+P62898,"Cytochrome c, somatic ",62,8,302,8,Cycs; LOC100363502,0.97,1.00,0.89,0.60,HEART,PROT,RAT
+D3ZFQ8,Cytochrome c-1 ,47,10,152,10,Cyc1,0.87,0.94,0.92,1.00,HEART,PROT,RAT
+G3V6S2,Cytoplasmic aconitate hydratase ,28,20,67,20,Aco1 rCG_55067,1.02,1.00,1.07,0.36,HEART,PROT,RAT
+M0R9X8,Cytoplasmic dynein 1 heavy chain 1 ,27,94,218,94,Dync1h1,1.29,<0.01,1.32,<0.01,HEART,PROT,RAT
+D3ZU74,Cytoplasmic dynein 1 intermediate chain 2 ,6,2,4,2,Dync1i2,1.38,0.29,1.60,0.13,HEART,PROT,RAT
+D3ZH41,Cytoskeleton-associated protein 4 ,56,12,28,12,Ckap4,2.60,<0.01,2.43,<0.01,HEART,PROT,RAT
+Q68FS4,Cytosol aminopeptidase ,41,16,55,16,Lap3,1.32,0.31,1.16,0.41,HEART,PROT,RAT
+Q6Q0N1,Cytosolic non-specific dipeptidase ,39,12,27,12,Cndp2,1.27,0.21,1.24,0.25,HEART,PROT,RAT
+P84850,"D-2-hydroxyglutarate dehydrogenase, mitochondrial ",11,4,6,4,D2hgdh,0.67,0.50,0.79,0.91,HEART,PROT,RAT
+Q6AYT5,Damage-control phosphatase ARMT1 ,18,7,13,7,RGD1305235; Armt1,0.91,1.00,0.95,1.00,HEART,PROT,RAT
+P29147,"D-beta-hydroxybutyrate dehydrogenase, mitochondrial ",27,8,45,8,Bdh1,1.81,<0.01,1.40,<0.01,HEART,PROT,RAT
+P80254,D-dopachrome decarboxylase ,46,6,20,6,Ddt,1.28,0.01,1.15,0.19,HEART,PROT,RAT
+A0A096MIX2,"DEAD (Asp-Glu-Ala-Asp) box polypeptide 17, isoform CRA_a ",13,7,15,4,Ddx17,1.01,1.00,0.90,1.00,HEART,PROT,RAT
+Q6AYI1,DEAD (Asp-Glu-Ala-Asp) box polypeptide 5 ,12,8,14,5,Ddx5,0.75,0.57,0.93,1.00,HEART,PROT,RAT
+Q4QQV4,Dead end homolog 1 (Zebrafish) ,19,8,15,8,Hars,0.93,1.00,0.84,0.72,HEART,PROT,RAT
+A0A0G2K719,"DEAD-box helicase 3, X-linked ",23,11,39,2,Ddx3x,1.35,0.07,1.24,0.61,HEART,PROT,RAT
+Q01129,Decorin ,33,11,63,10,Dcn,0.80,0.03,0.98,1.00,HEART,PROT,RAT
+Q8VID1,Dehydrogenase/reductase SDR family member 4 ,28,8,38,8,Dhrs4,0.80,0.24,0.88,0.36,HEART,PROT,RAT
+Q62651,"Delta(3,5)-Delta(2,4)-dienoyl-CoA isomerase, mitochondrial ",51,14,91,14,Ech1,0.57,<0.01,0.67,<0.01,HEART,PROT,RAT
+D3ZDE4,Deoxyguanosine kinase ,34,7,30,7,Dguok,0.88,0.79,1.01,1.00,HEART,PROT,RAT
+Q6P725,Desmin ,67,29,600,25,Des,1.65,<0.01,1.41,<0.01,HEART,PROT,RAT
+F1LYX9,Desmoglein 2 ,13,10,22,10,Dsg2,0.95,0.48,1.19,0.14,HEART,PROT,RAT
+F1LMV6,Desmoplakin ,43,115,474,115,Dsp,1.11,0.04,1.17,<0.01,HEART,PROT,RAT
+Q7M0E3,Destrin ,53,7,60,6,Dstn,1.68,<0.01,1.62,<0.01,HEART,PROT,RAT
+D4A9W3,D-glutamate cyclase ,24,10,25,10,RGD1311756; Dglucy,0.80,0.06,0.92,0.42,HEART,PROT,RAT
+A0A0G2JZH8,Dihydrolipoamide acetyltransferase component of pyruvate dehydrogenase complex ,31,14,93,14,Pdhx,1.34,0.01,1.12,0.26,HEART,PROT,RAT
+B2GV15,Dihydrolipoamide acetyltransferase component of pyruvate dehydrogenase complex ,37,19,93,19,Dbt,0.78,0.04,0.87,0.72,HEART,PROT,RAT
+G3V6P2,"Dihydrolipoamide S-succinyltransferase (E2 component of 2-oxo-glutarate complex), isoform CRA_a ",27,10,126,10,Dlst,1.01,1.00,0.95,1.00,HEART,PROT,RAT
+Q6P6R2,"Dihydrolipoyl dehydrogenase, mitochondrial ",46,15,197,15,Dld,1.14,0.68,0.99,1.00,HEART,PROT,RAT
+P08461,"Dihydrolipoyllysine-residue acetyltransferase component of pyruvate dehydrogenase complex, mitochondrial ",29,15,226,15,Dlat,1.27,<0.01,1.10,0.04,HEART,PROT,RAT
+P11348,Dihydropteridine reductase ,14,3,11,3,Qdpr,0.73,<0.01,0.76,<0.01,HEART,PROT,RAT
+P47942,Dihydropyrimidinase-related protein 2 ,52,19,99,16,Dpysl2,1.35,0.07,1.33,0.09,HEART,PROT,RAT
+Q62952,Dihydropyrimidinase-related protein 3 ,34,13,24,10,Dpysl3,1.32,0.40,1.46,0.17,HEART,PROT,RAT
+O55096,Dipeptidyl peptidase 3 ,22,9,14,9,Dpp3,1.42,0.51,1.71,0.44,HEART,PROT,RAT
+A0A0G2JTX5,Dipeptidyl peptidase 4 ,9,5,7,5,Dpp4,0.61,0.54,0.87,1.00,HEART,PROT,RAT
+F1LNM0,Disks large homolog 1 ,6,4,8,4,Dlg1,0.80,0.51,0.94,1.00,HEART,PROT,RAT
+G3V8T4,DNA damage-binding protein 1 ,14,12,22,12,Ddb1,0.97,1.00,1.15,0.63,HEART,PROT,RAT
+E9PT51,DNA polymerase delta-interacting protein 2 ,24,7,12,7,Poldip2,0.94,0.98,1.01,1.00,HEART,PROT,RAT
+Q5M9H7,"DnaJ (Hsp40) homolog, subfamily A, member 2 ",41,11,48,10,Dnaja2,1.04,1.00,1.11,1.00,HEART,PROT,RAT
+Q4QR73,"DnaJ (Hsp40) homolog, subfamily A, member 4 ",36,16,59,15,Dnaja4,1.17,0.03,1.18,0.04,HEART,PROT,RAT
+Q5XIP0,"DnaJ (Hsp40) homolog, subfamily B, member 4 ",31,9,15,9,Dnajb4,1.23,0.41,1.25,0.40,HEART,PROT,RAT
+G3V6I5,DnaJ heat shock protein family (Hsp40) member A3 ,35,11,49,11,Dnaja3,0.79,0.36,0.82,0.72,HEART,PROT,RAT
+Q6P7A7,Dolichyl-diphosphooligosaccharide--protein glycosyltransferase subunit 1 ,22,10,20,10,Rpn1,1.12,1.00,1.66,0.06,HEART,PROT,RAT
+Q01986,Dual specificity mitogen-activated protein kinase kinase 1 ,15,5,17,3,Map2k1,1.08,0.54,1.15,0.41,HEART,PROT,RAT
+P36506,Dual specificity mitogen-activated protein kinase kinase 2 ,14,5,8,3,Map2k2,1.07,1.00,1.16,0.93,HEART,PROT,RAT
+A0A0G2K3I9,Dual specificity protein phosphatase ,35,6,29,6,Dusp3,1.42,0.11,1.40,0.08,HEART,PROT,RAT
+A0A0G2K428,Dynactin subunit 1 ,21,18,35,18,Dctn1,1.28,<0.01,1.35,<0.01,HEART,PROT,RAT
+A0A0G2JUC7,Dynactin subunit 2 ,38,12,29,12,Dctn2,1.32,<0.01,1.17,0.09,HEART,PROT,RAT
+O35303,Dynamin-1-like protein ,46,25,70,25,Dnm1l,1.07,1.00,1.04,0.82,HEART,PROT,RAT
+P39052,Dynamin-2 ,12,8,17,4,Dnm2,1.10,1.00,1.33,0.79,HEART,PROT,RAT
+Q2TA68,"Dynamin-like 120 kDa protein, mitochondrial ",43,36,132,36,Opa1,0.97,0.86,1.14,0.33,HEART,PROT,RAT
+Q78P75,"Dynein light chain 2, cytoplasmic ",20,2,10,2,Dynll2,0.95,1.00,1.13,0.26,HEART,PROT,RAT
+P62628,Dynein light chain roadblock-type 1 ,51,3,10,3,Dynlrb1,1.07,0.84,1.18,0.35,HEART,PROT,RAT
+G3V7G0,Dynein light intermediate chain ,22,8,20,8,Dync1li1,1.23,0.03,1.45,0.01,HEART,PROT,RAT
+A0A0G2K7B6,Dysferlin ,17,28,77,28,Dysf,1.18,0.20,1.30,0.02,HEART,PROT,RAT
+D4A772,Dystrobrevin ,20,10,33,10,Dtna,0.88,0.16,1.01,1.00,HEART,PROT,RAT
+F1M8K0,Dystroglycan 1 ,15,10,38,10,Dag1,1.06,0.85,1.07,1.00,HEART,PROT,RAT
+P11530,Dystrophin ,42,121,396,117,Dmd,0.76,<0.01,1.01,0.90,HEART,PROT,RAT
+A0A0G2K8P3,E3 ubiquitin-protein ligase ,10,7,15,7,Nedd4,1.24,0.04,1.26,0.07,HEART,PROT,RAT
+A0A0G2K051,Early endosome antigen 1 ,11,11,16,11,Eea1,1.18,0.02,1.08,0.19,HEART,PROT,RAT
+Q5RJP4,Ectonucleoside triphosphate diphosphohydrolase 2 ,5,2,6,2,Entpd2,0.88,0.62,0.94,1.00,HEART,PROT,RAT
+Q4FZY0,EF-hand domain-containing protein D2 ,27,6,12,6,Efhd2,1.88,0.03,1.70,0.05,HEART,PROT,RAT
+Q641Z6,EH domain-containing protein 1 ,69,31,205,27,Ehd1,1.54,<0.01,1.37,<0.01,HEART,PROT,RAT
+Q4V8H8,EH domain-containing protein 2 ,48,24,127,21,Ehd2,0.77,0.01,0.97,0.69,HEART,PROT,RAT
+Q8R3Z7,EH-domain-containing 4 ,62,25,111,20,Ehd4,1.59,0.01,1.52,0.01,HEART,PROT,RAT
+Q6P6T4,Echinoderm microtubule-associated protein-like 2 ,10,5,7,5,Eml2,1.01,1.00,1.29,0.01,HEART,PROT,RAT
+D3Z9E1,Elastin microfibril interfacer 1 ,13,9,17,9,Emilin1,1.52,0.38,1.82,0.19,HEART,PROT,RAT
+B5DF91,ELAV-like protein 1 ,19,5,5,5,Elavl1,1.35,0.85,0.96,1.00,HEART,PROT,RAT
+P13803,"Electron transfer flavoprotein subunit alpha, mitochondrial ",55,14,357,14,Etfa,0.81,<0.01,0.77,<0.01,HEART,PROT,RAT
+Q68FU3,Electron transfer flavoprotein subunit beta ,44,12,114,12,Etfb,0.90,0.09,0.89,0.04,HEART,PROT,RAT
+Q66HF3,Electron transfer flavoprotein-ubiquinone oxidoreductase ,33,19,194,19,Etfdh,0.80,0.01,0.92,0.72,HEART,PROT,RAT
+M0R757,Elongation factor 1-alpha ,44,15,118,6,LOC100360413; LOC100911991,1.39,0.24,1.38,0.19,HEART,PROT,RAT
+P62632,Elongation factor 1-alpha 2 ,47,18,214,9,Eef1a2,0.98,1.00,0.96,1.00,HEART,PROT,RAT
+Q68FR9,Elongation factor 1-delta ,44,10,41,10,Eef1d,1.38,0.05,1.17,0.35,HEART,PROT,RAT
+Q68FR6,Elongation factor 1-gamma ,45,17,70,17,Eef1g,1.48,0.03,1.37,0.14,HEART,PROT,RAT
+P05197,Elongation factor 2 ,41,32,213,32,Eef2,1.20,0.11,1.14,0.18,HEART,PROT,RAT
+Q07803,"Elongation factor G, mitochondrial ",25,17,48,17,Gfm1,0.95,0.79,1.08,0.43,HEART,PROT,RAT
+Q9QYU2,"Elongation factor Ts, mitochondrial ",31,5,13,5,Tsfm,1.03,1.00,0.98,1.00,HEART,PROT,RAT
+P85834,"Elongation factor Tu, mitochondrial ",52,20,194,20,Tufm,1.08,0.25,1.01,1.00,HEART,PROT,RAT
+P62870,Elongin-B ,38,6,17,6,Tceb2; Elob,0.92,0.93,1.04,0.77,HEART,PROT,RAT
+P83941,Elongin-C ,37,3,7,3,Tceb1; Eloc,0.94,1.00,1.05,0.98,HEART,PROT,RAT
+Q3V5X8,Endonuclease ,38,8,26,8,Endog,0.79,0.05,0.79,0.08,HEART,PROT,RAT
+Q6AYE2,Endophilin-B1 ,16,5,10,4,Sh3glb1,0.78,0.05,0.90,0.41,HEART,PROT,RAT
+P06761,Endoplasmic reticulum chaperone BiP ,52,29,192,26,Hspa5,1.19,0.05,1.14,0.75,HEART,PROT,RAT
+P52555,Endoplasmic reticulum resident protein 29 ,21,6,22,6,Erp29,1.88,0.05,1.75,0.07,HEART,PROT,RAT
+Q66HD0,Endoplasmin ,36,28,74,27,Hsp90b1,1.32,<0.01,1.35,<0.01,HEART,PROT,RAT
+Q561R9,Endoribonuclease LACTB2 ,16,4,7,4,Lactb2,0.79,0.06,0.89,0.39,HEART,PROT,RAT
+D3ZIL6,Enoyl CoA hydratase domain-containing 2 ,31,6,29,6,Echdc2,0.58,<0.01,0.83,0.29,HEART,PROT,RAT
+A0A140TAE6,"Enoyl-[acyl-carrier-protein] reductase, mitochondrial ",42,9,26,9,Mecr,0.75,0.11,0.78,0.05,HEART,PROT,RAT
+P23965,"Enoyl-CoA delta isomerase 1, mitochondrial ",55,14,187,14,Eci1,0.52,<0.01,0.63,0.02,HEART,PROT,RAT
+Q5XIC0,"Enoyl-CoA delta isomerase 2, mitochondrial ",33,10,75,5,Eci2,0.75,0.01,0.78,0.03,HEART,PROT,RAT
+P14604,"Enoyl-CoA hydratase, mitochondrial ",40,12,197,12,Echs1; LOC100911186,0.80,<0.01,0.83,<0.01,HEART,PROT,RAT
+F1M471,EPM2A-interacting protein 1 ,10,3,8,3,Epm2aip1,0.99,1.00,1.22,0.94,HEART,PROT,RAT
+B5DEH2,Erlin-2 ,15,5,12,5,Erlin2,0.95,1.00,1.39,0.10,HEART,PROT,RAT
+Q8R4A1,ERO1-like protein alpha ,9,3,6,3,Ero1l; Ero1a,1.75,0.03,1.71,0.02,HEART,PROT,RAT
+D4A6Q4,Erythrocyte membrane protein band 4.1 ,8,4,6,4,Epb41 Epb4.1,0.91,0.88,1.18,0.52,HEART,PROT,RAT
+D3ZDT1,Erythrocyte membrane protein band 4.1-like 2 ,10,7,16,7,Epb4.1l2; Epb41l2,1.25,0.32,1.29,0.25,HEART,PROT,RAT
+P56571,"ES1 protein homolog, mitochondrial ",43,11,151,11,RGD1303003,0.94,0.21,0.90,0.03,HEART,PROT,RAT
+Q6MGB5,Estradiol 17-beta-dehydrogenase 8 ,15,3,10,3,Hsd17b8,0.57,0.20,0.85,1.00,HEART,PROT,RAT
+O88637,Ethanolamine-phosphate cytidylyltransferase ,24,8,21,8,Pcyt2,1.35,0.04,1.33,0.07,HEART,PROT,RAT
+B0BNJ4,"ETHE1, persulfide dioxygenase ",13,2,5,2,Ethe1,0.91,0.97,0.91,0.95,HEART,PROT,RAT
+Q5RKI1,Eukaryotic initiation factor 4A-II ,47,15,48,6,Eif4a2,1.05,1.00,1.26,0.52,HEART,PROT,RAT
+Q6AYD5,Eukaryotic peptide chain release factor GTP-binding subunit ERF3B-like ,14,7,11,7,Gspt1; LOC100911685,1.31,0.02,1.09,0.50,HEART,PROT,RAT
+Q5U2Q7,Eukaryotic peptide chain release factor subunit 1 ,10,3,7,3,Etf1,1.08,1.00,1.23,1.00,HEART,PROT,RAT
+B5DEN5,Eukaryotic translation elongation factor 1 beta 2 ,41,8,27,8,Eef1b2,1.49,0.05,1.26,0.25,HEART,PROT,RAT
+Q6P685,Eukaryotic translation initiation factor 2 subunit beta ,21,6,10,6,Eif2s2,0.98,1.00,0.78,1.00,HEART,PROT,RAT
+Q1JU68,Eukaryotic translation initiation factor 3 subunit A ,10,10,16,10,Eif3a,1.07,0.18,1.30,0.01,HEART,PROT,RAT
+D4AC36,Eukaryotic translation initiation factor 3 subunit F ,14,4,7,4,Eif3f,1.14,1.00,1.20,0.97,HEART,PROT,RAT
+M0RCH0,Eukaryotic translation initiation factor 3 subunit I ,28,6,15,6,EIF3I Eif3i EIF3S2,1.15,1.00,1.15,0.62,HEART,PROT,RAT
+A0JPM9,Eukaryotic translation initiation factor 3 subunit J ,41,7,25,7,Eif3j,1.13,0.37,1.33,0.06,HEART,PROT,RAT
+D3ZU13,"Eukaryotic translation initiation factor 4 gamma, 1 ",9,12,18,11,Eif4g1,1.07,1.00,1.12,0.88,HEART,PROT,RAT
+Q6P3V8,Eukaryotic translation initiation factor 4A1 ,41,14,32,5,Eif4a1,1.33,0.03,1.39,0.03,HEART,PROT,RAT
+P63074,Eukaryotic translation initiation factor 4E ,18,4,8,4,Eif4e,0.89,1.00,1.18,1.00,HEART,PROT,RAT
+Q07205,Eukaryotic translation initiation factor 5 ,6,2,10,2,Eif5,1.19,0.43,1.15,0.63,HEART,PROT,RAT
+Q3T1J1,Eukaryotic translation initiation factor 5A-1 ,34,5,32,5,Eif5a,1.01,1.00,1.08,0.86,HEART,PROT,RAT
+Q5XIC2,"Evolutionarily conserved signaling intermediate in Toll pathway, mitochondrial ",21,7,18,7,Ecsit,1.03,1.00,1.07,0.85,HEART,PROT,RAT
+Q80U96,Exportin-1 ,14,11,20,11,Xpo1,0.97,1.00,1.40,0.02,HEART,PROT,RAT
+P31977,Ezrin ,27,17,61,8,Ezr,1.51,0.55,1.28,0.83,HEART,PROT,RAT
+B2GUZ5,F-actin-capping protein subunit alpha-1 ,40,7,21,5,Capza1,1.22,0.02,1.29,0.02,HEART,PROT,RAT
+Q3T1K5,F-actin-capping protein subunit alpha-2 ,47,8,40,6,Capza2,1.03,1.00,1.00,1.00,HEART,PROT,RAT
+Q5XI32,F-actin-capping protein subunit beta ,32,9,49,9,Capzb,1.10,0.04,1.01,0.77,HEART,PROT,RAT
+D3ZEH2,FAD-dependent oxidoreductase domain containing 1 ,4,2,3,2,Foxred1,0.90,1.00,0.95,1.00,HEART,PROT,RAT
+B2GUZ9,Fam49b protein ,19,5,12,5,Fam49b,1.08,1.00,1.11,0.56,HEART,PROT,RAT
+P85845,Fascin ,15,6,13,6,Fscn1; LOC683788,1.21,0.85,1.00,1.00,HEART,PROT,RAT
+Q5M9G9,FAST kinase domain-containing protein 4 ,10,4,6,4,Tbrg4,0.93,0.80,1.05,1.00,HEART,PROT,RAT
+P55053,Fatty acid-binding protein 5 ,22,3,9,3,Fabp5,0.67,0.35,0.84,0.95,HEART,PROT,RAT
+P07483,"Fatty acid-binding protein, heart ",82,12,519,12,Fabp3,0.68,0.01,0.68,0.03,HEART,PROT,RAT
+Q5XI19,Fermitin family homolog 2 (Drosophila) ,21,10,39,10,Fermt2,1.11,0.83,1.11,0.19,HEART,PROT,RAT
+P19132,Ferritin heavy chain ,31,5,11,5,Fth1,0.72,0.03,0.81,0.34,HEART,PROT,RAT
+D3ZBM3,Ferrochelatase ,26,9,24,9,Fech,0.74,0.01,0.98,1.00,HEART,PROT,RAT
+Q9QX79,Fetuin-B ,16,5,30,5,Fetub,0.83,0.45,0.89,1.00,HEART,PROT,RAT
+G3V9M6,Fibrillin 1 ,1,4,8,4,Fbn1,2.47,0.01,2.08,0.03,HEART,PROT,RAT
+P14480,Fibrinogen beta chain ,32,12,34,12,Fgb,1.15,0.21,0.90,0.23,HEART,PROT,RAT
+P02680,Fibrinogen gamma chain ,21,8,22,8,Fgg,1.19,0.06,0.85,0.20,HEART,PROT,RAT
+A0A096P6L8,Fibronectin ,16,25,50,25,Fn1,1.68,<0.01,1.24,0.02,HEART,PROT,RAT
+Q9WVH8,Fibulin-5 ,9,4,8,4,Fbln5,1.34,0.71,1.82,0.23,HEART,PROT,RAT
+C0JPT7,Filamin A ,38,69,236,60,Flna,0.93,0.05,1.31,<0.01,HEART,PROT,RAT
+A0A0G2JXT8,Filamin B ,13,25,77,17,Flnb,1.15,0.87,1.22,0.81,HEART,PROT,RAT
+Q5U1Y3,Filamin-binding LIM protein 1 ,12,2,7,2,Fblim1,1.24,0.11,1.16,0.20,HEART,PROT,RAT
+D3ZHA0,Filamin-C ,45,98,477,87,Flnc,1.96,<0.01,1.66,<0.01,HEART,PROT,RAT
+Q5RKI5,"FLII, actin-remodeling protein ",6,5,6,5,Flii,1.16,0.23,1.50,0.02,HEART,PROT,RAT
+Q9Z1E1,Flotillin-1 ,35,11,24,11,Flot1,1.12,1.00,1.00,1.00,HEART,PROT,RAT
+Q9Z2S9,Flotillin-2 ,23,8,18,8,Flot2,0.97,1.00,1.13,0.82,HEART,PROT,RAT
+Q6P792,Four and a half LIM domains 1 ,13,4,36,4,Fhl1,2.09,<0.01,2.17,<0.01,HEART,PROT,RAT
+O35115,Four and a half LIM domains protein 2 ,9,3,23,3,Fhl2,0.60,0.60,1.07,1.00,HEART,PROT,RAT
+A0A3G2LW22,Fragile X mental retardation syndrome-related protein 1 ,16,7,17,7,Fxr1,1.16,0.06,1.30,0.02,HEART,PROT,RAT
+M0RAK4,"Frataxin, mitochondrial ",25,4,13,4,Fxn,0.82,0.09,1.10,0.82,HEART,PROT,RAT
+P05065,Fructose-bisphosphate aldolase A ,59,18,316,8,Aldoa,1.06,0.72,0.90,0.57,HEART,PROT,RAT
+P14408,"Fumarate hydratase, mitochondrial ",56,19,239,19,Fh Fh1,0.90,<0.01,0.84,<0.01,HEART,PROT,RAT
+B2RYW9,Fumarylacetoacetate hydrolase domain-containing protein 2 ,45,10,32,10,Fahd2a,0.85,0.01,0.95,0.42,HEART,PROT,RAT
+D3ZAQ0,FUN14 domain-containing 2 ,26,4,7,4,Fundc2,0.84,0.13,0.76,0.04,HEART,PROT,RAT
+Q5PQK2,FUS RNA-binding protein ,9,4,7,4,Fus,0.88,0.58,0.98,1.00,HEART,PROT,RAT
+D3ZYS7,G3BP stress granule assembly factor 1 ,15,5,11,5,G3bp1,0.96,1.00,0.99,1.00,HEART,PROT,RAT
+Q6AY21,G3BP stress granule assembly factor 2 ,5,2,3,2,G3bp2,0.78,0.49,0.93,1.00,HEART,PROT,RAT
+A0A0G2JXN6,Galectin ,14,4,9,4,Lgals3,1.99,0.01,1.90,0.02,HEART,PROT,RAT
+B4F7A3,Galectin ,15,2,7,2,Lgalsl,0.90,0.73,1.08,0.97,HEART,PROT,RAT
+P11762,Galectin-1 ,37,5,27,5,Lgals1,1.69,0.05,1.30,0.39,HEART,PROT,RAT
+P47967,Galectin-5 ,39,4,13,4,Lgals5,1.48,0.03,1.86,0.01,HEART,PROT,RAT
+P08050,Gap junction alpha-1 protein ,14,4,12,4,Gja1,0.60,0.07,0.80,0.52,HEART,PROT,RAT
+D3ZKU6,GB1/RHD3-type G domain-containing protein ,15,8,30,8,Gbp1,1.68,<0.01,1.59,<0.01,HEART,PROT,RAT
+Q68FP1,Gelsolin ,27,14,49,14,Gsn,1.41,<0.01,1.45,<0.01,HEART,PROT,RAT
+Q63228,Glia maturation factor beta ,27,3,10,3,Gmfb,1.48,0.08,1.38,0.15,HEART,PROT,RAT
+Q5RK08,Glioblastoma amplified sequence ,49,13,118,13,Gbas; Nipsnap2,0.76,<0.01,0.98,0.56,HEART,PROT,RAT
+Q62669,Globin a1 ,82,11,261,7,Hbb-b1; LOC103694855,1.89,<0.01,1.72,<0.01,HEART,PROT,RAT
+A0A0G2JSW3,Globin a4 ,75,12,689,4,Hbb,1.66,<0.01,1.66,<0.01,HEART,PROT,RAT
+A0A0G2JTB2,"Glucan (1,4-alpha-), branching enzyme 1 ",19,10,27,4,Gbe1,1.32,0.02,1.32,0.01,HEART,PROT,RAT
+Q6P6V0,Glucose-6-phosphate isomerase ,54,23,216,23,Gpi,1.51,<0.01,1.39,<0.01,HEART,PROT,RAT
+P10860,"Glutamate dehydrogenase 1, mitochondrial ",41,21,114,21,Glud1,0.77,0.01,0.82,0.04,HEART,PROT,RAT
+Q66H61,Glutamine--tRNA ligase ,14,8,11,8,Qars,1.09,1.00,1.06,1.00,HEART,PROT,RAT
+A0A0G2JZI2,Glutamyl-prolyl-tRNA synthetase ,12,13,20,13,Eprs,1.12,0.82,1.20,0.50,HEART,PROT,RAT
+Q9JLZ1,Glutaredoxin-3 ,33,8,22,8,Glrx3,1.20,0.77,1.23,0.18,HEART,PROT,RAT
+D3ZT90,Glutaryl-CoA dehydrogenase ,27,8,40,8,Gcdh,0.81,0.02,0.93,0.73,HEART,PROT,RAT
+A0A0G2K531,Glutathione peroxidase ,26,5,13,5,Gpx3,1.61,<0.01,1.42,0.01,HEART,PROT,RAT
+F8WFK6,Glutathione peroxidase ,18,4,17,4,Gpx4,1.17,1.00,1.13,1.00,HEART,PROT,RAT
+P04041,Glutathione peroxidase 1 ,63,10,60,10,Gpx1,1.59,<0.01,1.36,<0.01,HEART,PROT,RAT
+F1LRE1,Glutathione reductase ,24,7,13,7,Gsr,0.89,0.91,0.95,1.00,HEART,PROT,RAT
+P04904,Glutathione S-transferase alpha-3 ,57,9,68,5,Gsta3; Gsta1; LOC102550391; LOC108348061,1.19,0.08,1.16,0.08,HEART,PROT,RAT
+P14942,Glutathione S-transferase alpha-4 ,13,3,10,2,Gsta4,0.71,0.84,1.09,1.00,HEART,PROT,RAT
+P24473,Glutathione S-transferase kappa 1 ,57,11,55,11,Gstk1,0.89,0.03,1.04,1.00,HEART,PROT,RAT
+P08010,Glutathione S-transferase Mu 2 ,65,16,145,11,Gstm2,0.89,0.18,0.90,0.42,HEART,PROT,RAT
+Q9Z339,Glutathione S-transferase omega-1 ,33,7,25,7,Gsto1,1.19,0.32,1.01,1.00,HEART,PROT,RAT
+P04906,Glutathione S-transferase P ,38,6,34,6,Gstp1,0.87,0.03,0.95,1.00,HEART,PROT,RAT
+P30713,Glutathione S-transferase theta-2 ,31,6,24,5,Gstt2,1.13,1.00,1.32,0.36,HEART,PROT,RAT
+P08009,Glutathione S-transferase Yb-3 ,60,12,89,5,Gstm7,0.76,0.01,0.82,0.15,HEART,PROT,RAT
+P04797,Glyceraldehyde-3-phosphate dehydrogenase ,53,16,913,3,Gapdh; LOC685186; LOC108351137,1.01,0.81,0.97,0.82,HEART,PROT,RAT
+D3ZAP9,Glycerol-3-phosphate dehydrogenase [NAD(+)] ,38,13,38,10,Gpd1l,1.07,0.74,1.18,0.33,HEART,PROT,RAT
+O35077,"Glycerol-3-phosphate dehydrogenase [NAD(+)], cytoplasmic ",46,16,86,13,Gpd1,1.48,<0.01,1.32,<0.01,HEART,PROT,RAT
+D3ZDK7,Glycerol-3-phosphate phosphatase ,12,3,12,3,Pgp,1.00,1.00,0.97,1.00,HEART,PROT,RAT
+Q5I0G4,Glycine--tRNA ligase ,22,12,23,12,Gars1 Gars,1.05,1.00,0.93,0.92,HEART,PROT,RAT
+A2RRU1,"Glycogen [starch] synthase, muscle ",29,18,69,18,Gys1,0.96,0.87,1.07,0.76,HEART,PROT,RAT
+A0A0G2KB98,Glycogen synthase kinase-3 beta ,19,4,16,3,Gsk3b,1.15,1.00,1.26,0.16,HEART,PROT,RAT
+F8WFR6,Glycogenin-1 ,33,7,44,7,Gyg1,1.72,<0.01,1.32,0.01,HEART,PROT,RAT
+Q5I0D1,Glyoxalase domain-containing protein 4 ,41,11,38,11,Glod4,1.22,0.20,1.18,0.30,HEART,PROT,RAT
+Q6P7Q2,Glypican-1 ,25,9,33,9,Gpc1,1.66,0.16,1.95,0.02,HEART,PROT,RAT
+Q9Z244,GMP reductase 1 ,24,6,36,6,Gmpr,0.77,0.02,0.88,0.20,HEART,PROT,RAT
+Q4V7C6,GMP synthase [glutamine-hydrolyzing] ,13,7,14,7,Gmps,1.00,1.00,0.81,0.78,HEART,PROT,RAT
+Q5XI09,Gnl1 protein (Fragment) ,6,2,5,2,Gnl1,1.67,0.41,1.35,0.83,HEART,PROT,RAT
+Q9R080,G-protein-signaling modulator 1 ,7,3,6,3,Gpsm1,0.99,1.00,1.71,0.05,HEART,PROT,RAT
+A0A0G2JTY6,G-rich RNA sequence-binding factor 1 ,17,5,12,5,Grsf1,0.76,0.13,0.86,0.68,HEART,PROT,RAT
+Q68FY4,Group specific component ,29,11,57,11,Gc,0.94,0.21,1.01,1.00,HEART,PROT,RAT
+P62994,Growth factor receptor-bound protein 2 ,27,6,12,6,Grb2,1.07,1.00,0.94,1.00,HEART,PROT,RAT
+P97576,"GrpE protein homolog 1, mitochondrial ",46,9,45,9,Grpel1,0.90,1.00,0.89,0.64,HEART,PROT,RAT
+Q6P2A5,"GTP:AMP phosphotransferase AK3, mitochondrial ",74,16,92,16,Ak3,1.05,0.36,1.14,0.02,HEART,PROT,RAT
+Q04970,GTPase NRas ,40,5,12,5,Nras,0.97,1.00,1.05,1.00,HEART,PROT,RAT
+P62828,GTP-binding nuclear protein Ran ,33,6,32,6,Ran,1.27,0.05,1.20,0.35,HEART,PROT,RAT
+G3V7K9,GTP-binding protein ,14,3,4,3,Rrad,0.97,1.00,1.07,1.00,HEART,PROT,RAT
+Q5HZY2,GTP-binding protein SAR1b ,21,4,14,2,Sar1b,0.95,0.86,0.90,0.85,HEART,PROT,RAT
+Q9JKB7,Guanine deaminase ,33,16,59,16,Gda,1.41,<0.01,1.43,<0.01,HEART,PROT,RAT
+P04897,Guanine nucleotide-binding protein G(i) subunit alpha-2 ,31,8,25,4,Gnai2,1.39,0.01,1.45,<0.01,HEART,PROT,RAT
+P54311,Guanine nucleotide-binding protein G(I)/G(S)/G(T) subunit beta-1 ,16,6,24,3,Gnb1,1.13,0.79,1.28,0.07,HEART,PROT,RAT
+D4A9P9,"Gup1, glycerol uptake/transporter homolog (Yeast) (Predicted) ",28,10,54,10,Hhatl,0.67,<0.01,0.88,0.89,HEART,PROT,RAT
+Q6MGC4,"H2-K region expressed gene 2, rat orthologue ",34,4,7,4,Pfdn6,1.21,0.57,1.22,0.92,HEART,PROT,RAT
+P06866,Haptoglobin ,34,12,52,12,Hp,1.03,1.00,0.95,1.00,HEART,PROT,RAT
+B5DFG4,"Heat shock 27kD protein family, member 7 (Cardiovascular) ",46,6,22,6,Hspb7,2.20,0.01,2.00,0.04,HEART,PROT,RAT
+G3V913,Heat shock 27kDa protein 1 ,88,13,111,13,Hspb1,2.16,<0.01,1.69,<0.01,HEART,PROT,RAT
+G3V7G6,Heat shock 27kDa protein 3 ,39,5,9,5,Hspb3,1.28,0.32,1.21,0.90,HEART,PROT,RAT
+P0DMW0,Heat shock 70 kDa protein 1A ,39,19,104,14,Hspa1b; Hspa1a; LOC108348108,1.25,0.01,1.46,<0.01,HEART,PROT,RAT
+O88600,Heat shock 70 kDa protein 4 ,45,30,98,30,Hspa4,1.24,0.02,1.25,0.01,HEART,PROT,RAT
+P63018,Heat shock cognate 71 kDa protein ,57,31,345,24,Hspa8,1.19,0.03,1.05,1.00,HEART,PROT,RAT
+Q66HA8,Heat shock protein 105 kDa ,4,2,5,2,Hsph1,1.10,1.00,1.30,0.56,HEART,PROT,RAT
+Q5XHZ0,"Heat shock protein 75 kDa, mitochondrial ",42,25,65,24,Trap1,1.00,1.00,1.06,0.69,HEART,PROT,RAT
+O35878,Heat shock protein beta-2 ,57,6,38,6,Hspb2,1.11,0.50,1.24,0.06,HEART,PROT,RAT
+P97541,Heat shock protein beta-6 ,75,7,79,7,Hspb6,1.41,<0.01,1.17,0.11,HEART,PROT,RAT
+Q9EPX0,Heat shock protein beta-8 ,24,5,23,5,Hspb8,1.46,<0.01,1.16,0.03,HEART,PROT,RAT
+D3ZVM5,Heat shock protein family A (Hsp70) member 12B ,14,7,16,6,Hspa12b,0.85,0.05,1.05,0.74,HEART,PROT,RAT
+P82995,Heat shock protein HSP 90-alpha ,39,27,152,17,Hsp90aa1; LOC103692716,1.97,<0.01,1.77,<0.01,HEART,PROT,RAT
+P34058,Heat shock protein HSP 90-beta ,42,30,221,19,Hsp90ab1,1.24,<0.01,1.20,<0.01,HEART,PROT,RAT
+B4F7C7,Hebp1 protein ,37,5,6,5,Hebp1,1.38,0.49,1.53,0.31,HEART,PROT,RAT
+P11517,Hemoglobin subunit beta-2 ,73,11,586,3,LOC100134871; LOC689064; LOC103694857,1.62,<0.01,1.76,<0.01,HEART,PROT,RAT
+P20059,Hemopexin ,34,15,99,15,Hpx,1.44,<0.01,1.47,<0.01,HEART,PROT,RAT
+F1LPC7,Hepatoma-derived growth factor ,18,3,7,3,Hdgf,1.08,1.00,1.01,1.00,HEART,PROT,RAT
+P04256,Heterogeneous nuclear ribonucleoprotein A1 ,25,7,20,5,Hnrnpa1,0.79,0.01,0.98,1.00,HEART,PROT,RAT
+Q6URK4,Heterogeneous nuclear ribonucleoprotein A3 ,22,6,19,5,Hnrnpa3,1.16,0.83,1.20,0.17,HEART,PROT,RAT
+A0A0G2JXW4,Heterogeneous nuclear ribonucleoprotein C ,26,7,22,7,LOC100911576; Hnrnpc,0.83,0.81,0.99,1.00,HEART,PROT,RAT
+Q9JJ54,Heterogeneous nuclear ribonucleoprotein D0 ,6,2,10,2,Hnrpd; Hnrnpd,0.93,0.79,1.03,1.00,HEART,PROT,RAT
+Q794E4,Heterogeneous nuclear ribonucleoprotein F ,21,5,12,3,Hnrnpf,1.16,1.00,1.07,1.00,HEART,PROT,RAT
+G3V9Q3,Heterogeneous nuclear ribonucleoprotein H ,18,5,15,3,Hnrnph1 Hnrph1,0.90,1.00,1.12,0.92,HEART,PROT,RAT
+Q5D059,Heterogeneous nuclear ribonucleoprotein K ,39,14,51,14,Hnrnpk,0.87,0.54,1.03,1.00,HEART,PROT,RAT
+F1LQ48,Heterogeneous nuclear ribonucleoprotein L ,22,9,25,9,Hnrnpl; Fblim1,0.90,0.12,1.07,0.50,HEART,PROT,RAT
+F1M3D3,Heterogeneous nuclear ribonucleoprotein M ,35,16,31,16,Hnrnpm,0.83,0.39,1.04,1.00,HEART,PROT,RAT
+M0R735,Heterogeneous nuclear ribonucleoprotein Q ,31,13,27,10,Syncrip,1.11,0.37,1.15,0.74,HEART,PROT,RAT
+Q6IMY8,Heterogeneous nuclear ribonucleoprotein U ,11,8,18,8,Hnrnpu,0.76,0.17,1.04,1.00,HEART,PROT,RAT
+D4ABT8,Heterogeneous nuclear ribonucleoprotein U-like 2 ,4,2,4,2,Hnrnpul2,1.30,0.05,1.31,0.06,HEART,PROT,RAT
+A7VJC2,Heterogeneous nuclear ribonucleoproteins A2/B1 ,37,10,71,9,Hnrnpa2b1,0.82,0.24,0.96,1.00,HEART,PROT,RAT
+P05708,Hexokinase-1 ,32,28,117,6,Hk1,1.98,<0.01,1.46,<0.01,HEART,PROT,RAT
+P27881,Hexokinase-2 ,14,12,28,8,Hk2,1.39,<0.01,1.15,0.27,HEART,PROT,RAT
+Q3KRF2,High density lipoprotein binding protein (Vigilin) ,16,13,26,13,Hdlbp,1.22,1.00,1.72,1.00,HEART,PROT,RAT
+P63159,High mobility group protein B1 ,29,8,30,7,Hmgb1; Hmg1l1,0.91,0.62,1.14,0.86,HEART,PROT,RAT
+P52925,High mobility group protein B2 ,15,3,8,2,Hmgb2; RGD1564519; Hmgb2l1,0.98,1.00,1.12,1.00,HEART,PROT,RAT
+P62749,Hippocalcin-like protein 1 ,22,4,8,4,Hpcal1,1.01,1.00,1.12,0.54,HEART,PROT,RAT
+G3V8S6,"Histidine rich calcium binding protein, isoform CRA_b ",25,11,45,11,Hrc,0.77,0.11,0.92,0.84,HEART,PROT,RAT
+D4AB01,"Histidine triad nucleotide binding protein 2 (Predicted), isoform CRA_a ",31,4,25,4,Hint2,0.83,0.02,0.85,0.07,HEART,PROT,RAT
+P62959,Histidine triad nucleotide-binding protein 1 ,55,4,38,4,Hint1,1.11,0.82,1.20,0.70,HEART,PROT,RAT
+A0A0G2K3G0,Histidine-rich glycoprotein ,7,4,10,4,Hrg rCG_36700,1.32,0.06,1.27,0.08,HEART,PROT,RAT
+D3ZA85,"Histone cell cycle regulation defective interacting protein 5 (Predicted), isoform CRA_a ",19,4,19,4,Nfu1,0.99,1.00,1.01,1.00,HEART,PROT,RAT
+A0A0G2K654,Histone cluster 1 H1 family member c ,19,4,10,4,LOC684681; Hist1h1c,0.79,0.70,0.78,0.69,HEART,PROT,RAT
+D3ZXP3,Histone H2A ,33,4,26,2,H2afx,0.90,0.32,1.02,1.00,HEART,PROT,RAT
+D4AEC0,Histone H2A ,26,3,15,2,LOC685909; H2afv,0.86,1.00,1.06,1.00,HEART,PROT,RAT
+D3ZNH4,Histone H2B ,36,5,142,5,Hist1h2bo,0.89,0.78,0.95,1.00,HEART,PROT,RAT
+P62804,Histone H4 ,50,5,9,5,LOC100912418; RGD1562378; LOC680097; Hist4h4; LOC100912564; LOC100912489; Hist1h4b; LOC100360950; LOC680430; LOC100912290; Hist1h4a; LOC679983; Hist2h4a; Hist1h4m; Hist2h4; LOC102551184; LOC102548682; LOC102557184; Hist1h2ao,0.88,0.88,0.70,0.06,HEART,PROT,RAT
+A0A0H2UI35,Homer protein homolog 1 ,6,2,3,2,Homer1,0.92,0.78,0.64,0.02,HEART,PROT,RAT
+P50503,Hsc70-interacting protein ,23,9,39,9,St13,1.27,0.02,1.27,0.05,HEART,PROT,RAT
+B0BNB9,HtrA serine peptidase 2 ,12,4,10,4,Htra2,0.81,0.62,0.98,1.00,HEART,PROT,RAT
+D3ZXS8,"Huntingtin interacting protein 2 (Predicted), isoform CRA_a ",18,3,4,3,Ube2k,1.14,1.00,1.30,1.00,HEART,PROT,RAT
+F1LQI1,Hydroxyacyl glutathione hydrolase ,11,3,8,3,Hagh,1.13,0.12,1.04,1.00,HEART,PROT,RAT
+Q9WVK7,"Hydroxyacyl-coenzyme A dehydrogenase, mitochondrial ",67,15,321,15,Hadh,0.51,<0.01,0.57,<0.01,HEART,PROT,RAT
+P97519,"Hydroxymethylglutaryl-CoA lyase, mitochondrial ",34,8,49,8,Hmgcl,0.99,1.00,0.99,1.00,HEART,PROT,RAT
+Q4V8F9,Hydroxysteroid dehydrogenase-like protein 2 ,36,14,148,14,Hsdl2,0.60,<0.01,0.68,<0.01,HEART,PROT,RAT
+Q6P136,Hyou1 protein ,30,20,38,20,Hyou1,1.07,1.00,1.13,0.69,HEART,PROT,RAT
+G3V628,Hypothetical protein MGC:15854 ,11,3,6,3,RGD1302996,0.87,0.13,0.93,1.00,HEART,PROT,RAT
+P27605,Hypoxanthine-guanine phosphoribosyltransferase ,48,9,79,9,Hprt1; LOC103689983,1.18,0.72,1.18,1.00,HEART,PROT,RAT
+Q3MHS9,"Chaperonin containing Tcp1, subunit 6A (Zeta 1) ",47,20,74,20,Cct6a,1.23,0.27,1.32,0.07,HEART,PROT,RAT
+D4ACB8,"Chaperonin subunit 8 (Theta) (Predicted), isoform CRA_a ",41,20,49,20,Cct8,1.13,0.19,1.30,0.01,HEART,PROT,RAT
+G3V8C4,Chloride intracellular channel protein ,49,10,49,9,Clic4,1.54,<0.01,1.36,<0.01,HEART,PROT,RAT
+Q6MG61,Chloride intracellular channel protein 1 ,21,4,9,4,Clic1,1.76,<0.01,1.60,0.01,HEART,PROT,RAT
+Q9EPT8,Chloride intracellular channel protein 5 ,37,7,11,6,Clic5,1.09,1.00,1.17,1.00,HEART,PROT,RAT
+P19836,Choline-phosphate cytidylyltransferase A ,13,3,5,3,Pcyt1a,0.91,1.00,1.03,1.00,HEART,PROT,RAT
+D3ZPR0,Chromosome segregation 1-like ,15,10,25,10,Cse1l,0.88,1.00,1.19,1.00,HEART,PROT,RAT
+P20761,Ig gamma-2B chain C region ,15,4,17,4,Igh-1a; Igh-6,1.50,<0.01,1.45,<0.01,HEART,PROT,RAT
+A0A0G2K477,Immunoglobulin heavy constant mu ,18,7,41,3,Ighm,3.41,<0.01,3.77,<0.01,HEART,PROT,RAT
+D4A781,Importin 5 ,19,13,39,13,Ipo5,0.92,1.00,1.14,0.62,HEART,PROT,RAT
+D4AE96,Importin 7 ,10,7,17,7,Ipo7,1.51,0.02,1.35,0.07,HEART,PROT,RAT
+A0A0H2UHW5,Importin subunit alpha ,5,2,3,2,Kpna5,1.11,1.00,1.26,0.61,HEART,PROT,RAT
+F2Z3Q8,Importin subunit beta-1 ,21,13,48,13,Kpnb1,0.92,1.00,1.40,0.18,HEART,PROT,RAT
+F7EPH4,Inorganic pyrophosphatase 1 ,42,10,34,10,Ppa1,0.89,0.86,0.97,1.00,HEART,PROT,RAT
+D4A830,Inorganic pyrophosphatase 2 ,56,13,66,13,Ppa2,0.78,<0.01,0.77,0.01,HEART,PROT,RAT
+D3ZW55,Inosine triphosphate pyrophosphatase ,23,4,11,4,Itpa,1.07,1.00,1.39,0.15,HEART,PROT,RAT
+P35559,Insulin-degrading enzyme ,10,8,13,8,Ide,1.60,0.01,1.49,0.04,HEART,PROT,RAT
+Q5XIE8,Integral membrane protein 2B ,9,2,4,2,Itm2b,1.69,0.22,1.37,0.59,HEART,PROT,RAT
+P18614,Integrin alpha-1 ,8,8,18,8,Itga1,1.33,0.40,1.24,0.26,HEART,PROT,RAT
+Q63258,Integrin alpha-7 ,18,16,50,16,Itga7,0.94,0.65,1.03,1.00,HEART,PROT,RAT
+A0A0G2JSK5,Integrin beta ,16,10,33,10,Itgb1,1.23,0.13,1.25,0.14,HEART,PROT,RAT
+D3ZW59,Integrin beta 1 binding protein 2 (Predicted) ,19,4,15,4,Itgb1bp2,1.14,0.36,1.28,0.09,HEART,PROT,RAT
+Q99J82,Integrin-linked protein kinase ,27,12,32,12,Ilk,0.89,0.92,1.28,0.15,HEART,PROT,RAT
+Q5EBC0,"Inter alpha-trypsin inhibitor, heavy chain 4 ",18,14,40,14,Itih4,1.63,<0.01,1.57,0.01,HEART,PROT,RAT
+B2RYM3,"Inter-alpha trypsin inhibitor, heavy chain 1 ",9,6,11,6,Itih1,0.94,0.66,1.05,0.85,HEART,PROT,RAT
+D3ZFH5,Inter-alpha-trypsin inhibitor heavy chain 2 ,10,5,13,5,Itih2,1.24,0.35,1.21,0.47,HEART,PROT,RAT
+D3ZBS2,Inter-alpha-trypsin inhibitor heavy chain H3 ,17,9,32,9,Itih3,1.42,0.43,1.11,1.00,HEART,PROT,RAT
+Q6AXM6,Intercellular adhesion molecule 2 ,8,2,7,2,Icam2,1.32,0.89,1.25,1.00,HEART,PROT,RAT
+G3V7Q7,"IQ motif containing GTPase activating protein 1 (Predicted), isoform CRA_b ",16,19,33,18,Iqgap1,1.25,0.01,1.39,<0.01,HEART,PROT,RAT
+Q80W96,"Iron-sulfur cluster assembly 1 homolog, mitochondrial ",19,2,4,2,Isca1,1.07,1.00,1.03,1.00,HEART,PROT,RAT
+D4ADG2,Iron-sulfur cluster assembly factor IBA57 ,37,8,22,8,Iba57,1.19,0.40,0.94,1.00,HEART,PROT,RAT
+Q8VI04,Isoaspartyl peptidase/L-asparaginase ,20,6,11,6,Asrgl1,0.94,1.00,0.98,1.00,HEART,PROT,RAT
+Q99NA5,"Isocitrate dehydrogenase [NAD] subunit alpha, mitochondrial ",38,12,322,12,Idh3a,1.00,1.00,0.99,1.00,HEART,PROT,RAT
+Q68FX0,"Isocitrate dehydrogenase [NAD] subunit beta, mitochondrial ",44,14,105,14,Idh3B,1.01,1.00,1.01,1.00,HEART,PROT,RAT
+Q5XIJ3,"Isocitrate dehydrogenase [NAD] subunit, mitochondrial ",34,10,72,10,Idh3g,1.03,1.00,1.01,1.00,HEART,PROT,RAT
+P41562,Isocitrate dehydrogenase [NADP] cytoplasmic ,45,16,79,15,Idh1,1.11,0.64,0.95,1.00,HEART,PROT,RAT
+P56574,"Isocitrate dehydrogenase [NADP], mitochondrial ",42,23,669,22,Idh2,0.90,0.06,0.88,0.06,HEART,PROT,RAT
+F2Z3T7,Isochorismatase domain-containing protein 1 ,37,7,12,7,LOC103694869,0.55,0.03,0.73,0.16,HEART,PROT,RAT
+Q5U3Z3,Isochorismatase domain-containing protein 2 ,36,4,15,3,Isoc2b,0.56,0.07,0.61,0.26,HEART,PROT,RAT
+A0A0G2K261,"Isoleucyl-tRNA synthetase 2, mitochondrial ",29,23,74,23,Iars2,0.98,1.00,1.05,0.97,HEART,PROT,RAT
+P12007,"Isovaleryl-CoA dehydrogenase, mitochondrial ",54,17,172,17,Ivd,0.91,0.05,0.90,0.04,HEART,PROT,RAT
+Q2PS20,Junctophilin-2 ,16,8,37,8,Jph2,0.89,0.59,1.01,1.00,HEART,PROT,RAT
+P97569,Kallistatin ,12,4,6,4,Serpina4,1.05,1.00,1.43,0.24,HEART,PROT,RAT
+Q9ER30,Kelch-like protein 41 ,14,8,33,8,Kbtbd10; Klhl41,1.49,<0.01,1.49,<0.01,HEART,PROT,RAT
+Q6IFW6,"Keratin, type I cytoskeletal 10 ",19,12,101,9,Krt10,0.85,0.16,1.46,0.01,HEART,PROT,RAT
+Q6IMF3,"Keratin, type II cytoskeletal 1 ",9,7,43,5,Krt1,0.85,0.62,1.18,0.38,HEART,PROT,RAT
+A0A0G2JWX4,"Keratin, type II cytoskeletal 2 epidermal ",8,6,20,4,Krt2,0.75,0.66,1.52,0.29,HEART,PROT,RAT
+Q6P6Q2,"Keratin, type II cytoskeletal 5 ",13,8,42,3,Krt5,0.72,0.58,1.49,0.35,HEART,PROT,RAT
+Q9QYU4,Ketimine reductase mu-crystallin ,30,7,19,7,Crym,1.17,0.56,0.91,0.83,HEART,PROT,RAT
+Q2PQA9,Kinesin-1 heavy chain ,31,24,59,24,Kif5b,1.30,<0.01,1.27,<0.01,HEART,PROT,RAT
+Q5PQU1,Kininogen 1 ,23,9,49,5,Kng1; Kng2,2.82,<0.01,2.91,<0.01,HEART,PROT,RAT
+D4ACC2,KN motif and ankyrin repeat domain-containing protein 2 ,22,11,25,11,Kank2,0.81,1.00,1.36,0.62,HEART,PROT,RAT
+Q5M8A0,Kng2 protein ,11,5,20,2,Kng2; Kng2l1,1.30,0.35,1.24,0.50,HEART,PROT,RAT
+Q08415,"Kynurenine--oxoglutarate transaminase 1, mitochondrial ",19,6,22,6,Ccbl1; Kyat1,0.77,0.12,0.83,0.44,HEART,PROT,RAT
+Q58FK9,Kynurenine--oxoglutarate transaminase 3 ,28,9,25,9,Kat3; Ccbl2; Kyat3,0.84,0.05,0.97,1.00,HEART,PROT,RAT
+D3ZVS2,L-2-hydroxyglutarate dehydrogenase ,25,10,22,10,L2hgdh,0.77,0.36,0.98,1.00,HEART,PROT,RAT
+Q1PBJ1,Lactadherin ,26,9,20,9,Mfge8,1.01,1.00,1.07,1.00,HEART,PROT,RAT
+A0A0G2K1W9,Lactate dehydrogenase D ,8,3,7,3,Ldhd,0.93,1.00,0.67,0.28,HEART,PROT,RAT
+Q6P7Q4,Lactoylglutathione lyase ,39,8,50,8,Glo1,0.99,1.00,0.96,0.79,HEART,PROT,RAT
+Q811X6,Lambda-crystallin homolog ,11,3,10,3,Cryl1,0.99,1.00,1.14,0.86,HEART,PROT,RAT
+G3V8L3,"Lamin A, isoform CRA_b ",54,35,184,35,Lmna,1.14,0.01,1.22,<0.01,HEART,PROT,RAT
+D3ZLC1,Lamin B2 ,15,8,12,8,Lmnb2,0.95,1.00,1.37,0.77,HEART,PROT,RAT
+G3V7U4,Lamin-B1 ,36,17,44,17,LOC497722,0.86,0.08,1.05,0.88,HEART,PROT,RAT
+F1M614,Laminin subunit alpha 2 ,23,61,211,61,Lama2,0.75,<0.01,0.85,<0.01,HEART,PROT,RAT
+F1LTF8,Laminin subunit alpha 4 ,17,21,48,21,Lama4,1.25,0.01,1.22,0.04,HEART,PROT,RAT
+F1MAN8,Laminin subunit alpha 5 ,14,38,94,38,Lama5,1.22,0.23,1.37,0.07,HEART,PROT,RAT
+D3ZQN7,Laminin subunit beta 1 ,17,27,104,27,Lamb1,1.01,1.00,0.92,0.62,HEART,PROT,RAT
+P15800,Laminin subunit beta-2 ,23,37,159,37,Lamb2,0.99,0.90,1.09,0.04,HEART,PROT,RAT
+F1MAA7,Laminin subunit gamma 1 ,24,31,156,31,Lamc1,0.95,0.49,1.03,0.55,HEART,PROT,RAT
+Q6MG49,Large proline-rich protein BAG6 ,6,4,5,4,Bag6,1.06,0.99,1.04,1.00,HEART,PROT,RAT
+Q5XIG1,Ldb3 protein ,83,15,279,5,Ldb3,0.69,0.10,0.72,0.27,HEART,PROT,RAT
+A1A5Q0,Leiomodin-2 ,17,9,25,9,Lmod2,1.41,0.02,1.27,0.04,HEART,PROT,RAT
+F1LM33,"Leucine-rich PPR motif-containing protein, mitochondrial ",35,43,132,43,Lrpprc,0.96,1.00,1.14,0.07,HEART,PROT,RAT
+F1LT49,Leucine-rich repeat-containing 47 ,6,3,4,3,Lrrc47,0.96,1.00,1.13,1.00,HEART,PROT,RAT
+Q5RJR8,Leucine-rich repeat-containing protein 59 ,11,3,6,3,Lrrc59,1.56,0.02,1.08,0.86,HEART,PROT,RAT
+D3Z9N3,"Leucyl-tRNA synthetase 2, mitochondrial ",4,2,3,2,Lars2,0.87,1.00,0.74,0.59,HEART,PROT,RAT
+P97829,Leukocyte surface antigen CD47 ,10,3,10,3,Cd47,0.91,0.88,1.08,1.00,HEART,PROT,RAT
+Q499P2,Leukotriene A(4) hydrolase ,12,5,7,5,Lta4h,1.31,0.90,1.58,0.57,HEART,PROT,RAT
+Q6AYF2,LIM and cysteine-rich domains 1 ,33,9,35,9,Lmcd1,1.74,0.01,1.59,0.01,HEART,PROT,RAT
+C0KUC6,LIM and senescent cell antigen-like-containing domain protein ,5,2,8,2,Lims1,1.01,1.00,0.98,1.00,HEART,PROT,RAT
+Q99MZ8,LIM and SH3 domain protein 1 ,21,5,8,5,Lasp1,1.12,1.00,1.03,1.00,HEART,PROT,RAT
+A0A0G2K8R3,LIM domain 7 ,16,19,28,19,Lmo7,1.25,0.67,1.14,0.95,HEART,PROT,RAT
+A0A096MJ01,LIM domain-binding 3 ,36,19,312,9,Ldb3,1.13,0.12,0.99,1.00,HEART,PROT,RAT
+Q5XI07,Lipoma-preferred partner homolog ,13,4,8,4,Lpp,0.83,1.00,1.38,0.71,HEART,PROT,RAT
+Q06000,Lipoprotein lipase ,12,4,11,4,Lpl,0.70,0.51,1.43,0.54,HEART,PROT,RAT
+P04642,L-lactate dehydrogenase A chain ,51,17,265,16,Ldha,1.49,<0.01,1.39,<0.01,HEART,PROT,RAT
+P42123,L-lactate dehydrogenase B chain ,49,20,509,19,Ldhb,0.91,0.46,0.92,0.16,HEART,PROT,RAT
+B0BNJ1,LOC683667 protein ,16,3,8,3,Sri,1.03,0.94,1.08,0.82,HEART,PROT,RAT
+B2RYX1,LOC685322 protein ,52,3,25,3,LOC685322; Uqcr10,1.03,1.00,0.90,1.00,HEART,PROT,RAT
+Q924S5,"Lon protease homolog, mitochondrial ",46,28,121,28,Lonp1,0.91,0.30,1.04,0.63,HEART,PROT,RAT
+P15650,"Long-chain specific acyl-CoA dehydrogenase, mitochondrial ",43,23,503,23,Acadl,0.94,0.53,0.89,0.13,HEART,PROT,RAT
+P18163,Long-chain-fatty-acid--CoA ligase 1 ,38,26,204,26,Acsl1,0.62,<0.01,0.80,<0.01,HEART,PROT,RAT
+Q6TXE7,LRRGT00052 ,12,21,50,15,,1.15,0.45,1.17,0.23,HEART,PROT,RAT
+Q6QI16,LRRGT00192 ,27,6,34,6,RGD1304704; Rtraf,1.15,0.48,1.22,0.27,HEART,PROT,RAT
+Q8VHS9,L-type calcium channel alpha2/delta subunit ,11,8,14,8,Cacna2d1,0.87,0.01,0.98,1.00,HEART,PROT,RAT
+P51886,Lumican ,35,10,92,10,Lum,0.89,<0.01,1.05,0.08,HEART,PROT,RAT
+P38656,Lupus La protein homolog ,7,2,5,2,Ssb,0.85,1.00,1.07,1.00,HEART,PROT,RAT
+A0A0G2JT25,L-xylulose reductase ,12,2,7,2,Dcxr,0.57,0.07,1.02,1.00,HEART,PROT,RAT
+Q5XIM7,Lysine--tRNA ligase ,18,10,19,10,Kars,1.05,1.00,1.07,0.95,HEART,PROT,RAT
+P14562,Lysosome-associated membrane glycoprotein 1 ,12,4,9,4,Lamp1,0.94,1.00,1.25,0.67,HEART,PROT,RAT
+P17046,Lysosome-associated membrane glycoprotein 2 ,7,2,21,2,Lamp2,1.15,1.00,1.07,1.00,HEART,PROT,RAT
+Q6AY04,"m-AAA protease-interacting protein 1, mitochondrial ",18,5,11,5,MGC94335; Maip1,1.00,1.00,0.75,0.62,HEART,PROT,RAT
+Q6AYC4,Macrophage-capping protein ,38,9,19,9,Capg,2.25,0.35,1.48,0.90,HEART,PROT,RAT
+P02761,Major urinary protein ,47,8,26,7,LOC259246,1.61,0.41,2.04,0.19,HEART,PROT,RAT
+Q62667,Major vault protein ,45,26,100,26,Mvp,2.38,<0.01,1.93,<0.01,HEART,PROT,RAT
+O88989,"Malate dehydrogenase, cytoplasmic ",55,16,309,16,Mdh1,0.88,<0.01,0.89,<0.01,HEART,PROT,RAT
+P04636,"Malate dehydrogenase, mitochondrial ",49,16,654,16,Mdh2,0.89,<0.01,0.84,<0.01,HEART,PROT,RAT
+P57113,Maleylacetoacetate isomerase ,53,8,41,8,Gstz1,0.47,<0.01,0.85,0.20,HEART,PROT,RAT
+A0A0G2K1S6,Malic enzyme ,32,14,25,14,Me1,0.88,1.00,0.99,1.00,HEART,PROT,RAT
+F1M5N4,Malic enzyme ,38,19,85,18,Me3,0.75,0.01,0.89,0.82,HEART,PROT,RAT
+Q4G009,Malignant T-cell-amplified sequence 1 ,41,5,20,5,Mcts1,1.03,0.93,1.01,1.00,HEART,PROT,RAT
+Q920F5,"Malonyl-CoA decarboxylase, mitochondrial ",33,12,39,12,Mlycd,0.71,0.04,0.76,0.49,HEART,PROT,RAT
+D3ZPF2,Malonyl-CoA-acyl carrier protein transacylase ,12,3,6,3,Mcat,0.84,0.37,0.95,0.95,HEART,PROT,RAT
+Q5XII0,Mammalian ependymin-related protein 1 ,18,4,12,4,Epdr1,0.79,0.13,0.83,0.11,HEART,PROT,RAT
+Q68FX1,Mannose-6-phosphate isomerase ,20,7,15,7,Mpi,0.91,1.00,0.95,1.00,HEART,PROT,RAT
+B1H230,Map2k3 protein ,11,3,19,3,LOC100911550; Map2k3,0.72,0.55,1.15,1.00,HEART,PROT,RAT
+A0A0G2JSR7,Matrin-3 ,8,5,16,5,Matr3,0.69,0.07,0.93,1.00,HEART,PROT,RAT
+Q499N5,"Medium-chain acyl-CoA ligase ACSF2, mitochondrial ",42,18,165,18,Acsf2,0.47,<0.01,0.62,0.01,HEART,PROT,RAT
+P08503,"Medium-chain specific acyl-CoA dehydrogenase, mitochondrial ",51,17,185,17,Acadm,0.68,<0.01,0.72,0.01,HEART,PROT,RAT
+Q5U1Z9,Metaxin 2 ,38,8,72,8,Mtx2,1.00,1.00,1.14,0.22,HEART,PROT,RAT
+F1LRJ9,Methanethiol oxidase ,48,20,120,20,Selenbp1 LOC103689947,0.70,<0.01,0.85,0.15,HEART,PROT,RAT
+Q5XIT9,"Methylcrotonoyl-CoA carboxylase beta chain, mitochondrial ",56,26,195,26,Mccc2,0.96,0.50,1.06,0.08,HEART,PROT,RAT
+F1LP30,"Methylcrotonoyl-CoA carboxylase subunit alpha, mitochondrial ",48,23,113,23,Mccc1,1.02,1.00,1.07,0.91,HEART,PROT,RAT
+F1LU71,"Methylglutaconyl-CoA hydratase, mitochondrial ",29,10,44,10,Auh,0.66,<0.01,0.74,<0.01,HEART,PROT,RAT
+D4A197,Methylmalonyl CoA epimerase ,34,3,30,3,Mcee,0.86,0.04,0.87,0.13,HEART,PROT,RAT
+D3ZKG1,Methylmalonyl-CoA mutase ,29,18,58,18,Mut,0.83,<0.01,0.90,0.08,HEART,PROT,RAT
+M0R7G4,MICOS complex subunit ,58,8,65,8,Apoo,0.89,0.40,0.98,1.00,HEART,PROT,RAT
+D3ZUX5,MICOS complex subunit ,37,10,65,10,Chchd3,0.86,0.61,0.91,0.44,HEART,PROT,RAT
+Q5U1W6,MICOS complex subunit ,57,12,66,12,Apool,0.86,0.54,1.01,1.00,HEART,PROT,RAT
+A0A0G2JVH4,MICOS complex subunit MIC60 ,54,39,267,39,Immt,0.83,<0.01,1.11,0.03,HEART,PROT,RAT
+D4ADS4,Microsomal glutathione S-transferase 3 ,34,3,26,3,Mgst3,0.99,1.00,1.08,1.00,HEART,PROT,RAT
+A0A0G2JW88,Microtubule-associated protein ,20,29,76,29,Map4,1.68,<0.01,1.48,<0.01,HEART,PROT,RAT
+F1LST4,Microtubule-associated protein ,19,7,10,7,LOC497674; Mapt,1.17,0.04,1.19,0.08,HEART,PROT,RAT
+G3V7U2,"Microtubule-associated protein 1 A, isoform CRA_c ",15,29,56,28,Map1a,2.16,<0.01,1.74,<0.01,HEART,PROT,RAT
+Q66HR2,Microtubule-associated protein RP/EB family member 1 ,21,5,10,4,Mapre1,1.20,0.87,1.27,0.69,HEART,PROT,RAT
+Q5XIT1,Microtubule-associated protein RP/EB family member 3 ,17,4,6,2,Mapre3,0.97,1.00,1.02,1.00,HEART,PROT,RAT
+P63086,Mitogen-activated protein kinase 1 ,20,5,12,4,Mapk1,1.06,1.00,1.30,0.33,HEART,PROT,RAT
+F1LP57,Mitogen-activated protein kinase kinase 4 ,20,5,9,5,Map2k4,0.85,0.90,0.86,0.95,HEART,PROT,RAT
+G3V6H5,Mitochondrial 2-oxoglutarate/malate carrier protein ,57,14,101,14,Slc25a11,0.94,0.94,0.97,1.00,HEART,PROT,RAT
+Q66HG9,Mitochondrial antiviral-signaling protein ,40,11,36,11,Mavs,1.47,0.04,1.28,0.20,HEART,PROT,RAT
+A0A0G2K059,Mitochondrial calcium uniporter ,18,5,10,5,Mcu,0.79,0.46,1.04,1.00,HEART,PROT,RAT
+P97521,Mitochondrial carnitine/acylcarnitine carrier protein ,35,9,36,9,Slc25a20,0.57,<0.01,0.69,<0.01,HEART,PROT,RAT
+B0BN52,Mitochondrial carrier 2 ,23,6,34,6,Mtch2,1.02,1.00,1.14,0.27,HEART,PROT,RAT
+P84817,Mitochondrial fission 1 protein ,32,5,38,5,Fis1,0.85,0.81,0.90,0.86,HEART,PROT,RAT
+Q5XIG9,Mitochondrial fission process 1 ,34,5,28,5,Mtfp1,0.68,0.01,0.96,1.00,HEART,PROT,RAT
+Q5XII9,Mitochondrial fission regulator 1-like ,20,4,8,4,Fam54b; Mtfr1l,1.09,0.93,1.01,1.00,HEART,PROT,RAT
+P62076,Mitochondrial import inner membrane translocase subunit Tim13 ,37,3,21,3,Timm13,0.92,1.00,0.96,1.00,HEART,PROT,RAT
+Q5U2X7,Mitochondrial import inner membrane translocase subunit Tim21 ,26,6,18,6,Timm21,0.62,<0.01,0.84,0.07,HEART,PROT,RAT
+O35094,Mitochondrial import inner membrane translocase subunit TIM44 ,28,12,43,12,Timm44,0.89,0.21,0.95,0.86,HEART,PROT,RAT
+D3ZJX5,Mitochondrial import inner membrane translocase subunit TIM50 ,26,7,33,7,LOC687295; Timm50,1.01,1.00,0.87,0.78,HEART,PROT,RAT
+Q9WVA1,Mitochondrial import inner membrane translocase subunit Tim8 A ,53,3,9,3,Timm8a1,1.12,1.00,1.04,1.00,HEART,PROT,RAT
+Q9WV97,Mitochondrial import inner membrane translocase subunit Tim9 ,35,3,12,3,Timm9,1.03,1.00,1.15,0.57,HEART,PROT,RAT
+Q3KRD5,Mitochondrial import receptor subunit TOM34 ,7,2,4,2,Tomm34,1.22,0.76,1.40,0.38,HEART,PROT,RAT
+G3V8F5,Mitochondrial import receptor subunit TOM40 homolog ,29,6,17,6,Tomm40,1.16,0.26,1.09,0.92,HEART,PROT,RAT
+R9PXR4,Mitochondrial import receptor subunit TOM70 ,10,7,12,7,Tomm70a; Tomm70,1.20,0.43,1.16,0.64,HEART,PROT,RAT
+A0A0H2UHS3,Mitochondrial potassium channel ,39,11,22,11,Ccdc51,0.85,0.84,1.00,1.00,HEART,PROT,RAT
+Q5XIN6,Mitochondrial proton/calcium exchanger protein ,43,26,104,26,Letm1,0.97,0.53,1.02,1.00,HEART,PROT,RAT
+P63031,Mitochondrial pyruvate carrier 1 ,31,2,26,2,Mpc1,0.82,0.87,1.04,1.00,HEART,PROT,RAT
+P38718,Mitochondrial pyruvate carrier 2 ,51,7,40,7,Mpc2,1.01,1.00,0.89,0.84,HEART,PROT,RAT
+B5DER4,Mitochondrial ribosomal protein L1 ,17,5,5,5,Mrpl1,0.77,0.45,0.65,0.28,HEART,PROT,RAT
+D3ZXF9,Mitochondrial ribosomal protein L12 ,16,4,15,4,Mrpl12,0.77,0.03,0.89,0.35,HEART,PROT,RAT
+D4A131,Mitochondrial ribosomal protein L4 ,13,3,5,3,Mrpl4,0.62,0.07,0.77,0.34,HEART,PROT,RAT
+D3ZDP2,Mitochondrial ribosomal protein L58 ,15,2,4,2,Ict1; Mrpl58,0.66,0.09,0.73,0.19,HEART,PROT,RAT
+D4A3E8,Mitochondrial ribosomal protein S27 ,16,6,16,6,Mrps27,0.81,0.08,0.99,1.00,HEART,PROT,RAT
+M0R776,Mitochondrial ribosomal protein S36 ,47,4,29,4,Mrps36,1.05,0.60,0.95,0.52,HEART,PROT,RAT
+P20069,Mitochondrial-processing peptidase subunit alpha ,19,6,27,6,Pmpca,1.07,1.00,1.04,1.00,HEART,PROT,RAT
+Q03346,Mitochondrial-processing peptidase subunit beta ,21,8,20,8,Pmpcb,0.91,0.74,0.98,1.00,HEART,PROT,RAT
+A0A096MK30,Moesin ,52,31,105,21,Msn,1.21,<0.01,1.23,<0.01,HEART,PROT,RAT
+P53987,Monocarboxylate transporter 1 ,11,6,24,6,Slc16a1,1.51,<0.01,1.60,<0.01,HEART,PROT,RAT
+B4F768,Multifunctional fusion protein (Fragment) ,40,18,94,18,Aldh4a1,0.85,0.01,0.91,0.04,HEART,PROT,RAT
+Q03626,Murinoglobulin-1 ,27,34,179,9,Mug1,1.00,1.00,0.94,1.00,HEART,PROT,RAT
+A0A096MJS3,Muscular LMNA-interacting protein (Fragment) ,13,8,19,8,Mlip,0.93,1.00,1.04,1.00,HEART,PROT,RAT
+D4A7F2,Myc-binding protein ,36,2,4,2,Mycbp,1.13,1.00,1.02,1.00,HEART,PROT,RAT
+B2GV99,Myl6 protein ,51,8,91,4,Myl6,1.13,0.48,1.30,0.02,HEART,PROT,RAT
+Q5EB94,Myocardial zonula adherens protein ,26,10,28,10,Gcom1; Myzap,1.21,0.40,0.98,1.00,HEART,PROT,RAT
+Q9QZ76,Myoglobin ,80,17,2051,17,Mb,0.94,0.88,1.00,1.00,HEART,PROT,RAT
+A0A0G2K5P5,Myomesin 1 ,53,79,653,79,Myom1,0.95,0.69,0.95,0.90,HEART,PROT,RAT
+G3V7K1,Myomesin 2 ,50,60,607,60,Myom2,0.90,0.01,0.98,1.00,HEART,PROT,RAT
+D4A7X7,Myopalladin ,8,8,20,8,Mypn,1.10,1.00,0.93,1.00,HEART,PROT,RAT
+F1LNF0,Myosin heavy chain 14 ,14,23,49,18,Myh14,0.86,0.15,1.01,1.00,HEART,PROT,RAT
+P16409,Myosin light chain 3 ,67,16,708,13,Myl3,0.95,0.79,1.00,1.00,HEART,PROT,RAT
+A0A0G2K2W5,Myosin light chain 7 ,42,4,12,4,Myl7,1.65,0.01,1.35,0.05,HEART,PROT,RAT
+E9PT87,Myosin light chain kinase 3 ,31,19,45,18,Mylk3,0.74,0.50,0.88,0.70,HEART,PROT,RAT
+P08733,"Myosin regulatory light chain 2, ventricular/cardiac muscle isoform ",90,19,1504,19,Myl2,0.96,0.87,1.05,1.00,HEART,PROT,RAT
+G3V9Y1,"Myosin, heavy polypeptide 10, non-muscle, isoform CRA_b ",10,17,41,4,Myh10,2.00,0.01,1.95,0.01,HEART,PROT,RAT
+G3V6P7,"Myosin, heavy polypeptide 9, non-muscle ",39,67,187,53,LOC100911597; Myh9; Myh9l1,1.21,0.01,1.37,<0.01,HEART,PROT,RAT
+E9PTU4,Myosin-11 ,31,51,141,35,Myh11,0.60,<0.01,1.25,0.09,HEART,PROT,RAT
+G3V885,Myosin-6 ,67,173,5653,46,Myh6,0.24,<0.01,0.28,<0.01,HEART,PROT,RAT
+G3V8B0,Myosin-7 ,69,191,6473,63,Myh7,1.25,0.01,1.14,0.18,HEART,PROT,RAT
+P56741,"Myosin-binding protein C, cardiac-type ",45,55,707,55,Mybpc3,1.01,1.00,0.96,0.61,HEART,PROT,RAT
+P62775,Myotrophin ,20,2,5,2,Mtpn,1.33,0.67,1.57,0.08,HEART,PROT,RAT
+A0A0G2KAQ5,Myozenin 2 ,59,14,218,14,Myoz2,1.07,0.01,0.95,0.05,HEART,PROT,RAT
+F1LMW7,Myristoylated alanine-rich C-kinase substrate ,30,6,12,6,Marcks,1.21,0.80,1.27,0.16,HEART,PROT,RAT
+O08557,"N(G),N(G)-dimethylarginine dimethylaminohydrolase 1 ",34,9,41,8,Ddah1,2.06,<0.01,1.60,<0.01,HEART,PROT,RAT
+Q6MG60,"N(G),N(G)-dimethylarginine dimethylaminohydrolase 2 ",29,7,18,6,Ddah2,1.10,0.75,1.04,1.00,HEART,PROT,RAT
+G3V6D9,Na(+)/H(+) exchange regulatory cofactor NHE-RF ,17,4,7,4,Slc9a3r2,0.74,0.22,0.99,1.00,HEART,PROT,RAT
+B1WC26,N-acetylneuraminate synthase ,17,4,17,4,Nans,1.21,0.71,1.13,0.99,HEART,PROT,RAT
+P69060,N-acylneuraminate cytidylyltransferase ,6,2,5,2,Cmas,1.04,1.00,1.32,0.57,HEART,PROT,RAT
+A0A096MKG5,"NAD kinase 2, mitochondrial ",18,6,7,6,Nadk2; Nadkd1,0.68,0.31,0.91,1.00,HEART,PROT,RAT
+A0A0G2K8S9,NAD(P)(+)--arginine ADP-ribosyltransferase ,20,7,43,7,Art3,0.64,<0.01,0.72,0.03,HEART,PROT,RAT
+B0BNM1,NAD(P)H-hydrate epimerase ,27,5,27,5,Apoa1bp; Naxe,0.66,0.06,0.89,0.72,HEART,PROT,RAT
+C6ZII9,NAD-dependent protein deacetylase ,22,6,14,6,Sirt3,0.78,1.00,1.34,0.95,HEART,PROT,RAT
+A0A0G2JWM2,NAD-dependent protein deacetylase ,11,3,6,3,Sirt2,0.76,0.26,0.88,0.84,HEART,PROT,RAT
+Q68FX9,"NAD-dependent protein deacylase sirtuin-5, mitochondrial ",14,3,10,3,Sirt5,0.77,0.07,0.95,1.00,HEART,PROT,RAT
+F1LWG4,"NADH dehydrogenase (Ubiquinone) 1 alpha subcomplex, assembly factor 1 (Predicted), isoform CRA_a ",13,4,10,4,Ndufaf1,0.94,1.00,1.03,1.00,HEART,PROT,RAT
+D4A7L4,"NADH dehydrogenase (Ubiquinone) 1 beta subcomplex, 11 (Predicted) ",44,4,25,4,Ndufb11,0.80,0.60,0.88,0.87,HEART,PROT,RAT
+D4A565,"NADH dehydrogenase (Ubiquinone) 1 beta subcomplex, 5 (Predicted), isoform CRA_b ",28,5,48,5,Ndufb5,0.91,0.36,0.77,0.03,HEART,PROT,RAT
+D3ZZ21,"NADH dehydrogenase (Ubiquinone) 1 beta subcomplex, 6 (Predicted) ",38,4,15,4,Ndufb6,1.05,1.00,0.72,0.07,HEART,PROT,RAT
+D3ZLT1,"NADH dehydrogenase (Ubiquinone) 1 beta subcomplex, 7 (Predicted) ",33,3,50,3,Ndufb7,0.87,1.00,0.78,0.74,HEART,PROT,RAT
+B2RYW3,"NADH dehydrogenase (Ubiquinone) 1 beta subcomplex, 9 ",26,4,37,4,Ndufb9,0.91,0.88,0.91,1.00,HEART,PROT,RAT
+A0A0H2UI06,"NADH dehydrogenase (ubiquinone) complex I, assembly factor 6 ",15,3,9,3,Ndufaf6,0.60,0.34,0.92,1.00,HEART,PROT,RAT
+D3ZG43,"NADH dehydrogenase (Ubiquinone) Fe-S protein 3 (Predicted), isoform CRA_c ",55,15,174,15,Ndufs3,0.87,0.44,0.93,0.91,HEART,PROT,RAT
+B5DEL8,NADH dehydrogenase (Ubiquinone) Fe-S protein 5 ,27,3,31,3,LOC100363268; Ndufs5,1.01,1.00,0.87,0.26,HEART,PROT,RAT
+Q5RJN0,NADH dehydrogenase (Ubiquinone) Fe-S protein 7 ,28,6,47,6,Ndufs7,0.88,0.58,0.99,1.00,HEART,PROT,RAT
+B0BNE6,"NADH dehydrogenase (Ubiquinone) Fe-S protein 8 (Predicted), isoform CRA_a ",36,8,131,8,Ndufs8,0.92,0.66,0.91,0.82,HEART,PROT,RAT
+G3V644,"NADH dehydrogenase (Ubiquinone) flavoprotein 3-like, isoform CRA_a ",16,4,15,4,Ndufv3,0.65,<0.01,0.74,0.01,HEART,PROT,RAT
+Q9NQR8,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex assembly factor 4 ,44,6,17,6,Ndufaf4,0.96,1.00,1.10,0.19,HEART,PROT,RAT
+Q561S0,"NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 10, mitochondrial ",46,11,255,11,Ndufa10; Ndufa10l1,0.88,0.91,0.93,0.92,HEART,PROT,RAT
+F1LXA0,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 12 ,63,8,87,8,Ndufa12,0.89,0.09,0.88,0.08,HEART,PROT,RAT
+D3ZS58,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 2 ,42,5,51,5,Ndufa2,0.94,0.50,0.91,1.00,HEART,PROT,RAT
+Q63362,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 5 ,49,6,68,6,Ndufa5,0.91,0.52,0.89,0.21,HEART,PROT,RAT
+D4A3V2,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 6 ,45,5,57,5,Ndufa6,0.83,<0.01,0.88,0.03,HEART,PROT,RAT
+A0A0G2JVL6,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 8 ,20,3,27,3,Ndufa8,1.02,0.99,0.83,0.05,HEART,PROT,RAT
+Q5BK63,"NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 9, mitochondrial ",68,22,214,22,Ndufa9,0.93,0.80,0.93,1.00,HEART,PROT,RAT
+P0DN35,NADH dehydrogenase [ubiquinone] 1 beta subcomplex subunit 1 ,33,2,13,2,LOC100912357; Ndufb1,0.89,1.00,0.64,0.08,HEART,PROT,RAT
+B2RYS8,"NADH dehydrogenase [ubiquinone] 1 beta subcomplex subunit 8, mitochondrial ",47,7,108,7,Ndufb8,0.88,0.54,0.87,0.18,HEART,PROT,RAT
+Q5PQZ9,NADH dehydrogenase [ubiquinone] 1 subunit C2 ,38,6,59,6,Ndufc2,0.90,1.00,1.04,1.00,HEART,PROT,RAT
+Q5XIH3,"NADH dehydrogenase [ubiquinone] flavoprotein 1, mitochondrial ",33,16,138,16,Ndufv1,0.93,0.81,0.95,1.00,HEART,PROT,RAT
+P19234,"NADH dehydrogenase [ubiquinone] flavoprotein 2, mitochondrial ",34,7,68,7,Ndufv2,0.89,0.07,0.86,0.03,HEART,PROT,RAT
+Q641Y2,"NADH dehydrogenase [ubiquinone] iron-sulfur protein 2, mitochondrial ",49,16,252,16,Ndufs2,1.01,1.00,1.00,1.00,HEART,PROT,RAT
+Q5XIF3,"NADH dehydrogenase [ubiquinone] iron-sulfur protein 4, mitochondrial ",51,7,70,7,Ndufs4,0.89,0.08,0.87,0.17,HEART,PROT,RAT
+D3ZCZ9,"NADH dehydrogenase [ubiquinone] iron-sulfur protein 6, mitochondrial ",34,3,28,3,LOC679739; LOC100912599,0.87,1.00,1.27,1.00,HEART,PROT,RAT
+D3ZE15,NADH:ubiquinone oxidoreductase subunit A13 ,59,7,90,7,LOC100911483; Ndufa13,1.01,0.86,0.90,0.07,HEART,PROT,RAT
+A9UMV9,NADH:ubiquinone oxidoreductase subunit A7 ,52,6,55,6,Ndufa7,0.89,0.17,0.94,0.15,HEART,PROT,RAT
+D4A0T0,NADH:ubiquinone oxidoreductase subunit B10 ,53,10,92,10,Ndufb10,0.91,0.73,0.73,0.01,HEART,PROT,RAT
+D4A4P3,NADH:ubiquinone oxidoreductase subunit B3 ,28,2,15,2,Ndufb3,0.91,0.58,0.91,1.00,HEART,PROT,RAT
+F1LPG5,NADH:ubiquinone oxidoreductase subunit B4 ,36,4,45,4,Ndufb4,0.95,0.85,0.92,0.29,HEART,PROT,RAT
+P20070,NADH-cytochrome b5 reductase 3 ,27,6,25,6,Cyb5r3,1.13,0.76,1.09,0.68,HEART,PROT,RAT
+Q66HF1,"NADH-ubiquinone oxidoreductase 75 kDa subunit, mitochondrial ",53,30,505,30,Ndufs1,0.93,0.14,0.93,0.07,HEART,PROT,RAT
+P03889,NADH-ubiquinone oxidoreductase chain 1 ,11,4,11,4,ND1,0.73,0.02,1.03,1.00,HEART,PROT,RAT
+Q7HKW3,NADH-ubiquinone oxidoreductase chain 4 (Fragment) ,20,6,32,6,NADH4 ND4 Nd4,0.94,0.81,1.00,1.00,HEART,PROT,RAT
+P11661,NADH-ubiquinone oxidoreductase chain 5 ,17,8,34,8,ND5,0.95,0.74,0.90,1.00,HEART,PROT,RAT
+M0R9L0,Nascent polypeptide-associated complex subunit alpha ,15,22,43,22,Naca,0.82,0.59,0.87,0.36,HEART,PROT,RAT
+B2RZD6,"NDUFA4, mitochondrial complex-associated ",56,6,109,6,Ndufa4,0.87,0.09,0.82,0.06,HEART,PROT,RAT
+A0A0G2JWS2,Nebulette ,62,55,310,55,Nebl,0.98,0.83,0.93,0.53,HEART,PROT,RAT
+D4A4K6,Nebulin-related-anchoring protein ,13,17,27,17,Nrap,3.30,0.01,2.38,0.03,HEART,PROT,RAT
+A1L122,NEDD8-activating enzyme E1 regulatory subunit ,4,2,3,2,Nae1,0.84,0.19,1.18,0.26,HEART,PROT,RAT
+F1LNY3,Neural cell adhesion molecule 1 ,22,14,32,14,Ncam1,4.56,<0.01,4.31,<0.01,HEART,PROT,RAT
+P42676,"Neurolysin, mitochondrial ",15,8,13,8,Nln,1.12,0.11,1.40,0.01,HEART,PROT,RAT
+B2GV54,Neutral cholesterol ester hydrolase 1 ,18,5,18,5,Nceh1,1.19,0.39,1.47,0.07,HEART,PROT,RAT
+Q9Z2J4,Nexilin ,24,13,44,5,Nexn,1.36,0.15,1.31,0.61,HEART,PROT,RAT
+Q5FWU2,Nfs1 protein (Fragment) ,20,8,15,8,Nfs1,0.89,1.00,0.96,1.00,HEART,PROT,RAT
+Q5BJZ3,Nicotinamide nucleotide transhydrogenase ,41,37,336,37,Nnt,0.82,<0.01,0.82,<0.01,HEART,PROT,RAT
+A0A0G2K0I3,Nicotinamide phosphoribosyltransferase ,47,17,71,17,Nampt,1.31,<0.01,1.23,0.02,HEART,PROT,RAT
+G3V709,Nicotinate phosphoribosyltransferase ,11,4,12,4,Naprt1; Naprt,0.99,1.00,0.98,1.00,HEART,PROT,RAT
+F1LM84,Nidogen-1 ,25,22,106,21,Nid1,0.82,0.06,0.94,1.00,HEART,PROT,RAT
+B5DFC9,Nidogen-2 ,9,10,31,9,Nid2,0.97,1.00,1.22,1.00,HEART,PROT,RAT
+A0A0G2K8N9,NIMA-related kinase 9 ,4,3,5,3,Nek9,1.13,1.00,1.27,0.78,HEART,PROT,RAT
+Q5FVQ8,NLR family member X1 ,12,9,20,9,Nlrx1,0.73,0.42,1.06,1.00,HEART,PROT,RAT
+A0A0G2JSV0,"N-myc downstream regulated gene 2, isoform CRA_a ",43,11,122,11,Ndrg2,0.82,<0.01,0.87,<0.01,HEART,PROT,RAT
+P11915,Non-specific lipid-transfer protein ,23,11,30,11,Scp2,1.12,0.29,1.16,0.38,HEART,PROT,RAT
+A0A0G2K350,NSF attachment protein gamma ,15,4,8,4,Napg,0.86,0.05,0.99,1.00,HEART,PROT,RAT
+A0A0G2K911,NSFL1 cofactor p47 ,44,10,30,10,Nsfl1c,0.77,0.34,0.85,0.66,HEART,PROT,RAT
+A0A0G2K0V8,Nuclear migration protein nudC-like ,30,7,13,7,LOC100911422,0.95,0.75,1.02,1.00,HEART,PROT,RAT
+Q9Z0U8,Nucleic acid binding factor pRM10 ,25,6,29,6,pRM10,1.11,0.91,1.04,0.78,HEART,PROT,RAT
+Q63083,Nucleobindin-1 ,20,6,23,6,Nucb1,1.67,0.24,1.39,0.58,HEART,PROT,RAT
+Q5U328,Nucleolin ,20,13,32,13,Ncl,0.95,1.00,1.14,0.40,HEART,PROT,RAT
+P13084,Nucleophosmin ,26,6,23,6,Npm1,1.10,0.13,1.09,0.09,HEART,PROT,RAT
+Q05982,Nucleoside diphosphate kinase A ,63,8,77,3,Nme1,1.25,0.25,1.34,0.35,HEART,PROT,RAT
+P19804,Nucleoside diphosphate kinase B ,72,10,217,5,Nme2,0.99,1.00,0.95,0.65,HEART,PROT,RAT
+D4A478,"Nucleoside-triphosphatase, cancer-related ",44,5,9,5,Ntpcr,0.72,0.17,0.96,1.00,HEART,PROT,RAT
+A0A0H2UHZ2,Nucleosome assembly protein 1-like 4 ,29,8,29,7,Nap1l4,1.02,1.00,1.11,0.17,HEART,PROT,RAT
+M0R515,Nudix hydrolase 13 ,26,6,13,6,Nudt13,0.86,0.63,1.08,1.00,HEART,PROT,RAT
+A0JPJ7,Obg-like ATPase 1 ,43,16,65,16,Ola1,0.95,0.72,0.92,0.28,HEART,PROT,RAT
+A0A0G2JUP3,"Obscurin, cytoskeletal calmodulin and titin-interacting RhoGEF ",19,93,242,23,Obscn,1.08,0.39,1.15,0.05,HEART,PROT,RAT
+D3ZZ80,Obscurin-like protein 1 ,5,6,6,6,Obsl1,1.59,0.11,1.29,0.46,HEART,PROT,RAT
+Q5XIG4,OCIA domain-containing protein 1 ,33,7,27,7,Ociad1,0.93,1.00,1.02,1.00,HEART,PROT,RAT
+Q497B0,Omega-amidase NIT2 ,45,10,61,10,Nit2,0.74,<0.01,0.77,<0.01,HEART,PROT,RAT
+P04182,"Ornithine aminotransferase, mitochondrial ",28,10,44,10,Oat,1.50,0.01,1.63,<0.01,HEART,PROT,RAT
+Q6P686,Osteoclast-stimulating factor 1 ,26,3,10,3,Ostf1,1.15,1.00,1.90,0.39,HEART,PROT,RAT
+D3ZVB7,Osteoglycin ,34,9,64,9,LOC100910855; Ogn; NEWGENE_1308171,0.86,0.72,1.18,0.17,HEART,PROT,RAT
+D4A0Y4,"Oxidoreductase NAD-binding domain containing 1 (Predicted), isoform CRA_b ",25,6,22,6,Oxnad1,0.86,0.19,0.87,0.20,HEART,PROT,RAT
+D4A9D8,Oxysterol-binding protein ,10,6,7,6,Osbp,0.72,0.19,0.89,0.90,HEART,PROT,RAT
+Q4KM62,Palmdelphin ,26,10,22,10,Palmd,0.93,0.29,1.01,1.00,HEART,PROT,RAT
+P04550,Parathymosin ,23,3,9,3,Ptms,1.09,0.32,1.21,0.66,HEART,PROT,RAT
+O88767,Parkinson disease protein 7 homolog ,53,8,101,8,Park7,0.99,1.00,0.99,1.00,HEART,PROT,RAT
+D3ZKG5,"Parvin, beta ",35,8,26,7,Parvb,1.03,1.00,1.12,0.91,HEART,PROT,RAT
+Q6AYU2,Pcbp2 protein ,22,6,17,3,Pcbp2,1.07,0.91,1.07,1.00,HEART,PROT,RAT
+B5DEP6,PCI domain-containing protein (Fragment) ,41,14,34,14,Psmd11,1.19,0.27,1.15,0.10,HEART,PROT,RAT
+P52944,PDZ and LIM domain protein 1 ,30,7,34,7,Pdlim1,1.36,0.10,1.21,0.25,HEART,PROT,RAT
+Q62920,PDZ and LIM domain protein 5 ,32,11,112,11,Pdlim5,1.08,0.15,1.00,1.00,HEART,PROT,RAT
+Q9Z1Z9,PDZ and LIM domain protein 7 ,5,2,5,2,Pdlim7,1.03,1.00,1.13,0.20,HEART,PROT,RAT
+F1LVY9,Peptide deformylase ,19,4,16,4,Pdf,0.79,0.32,0.96,1.00,HEART,PROT,RAT
+P10111,Peptidyl-prolyl cis-trans isomerase A ,32,5,48,5,Ppia; LOC100360977,1.16,0.02,1.11,0.22,HEART,PROT,RAT
+P24368,Peptidyl-prolyl cis-trans isomerase B ,44,9,23,9,Ppib,1.21,0.15,1.16,0.19,HEART,PROT,RAT
+Q6DGG0,Peptidyl-prolyl cis-trans isomerase D ,28,10,29,10,Ppid,1.17,0.20,1.22,0.13,HEART,PROT,RAT
+P29117,"Peptidyl-prolyl cis-trans isomerase F, mitochondrial ",31,7,27,7,Ppif,1.03,1.00,1.00,1.00,HEART,PROT,RAT
+Q62658,Peptidyl-prolyl cis-trans isomerase FKBP1A ,56,3,13,3,Fkbp1a,1.06,1.00,1.30,0.91,HEART,PROT,RAT
+D3ZZR9,Peptidylprolyl isomerase ,19,2,9,2,Fkbp2,1.06,1.00,0.98,1.00,HEART,PROT,RAT
+B5DF03,Peptidylprolyl isomerase (Fragment) ,40,8,41,8,Fkbp3,0.54,0.02,0.68,0.25,HEART,PROT,RAT
+Q5XI86,Peptidyl-tRNA hydrolase 2 ,20,2,8,2,Ptrh2,1.03,1.00,0.91,1.00,HEART,PROT,RAT
+M0RA08,Perilipin ,23,6,26,6,Plin3,1.27,0.75,0.83,0.60,HEART,PROT,RAT
+M0R7S5,Perilipin 4 ,65,16,69,16,Plin4,0.64,<0.01,0.83,0.08,HEART,PROT,RAT
+D3ZAF5,Periostin ,35,21,60,21,Postn,7.54,<0.01,3.43,<0.01,HEART,PROT,RAT
+Q496Z5,Peripherin ,14,7,35,3,Prph,0.81,0.51,0.92,1.00,HEART,PROT,RAT
+G3V7I0,Peroxiredoxin 3 ,31,8,94,8,Prdx3,0.96,0.57,0.88,<0.01,HEART,PROT,RAT
+A0A0G2JSH9,Peroxiredoxin-2 ,31,7,58,7,Prdx2,1.20,0.09,1.19,0.38,HEART,PROT,RAT
+Q9R063,"Peroxiredoxin-5, mitochondrial ",36,8,74,8,Prdx5,0.86,<0.01,0.79,<0.01,HEART,PROT,RAT
+O35244,Peroxiredoxin-6 ,79,18,196,18,Prdx6,1.37,<0.01,1.13,<0.01,HEART,PROT,RAT
+Q6AXX6,Peroxiredoxin-like 2A ,10,2,6,2,Prxl2a,2.49,0.03,3.16,0.02,HEART,PROT,RAT
+P07872,Peroxisomal acyl-coenzyme A oxidase 1 ,15,6,11,2,Acox1,0.78,0.06,0.98,1.00,HEART,PROT,RAT
+Q9QYU1,Peroxisomal biogenesis factor 19 ,33,6,21,6,Pex19,0.87,0.32,0.82,0.10,HEART,PROT,RAT
+P97852,Peroxisomal multifunctional enzyme type 2 ,33,21,47,21,Hsd17b4,1.09,0.27,1.16,0.19,HEART,PROT,RAT
+A0A0G2JVG4,Peroxisomal trans-2-enoyl-CoA reductase ,37,7,17,7,Pecr,0.57,<0.01,0.81,0.03,HEART,PROT,RAT
+A1A5L2,Pgm1 protein (Fragment) ,54,25,186,25,Pgm1,1.26,<0.01,1.18,0.05,HEART,PROT,RAT
+Q68FT7,Phenylalanyl-tRNA synthetase subunit beta ,15,7,14,7,Farsb,0.97,1.00,1.09,1.00,HEART,PROT,RAT
+Q6IRH6,"Phosphate carrier protein, mitochondrial ",30,12,97,12,Slc25a3,0.93,0.62,1.15,0.03,HEART,PROT,RAT
+Q91XU8,Phosphatidate cytidylyltransferase 2 ,15,4,10,4,Cds2,1.53,0.51,1.64,0.41,HEART,PROT,RAT
+P31044,Phosphatidylethanolamine-binding protein 1 ,63,8,105,8,Pebp1,0.96,0.95,0.87,0.19,HEART,PROT,RAT
+P0C089,Phosphatidylglycerophosphatase and protein-tyrosine phosphatase 1 ,22,3,8,3,Ptpmt1,0.68,0.01,0.93,1.00,HEART,PROT,RAT
+A0A140TAJ5,Phosphatidylinositol 4-kinase alpha ,1,2,4,2,Pi4ka,0.26,<0.01,0.31,<0.01,HEART,PROT,RAT
+R9PXS4,Phosphatidylinositol transfer protein alpha isoform ,39,8,19,7,Pitpna,1.01,1.00,1.03,0.88,HEART,PROT,RAT
+D3ZVR9,Phosphoglucomutase 5 ,24,11,41,11,Pgm5,1.59,<0.01,1.51,<0.01,HEART,PROT,RAT
+P16617,Phosphoglycerate kinase 1 ,55,22,280,22,Pgk1,1.10,0.22,1.04,1.00,HEART,PROT,RAT
+P25113,Phosphoglycerate mutase 1 ,62,10,141,7,Pgam1,1.03,0.97,1.06,0.70,HEART,PROT,RAT
+P16290,Phosphoglycerate mutase 2 ,40,9,142,6,Pgam2,0.75,0.06,0.79,0.11,HEART,PROT,RAT
+D3ZP47,Phosphohistidine phosphatase 1 ,31,4,20,4,Phpt1,0.99,1.00,1.01,1.00,HEART,PROT,RAT
+G3V9D1,Phosphoinositide phospholipase C ,5,3,9,3,Plcd1,0.82,0.73,1.21,0.78,HEART,PROT,RAT
+P54319,Phospholipase A-2-activating protein ,14,8,17,8,Plaa,1.00,1.00,1.06,0.67,HEART,PROT,RAT
+B5DF46,Phosphomannomutase ,31,7,23,7,Pmm2,0.88,0.24,1.01,1.00,HEART,PROT,RAT
+O08618,Phosphoribosyl pyrophosphate synthase-associated protein 2 ,25,6,21,5,Prpsap2,1.01,1.00,1.10,0.81,HEART,PROT,RAT
+P57093,"Phytanoyl-CoA dioxygenase, peroxisomal ",23,7,16,7,Phyh,0.99,1.00,1.03,1.00,HEART,PROT,RAT
+Q5M827,Pirin ,18,5,10,5,Pir,1.43,0.38,1.06,1.00,HEART,PROT,RAT
+D3ZUF9,Pitrilysin metallepetidase 1 (Predicted) ,15,12,22,12,Pitrm1,0.73,0.63,1.18,1.00,HEART,PROT,RAT
+P70565,Plakoglobin ,39,23,112,21,Jup,1.21,<0.01,1.25,<0.01,HEART,PROT,RAT
+Q6P734,Plasma protease C1 inhibitor ,12,5,5,5,Serping1,1.28,0.58,1.48,0.27,HEART,PROT,RAT
+Q01177,Plasminogen ,13,11,38,11,Plg,1.04,1.00,1.01,1.00,HEART,PROT,RAT
+Q6AXS5,Plasminogen activator inhibitor 1 RNA-binding protein ,30,11,23,11,Serbp1,0.98,1.00,0.88,1.00,HEART,PROT,RAT
+Q63598,Plastin-3 ,23,12,41,10,Pls3,1.76,<0.01,1.69,<0.01,HEART,PROT,RAT
+Q07969,Platelet glycoprotein 4 ,22,7,74,7,Cd36,0.69,0.01,0.85,0.46,HEART,PROT,RAT
+P63004,Platelet-activating factor acetylhydrolase IB subunit alpha ,16,6,16,5,Pafah1b1,1.01,1.00,1.17,0.22,HEART,PROT,RAT
+O35264,Platelet-activating factor acetylhydrolase IB subunit beta ,12,2,10,2,Pafah1b2,1.19,0.91,1.32,0.50,HEART,PROT,RAT
+Q6S3A4,Plectin ,48,188,661,188,Plec,0.96,0.39,1.01,0.71,HEART,PROT,RAT
+A0A0G2K2L1,Podocalyxin ,5,2,8,2,Podxl,1.52,<0.01,1.29,0.06,HEART,PROT,RAT
+Q5U2U3,Poly [ADP-ribose] polymerase ,9,4,6,4,Parp3,0.99,1.00,1.05,1.00,HEART,PROT,RAT
+G3V9N0,Polyadenylate-binding protein ,16,8,20,5,Pabpc4,0.81,0.78,0.84,0.95,HEART,PROT,RAT
+Q00438,Polypyrimidine tract-binding protein 1 ,15,4,19,4,Ptbp1,1.11,0.94,1.35,0.23,HEART,PROT,RAT
+G3V6G7,Polyribonucleotide nucleotidyltransferase 1 ,18,12,19,12,Pnpt1,0.91,1.00,1.27,0.64,HEART,PROT,RAT
+Q63654,Polyubiquitin (Fragment) ,55,5,41,5,Ubc,1.15,0.02,1.11,0.05,HEART,PROT,RAT
+Q6P722,Popeye domain-containing 2 ,6,2,5,2,Popdc2,1.01,1.00,1.11,1.00,HEART,PROT,RAT
+D3ZH76,"PPARGC1 and ESRR-induced regulator, muscle 1 ",14,6,11,6,RGD1304931; Perm1,0.54,0.90,1.04,1.00,HEART,PROT,RAT
+A0A0G2K781,PPFIA-binding protein 1 ,4,4,10,4,Ppfibp1,1.10,0.91,1.15,0.67,HEART,PROT,RAT
+A2VD12,Pre-B-cell leukemia transcription factor-interacting protein 1 ,31,13,41,13,Pbxip1,1.28,0.84,1.30,0.76,HEART,PROT,RAT
+B5DFN4,"Prefoldin 5 (Predicted), isoform CRA_a ",26,3,9,3,Pfdn5,1.09,0.93,1.06,0.66,HEART,PROT,RAT
+B0BN18,Prefoldin subunit 2 ,17,2,5,2,Pfdn2,1.03,1.00,1.18,1.00,HEART,PROT,RAT
+D3ZZV1,Presequence translocase-associated motor 16 ,15,2,5,2,Magmas; Pam16,0.90,1.00,0.89,1.00,HEART,PROT,RAT
+Q5PQN1,Probable E3 ubiquitin-protein ligase HERC4 ,3,2,6,2,Herc4,1.23,0.66,1.52,0.05,HEART,PROT,RAT
+P62963,Profilin-1 ,65,7,57,7,Pfn1,1.55,<0.01,1.34,<0.01,HEART,PROT,RAT
+D4ADF5,Programmed cell death 5 ,30,3,7,3,Pdcd5; LOC100912106; NEWGENE_1310561,1.05,1.00,1.28,1.00,HEART,PROT,RAT
+A0A140TAA4,Programmed cell death 6-interacting protein ,28,19,30,19,Pdcd6ip,1.13,0.23,1.18,0.06,HEART,PROT,RAT
+G3V7W1,Programmed cell death protein 6 ,13,3,4,3,Pdcd6,1.13,1.00,1.15,1.00,HEART,PROT,RAT
+P67779,Prohibitin ,77,18,161,18,Phb,0.87,<0.01,0.89,<0.01,HEART,PROT,RAT
+A0A0G2KB63,Prohibitin ,63,17,119,17,Phb2,0.82,<0.01,0.97,0.62,HEART,PROT,RAT
+Q9EQP5,Prolargin ,38,13,42,13,Prelp,0.92,0.18,0.95,1.00,HEART,PROT,RAT
+Q6AYD3,Proliferation-associated protein 2G4 ,12,4,15,4,Pa2g4,1.10,0.59,1.18,0.66,HEART,PROT,RAT
+Q68FZ8,"Propionyl coenzyme A carboxylase, beta polypeptide ",50,20,126,3,Pccb,0.66,<0.01,0.80,0.01,HEART,PROT,RAT
+A0A0G2K401,"Propionyl-CoA carboxylase alpha chain, mitochondrial ",47,29,203,29,Pcca,0.74,<0.01,0.80,<0.01,HEART,PROT,RAT
+F7EPE0,Prosaposin ,10,6,37,6,Psap,1.09,0.88,1.21,0.35,HEART,PROT,RAT
+D4AE56,Prostaglandin E synthase 2 ,46,14,45,14,Ptges2,0.74,0.03,0.86,0.49,HEART,PROT,RAT
+P97584,Prostaglandin reductase 1 ,39,9,47,9,Ptgr1,1.65,<0.01,1.38,<0.01,HEART,PROT,RAT
+Q5BK81,Prostaglandin reductase 2 ,34,9,64,9,Ptgr2,0.83,0.09,0.88,0.35,HEART,PROT,RAT
+Q5XIC6,"Proteasome (Prosome, macropain) 26S subunit, non-ATPase, 12 ",10,5,15,5,Psmd12,1.40,0.82,1.06,1.00,HEART,PROT,RAT
+Q4V8E2,"Proteasome (Prosome, macropain) 26S subunit, non-ATPase, 14 ",27,5,11,5,Psmd14,1.23,0.23,1.14,0.34,HEART,PROT,RAT
+Q5U2S7,"Proteasome (Prosome, macropain) 26S subunit, non-ATPase, 3 ",20,7,12,7,Psmd3,1.14,0.40,1.03,0.91,HEART,PROT,RAT
+Q6PCT9,"Proteasome (Prosome, macropain) 26S subunit, non-ATPase, 6 ",19,7,15,7,Psmd6,1.20,0.12,1.18,0.17,HEART,PROT,RAT
+D4AEH3,"Proteasome (Prosome, macropain) 26S subunit, non-ATPase, 7 (Predicted) ",44,8,28,8,Psmd7,1.25,0.01,1.22,0.01,HEART,PROT,RAT
+Q6P9V7,"Proteasome (Prosome, macropain) activator subunit 1 ",59,13,80,13,Psme1,0.83,0.01,1.02,1.00,HEART,PROT,RAT
+G3V6W6,"Proteasome 26S subunit, ATPase 6 ",31,8,24,8,Psmc6,1.17,0.01,1.14,0.05,HEART,PROT,RAT
+F1LMQ3,"Proteasome 26S subunit, non-ATPase 8 ",8,3,8,3,Psmd8,1.13,0.55,1.31,0.15,HEART,PROT,RAT
+Q63798,Proteasome activator complex subunit 2 ,34,6,28,6,Psme2; LOC100362709,1.00,1.00,1.19,0.17,HEART,PROT,RAT
+Q6P505,Proteasome subunit alpha type ,16,5,16,5,Psma4,1.17,0.18,1.09,1.00,HEART,PROT,RAT
+Q6IE67,Proteasome subunit alpha type ,25,6,22,6,LOC100361067; Psma3l,1.10,1.00,1.08,0.85,HEART,PROT,RAT
+A0A0G2K0W9,Proteasome subunit alpha type ,54,11,41,11,Psma7,1.03,1.00,1.02,0.79,HEART,PROT,RAT
+Q6P9V6,Proteasome subunit alpha type ,36,7,25,7,Psma5,1.02,1.00,1.19,0.37,HEART,PROT,RAT
+P18420,Proteasome subunit alpha type-1 ,57,12,32,12,Psma1,1.08,1.00,1.02,1.00,HEART,PROT,RAT
+P17220,Proteasome subunit alpha type-2 ,41,6,36,6,Psma2,1.09,0.78,1.08,0.34,HEART,PROT,RAT
+P60901,Proteasome subunit alpha type-6 ,32,7,28,7,Psma6,0.96,1.00,1.23,0.25,HEART,PROT,RAT
+G3V8U9,Proteasome subunit beta ,30,5,18,5,Psmb4,1.02,1.00,1.18,0.84,HEART,PROT,RAT
+Q6PDW4,Proteasome subunit beta ,42,7,34,7,Psmb1,0.98,1.00,1.01,1.00,HEART,PROT,RAT
+G3V7Q6,Proteasome subunit beta ,34,8,19,8,Psmb5,0.88,1.00,1.29,0.44,HEART,PROT,RAT
+P40307,Proteasome subunit beta type-2 ,36,6,24,6,Psmb2,1.02,1.00,1.08,0.59,HEART,PROT,RAT
+P40112,Proteasome subunit beta type-3 ,43,6,27,6,Psmb3,1.04,1.00,1.12,0.62,HEART,PROT,RAT
+P28073,Proteasome subunit beta type-6 ,25,3,9,3,Psmb6; LOC100360846,1.06,1.00,1.13,1.00,HEART,PROT,RAT
+Q9JHW0,Proteasome subunit beta type-7 ,14,4,13,4,Psmb7,0.92,1.00,1.12,1.00,HEART,PROT,RAT
+F1M5R3,Protein ABHD14B ,26,3,8,3,Abhd14b,0.54,<0.01,0.76,0.03,HEART,PROT,RAT
+Q5XIM5,Protein CDV3 homolog ,30,4,7,4,Cdv3,1.16,1.00,1.17,1.00,HEART,PROT,RAT
+P04785,Protein disulfide-isomerase ,53,23,113,23,P4hb,1.79,<0.01,1.48,<0.01,HEART,PROT,RAT
+A0A0H2UHM5,Protein disulfide-isomerase ,51,22,115,22,Pdia3,1.34,<0.01,1.31,<0.01,HEART,PROT,RAT
+A0A0G2JSZ5,Protein disulfide-isomerase A6 ,37,12,47,12,Pdia6,1.29,0.06,1.17,0.59,HEART,PROT,RAT
+A0A0G2JXC1,Protein ERGIC-53 ,29,10,24,10,Lman1,1.32,0.67,1.24,0.43,HEART,PROT,RAT
+Q4QQV3,Protein FAM162A ,36,7,48,7,Fam162a,1.27,0.81,1.36,0.14,HEART,PROT,RAT
+R9PXU3,Protein kinase C and casein kinase substrate in neurons 2 protein ,28,12,32,12,Pacsin2,0.83,0.28,0.85,0.68,HEART,PROT,RAT
+Q5I2Z0,Protein kinase C and casein kinase substrate in neurons 3 ,23,8,20,8,Pacsin3,1.06,1.00,1.46,0.92,HEART,PROT,RAT
+B1WC34,Protein kinase C substrate 80K-H ,16,6,10,6,Prkcsh,1.02,1.00,1.25,0.61,HEART,PROT,RAT
+A1L1M0,"Protein kinase, cAMP-dependent, catalytic, alpha ",29,9,38,4,Prkaca,0.94,0.64,1.06,1.00,HEART,PROT,RAT
+Q4QQR9,Protein MEMO1 ,30,6,11,6,Memo1,1.35,0.54,1.09,0.84,HEART,PROT,RAT
+D3ZIC4,Protein phosphatase 1 regulatory subunit ,26,22,48,20,Ppp1r12b,1.17,0.03,1.11,0.24,HEART,PROT,RAT
+Q10728,Protein phosphatase 1 regulatory subunit 12A ,14,11,25,9,Ppp1r12a,1.11,1.00,0.95,1.00,HEART,PROT,RAT
+A0A0H2UHE5,Protein phosphatase 1A ,25,9,17,7,Ppm1a,1.12,1.00,1.17,0.36,HEART,PROT,RAT
+Q9WVR7,Protein phosphatase 1F ,20,5,9,5,Ppm1f,0.89,1.00,1.16,1.00,HEART,PROT,RAT
+Q5XI34,"Protein phosphatase 2 (Formerly 2A), regulatory subunit A (PR 65), alpha isoform, isoform CRA_a ",41,19,103,15,Ppp2r1a,0.96,0.29,1.14,0.01,HEART,PROT,RAT
+A1L1J4,"Protein phosphatase 2C, magnesium dependent, catalytic subunit ",40,14,47,14,Pdp1,1.19,0.26,1.32,0.13,HEART,PROT,RAT
+D3ZBT9,"Protein phosphatase 6, regulatory subunit 3 ",5,4,10,4,Ppp6r3; Ppp6r3-ps1,0.97,1.00,1.08,1.00,HEART,PROT,RAT
+P05943,Protein S100-A10 ,18,2,7,2,S100a10,1.91,0.01,1.73,0.02,HEART,PROT,RAT
+P05964,Protein S100-A6 ,53,4,8,4,S100a6,1.28,0.25,1.70,0.04,HEART,PROT,RAT
+A0A0G2JSU3,Protein SET ,26,4,9,4,Set,1.14,1.00,1.44,0.52,HEART,PROT,RAT
+A0A0G2JZM2,Protein transport protein SEC23 ,9,4,7,4,Sec23a,1.17,0.30,1.18,0.27,HEART,PROT,RAT
+Q9Z2Q1,Protein transport protein Sec31A ,12,10,24,10,Sec31a,0.93,1.00,1.49,0.06,HEART,PROT,RAT
+B0BMY7,"Protein tyrosine kinase 9-like (A6-related protein) (Predicted), isoform CRA_b ",38,11,19,11,LOC684352; Twf2,0.97,1.00,0.99,1.00,HEART,PROT,RAT
+P22062,Protein-L-isoaspartate(D-aspartate) O-methyltransferase ,61,11,57,11,Pcmt1,1.13,0.49,1.15,0.14,HEART,PROT,RAT
+G3V778,Protein-serine/threonine kinase ,15,5,12,4,Pdk4,0.42,0.27,0.69,0.90,HEART,PROT,RAT
+G3V843,Prothrombin ,12,7,12,7,F2,1.09,0.40,1.26,0.04,HEART,PROT,RAT
+P06302,Prothymosin alpha ,21,3,7,3,Ptma; LOC100359583,1.45,0.97,1.42,0.58,HEART,PROT,RAT
+P61459,Pterin-4-alpha-carbinolamine dehydratase ,22,2,3,2,Pcbd1,1.00,1.00,1.12,1.00,HEART,PROT,RAT
+P85973,Purine nucleoside phosphorylase ,39,8,54,8,Pnp,1.51,0.02,1.61,0.01,HEART,PROT,RAT
+Q68FT3,Pyridine nucleotide-disulfide oxidoreductase domain-containing protein 2 ,25,11,31,11,Pyroxd2,0.66,<0.01,0.81,0.03,HEART,PROT,RAT
+D3ZCA0,Pyridoxal phosphate homeostasis protein ,37,8,25,8,Prosc; Plpbp,1.08,0.54,0.96,1.00,HEART,PROT,RAT
+O88794,Pyridoxine-5'-phosphate oxidase ,40,6,30,6,Pnpo,0.94,0.82,1.06,0.90,HEART,PROT,RAT
+A0A0G2JTL5,"Pyruvate carboxylase, mitochondrial ",29,24,87,24,Pc,1.01,1.00,1.20,0.50,HEART,PROT,RAT
+A0A0G2JW90,Pyruvate dehydrogenase E1 component subunit alpha ,46,18,228,18,Pdha1 Pdha1l1,1.08,0.32,0.96,1.00,HEART,PROT,RAT
+P49432,"Pyruvate dehydrogenase E1 component subunit beta, mitochondrial ",48,14,376,14,Pdhb,1.09,0.06,0.98,0.45,HEART,PROT,RAT
+D3ZXA6,Pyruvate dehydrogenase phosphatase regulatory subunit ,22,15,51,15,Pdpr,1.26,0.01,1.29,0.01,HEART,PROT,RAT
+A0A0G2JVG3,Pyruvate kinase ,53,21,209,2,Pkm,2.11,<0.01,1.67,0.02,HEART,PROT,RAT
+P11980,Pyruvate kinase PKM ,55,26,260,6,Pkm,0.92,1.00,0.91,0.77,HEART,PROT,RAT
+Q6AYT0,Quinone oxidoreductase ,37,9,20,9,Cryz,0.81,0.07,1.02,0.88,HEART,PROT,RAT
+P50398,Rab GDP dissociation inhibitor alpha ,39,14,45,10,Gdi1,1.31,0.39,1.45,0.21,HEART,PROT,RAT
+P50399,Rab GDP dissociation inhibitor beta ,47,16,80,12,Gdi2,1.06,0.57,1.19,0.06,HEART,PROT,RAT
+Q5RKJ9,"RAB10, member RAS oncogene family ",39,7,36,5,Rab10,1.19,0.36,1.02,1.00,HEART,PROT,RAT
+A0A0G2K4A0,RAB11 family-interacting protein 5 ,7,3,4,3,Rab11fip5,0.89,1.00,1.39,0.80,HEART,PROT,RAT
+A1L1J8,"RAB5B, member RAS oncogene family ",42,7,27,4,Rab5b,1.09,0.26,1.19,0.63,HEART,PROT,RAT
+Q5PQK5,Radixin ,21,15,59,5,Rdx,1.01,1.00,1.19,0.94,HEART,PROT,RAT
+Q5U204,Ragulator complex protein LAMTOR3 ,22,2,13,2,Lamtor3,1.10,1.00,1.08,1.00,HEART,PROT,RAT
+D4A2G9,RAN-binding protein 1 ,19,4,8,4,Ranbp1,1.26,0.20,1.27,0.20,HEART,PROT,RAT
+D4A8F2,Ras suppressor protein 1 ,46,9,32,9,Rsu1,1.41,0.12,1.07,1.00,HEART,PROT,RAT
+Q5BJU0,RAS-related 2 ,32,6,22,5,Rras2,1.04,1.00,1.05,0.96,HEART,PROT,RAT
+O35509,Ras-related protein Rab-11B ,52,10,38,10,Rab11b,1.06,0.50,1.09,0.57,HEART,PROT,RAT
+P61107,Ras-related protein Rab-14 ,45,7,26,6,Rab14,1.23,0.63,1.11,1.00,HEART,PROT,RAT
+Q5EB77,Ras-related protein Rab-18 ,35,6,17,6,Rab18,1.13,0.84,1.07,1.00,HEART,PROT,RAT
+Q6NYB7,Ras-related protein Rab-1A ,71,12,48,5,Rab1; Rab1a,1.13,0.59,1.04,1.00,HEART,PROT,RAT
+Q6AXT5,Ras-related protein Rab-21 ,17,3,10,3,Rab21,1.18,1.00,1.11,1.00,HEART,PROT,RAT
+F1LP82,Ras-related protein Rab-2A ,57,9,26,9,Rab2a,1.04,1.00,1.01,1.00,HEART,PROT,RAT
+P09527,Ras-related protein Rab-7a ,50,9,29,9,Rab7a,1.19,0.15,1.11,0.34,HEART,PROT,RAT
+Q31274,"Rat MHC class I RT1 (RT16) mRNA (u haplotype), 3' end (Fragment) ",16,4,15,4,RT1-EC2,1.29,0.04,1.27,0.08,HEART,PROT,RAT
+O55147,Rattus norvegicus utrophin ,3,10,21,6,Utrn,1.10,1.00,1.38,0.27,HEART,PROT,RAT
+D4A4W6,"RCG20695, isoform CRA_b ",66,5,17,5,Slirp,0.88,0.57,0.98,1.00,HEART,PROT,RAT
+D3ZTR5,RCG21454 ,3,2,10,2,Zbed5,1.06,1.00,1.12,0.87,HEART,PROT,RAT
+M0RAK2,RCG22622 ,48,5,37,4,LOC684270,0.70,0.01,0.90,0.81,HEART,PROT,RAT
+I6L9G6,"RCG31562, isoform CRA_c ",20,4,19,4,Tardbp,0.95,1.00,1.15,0.41,HEART,PROT,RAT
+A6HIS0,RCG32667 ,25,5,18,5,Tcap,1.22,0.34,1.15,0.37,HEART,PROT,RAT
+Q68FT8,"RCG33981, isoform CRA_a ",8,3,5,3,Serpinf2,0.93,1.00,1.36,0.42,HEART,PROT,RAT
+Q32Q54,"RCG37273, isoform CRA_a ",15,4,8,4,Uqcc; Uqcc1,0.53,<0.01,0.78,0.18,HEART,PROT,RAT
+A0A0H2UHP9,"RCG39700, isoform CRA_d ",17,3,8,3,Rab6a,1.34,0.33,1.38,0.29,HEART,PROT,RAT
+D3ZZC1,RCG43947 ,22,8,25,8,Txndc5,1.21,0.03,1.30,0.01,HEART,PROT,RAT
+G3V6H0,"RCG48149, isoform CRA_b ",74,12,43,5,Rab1b-ps1; Rab1b; LOC100363782; LOC102555167,0.83,0.10,0.76,0.02,HEART,PROT,RAT
+G3V852,"RCG55135, isoform CRA_b ",36,62,224,54,Tln1,1.20,<0.01,1.16,<0.01,HEART,PROT,RAT
+D4A3D2,"RCG56113, isoform CRA_a ",25,10,58,10,Smyd1,0.81,0.21,1.11,0.98,HEART,PROT,RAT
+A0A0G2K1V7,RCG57156 ,34,7,21,7,Sgcb,0.99,1.00,1.20,0.33,HEART,PROT,RAT
+F1LQS6,RCG61833 ,20,18,46,18,Xdh rCG_61833,1.29,0.01,1.37,<0.01,HEART,PROT,RAT
+M0RB63,RCG63041 ,42,2,25,2,LOC684509,0.89,1.00,1.22,1.00,HEART,PROT,RAT
+B2RZ37,Receptor expression-enhancing protein 5 ,19,4,12,4,Reep5,1.39,0.41,1.26,0.29,HEART,PROT,RAT
+P63245,Receptor of activated protein C kinase 1 ,22,6,15,6,Gnb2l1; Rack1; LOC100911540,0.94,1.00,1.02,1.00,HEART,PROT,RAT
+Q4G069,Regulator of microtubule dynamics protein 1 ,33,9,47,9,Rmdn1,0.47,<0.01,0.67,<0.01,HEART,PROT,RAT
+D3ZUB0,Reticulocalbin 1 ,23,4,9,4,Rcn1,1.74,<0.01,1.71,<0.01,HEART,PROT,RAT
+A0A0H2UHX1,Reticulon ,7,2,12,2,Rtn3,1.08,0.51,1.25,0.14,HEART,PROT,RAT
+Q6WN19,Reticulon ,12,3,16,3,Rtn2,0.75,0.26,1.07,1.00,HEART,PROT,RAT
+B2GUZ6,Reticulon 4-interacting protein 1 ,32,9,41,9,Rtn4ip1,0.78,0.07,0.84,0.24,HEART,PROT,RAT
+Q9JK11,Reticulon-4 ,30,20,58,20,Rtn4,1.37,0.08,1.46,0.12,HEART,PROT,RAT
+P51647,Retinal dehydrogenase 1 ,41,16,54,15,Aldh1a1,1.72,<0.01,2.08,<0.01,HEART,PROT,RAT
+Q920A6,Retinoid-inducible serine carboxypeptidase ,19,7,14,7,Scpep1,1.44,0.21,1.63,0.11,HEART,PROT,RAT
+D3ZFR9,Retinol dehydrogenase 13 ,28,7,15,7,Rdh13,0.85,0.19,1.04,1.00,HEART,PROT,RAT
+P02696,Retinol-binding protein 1 ,37,4,5,4,Rbp1,1.01,1.00,1.13,1.00,HEART,PROT,RAT
+B5DEF6,RGD1310159 protein ,29,23,54,23,Acad10,0.63,<0.01,0.78,0.02,HEART,PROT,RAT
+Q5M860,Rho GDP dissociation inhibitor beta ,24,3,8,3,Arhgdib,1.37,0.05,1.29,0.11,HEART,PROT,RAT
+Q5XI73,Rho GDP-dissociation inhibitor 1 ,41,7,37,7,Arhgdia,1.22,0.01,1.12,0.34,HEART,PROT,RAT
+D4A6C5,Rho GTPase-activating protein 1 ,15,4,19,4,Arhgap1,1.77,<0.01,1.78,<0.01,HEART,PROT,RAT
+Q62868,Rho-associated protein kinase 2 ,8,9,14,8,Rock2,0.99,1.00,1.07,0.87,HEART,PROT,RAT
+P29315,Ribonuclease inhibitor ,17,6,22,6,LOC100360501; Rnh1,1.20,0.29,1.21,0.32,HEART,PROT,RAT
+A0A0G2JSV3,Ribose-phosphate pyrophosphokinase I -like ,20,6,32,6,LOC314140,1.06,0.50,1.01,1.00,HEART,PROT,RAT
+D4A1P2,Ribosomal protein L10-like ,9,2,7,2,Rpl10l,1.02,1.00,1.03,1.00,HEART,PROT,RAT
+Q6P9U5,Ribosomal protein L9 ,30,4,11,4,Rpl9,0.99,1.00,1.02,1.00,HEART,PROT,RAT
+A0A0H2UI38,Ribosomal protein S19-like2 ,43,7,23,7,Rps19l2 Rps19,1.01,1.00,0.98,0.85,HEART,PROT,RAT
+O55211,Ribosomal protein S2 ,34,8,24,8,Rps2,1.02,1.00,1.06,0.94,HEART,PROT,RAT
+A0A0G2JY70,Ribosomal_S10 domain-containing protein ,21,2,10,2,,1.13,0.97,1.07,1.00,HEART,PROT,RAT
+Q5RKI9,"Ribosome-recycling factor, mitochondrial ",11,2,3,2,Mrrf,0.54,0.07,0.80,0.61,HEART,PROT,RAT
+Q6AY80,Ribosyldihydronicotinamide dehydrogenase [quinone] ,22,5,13,5,Nqo2,0.87,0.49,0.84,0.58,HEART,PROT,RAT
+Q6AYT3,RNA-splicing ligase RtcB homolog ,32,11,33,11,LOC362855; Rtcb,1.11,0.38,1.06,0.41,HEART,PROT,RAT
+Q5XFV9,Rps16 protein (Fragment) ,26,4,6,4,Rps16,1.03,1.00,1.35,0.09,HEART,PROT,RAT
+B0LPN4,Ryanodine receptor 2 ,21,79,242,79,Ryr2,0.82,<0.01,1.06,0.07,HEART,PROT,RAT
+Q6AY30,Saccharopine dehydrogenase-like oxidoreductase ,29,9,33,9,Sccpdh; LOC100910414; LOC103689999,0.89,0.18,0.98,1.00,HEART,PROT,RAT
+F1LRB8,S-adenosylmethionine synthase ,9,3,6,3,Mat2a rCG_56483,0.66,0.98,1.17,1.00,HEART,PROT,RAT
+Q498U4,SAP domain-containing ribonucleoprotein ,16,3,5,3,Sarnp,0.88,0.98,1.07,1.00,HEART,PROT,RAT
+F1LWG8,Sarcalumenin ,38,27,284,27,Srl,0.66,<0.01,0.78,<0.01,HEART,PROT,RAT
+D3ZDQ9,"Sarcoglycan, alpha ",34,10,31,10,Sgca,0.82,0.24,1.08,0.84,HEART,PROT,RAT
+F1LYS7,"Sarcoglycan, delta ",15,4,15,4,Sgcd,0.91,0.73,1.12,0.86,HEART,PROT,RAT
+Q5XID6,"Sarcoglycan, gamma ",32,6,29,6,Sgcg,1.04,1.00,1.35,0.01,HEART,PROT,RAT
+B5DF63,Sarcolemmal membrane-associated protein ,20,16,64,16,Slmap,1.47,<0.01,1.38,<0.01,HEART,PROT,RAT
+P11507,Sarcoplasmic/endoplasmic reticulum calcium ATPase 2 ,33,33,446,20,Atp2a2,0.89,<0.01,1.30,<0.01,HEART,PROT,RAT
+Q64380,"Sarcosine dehydrogenase, mitochondrial ",9,6,12,6,Sardh,0.82,0.54,0.82,0.72,HEART,PROT,RAT
+D4ABT9,Sarcospan ,11,2,4,2,Sspn,1.11,1.00,1.34,0.95,HEART,PROT,RAT
+A0A0G2K189,Secernin 3 ,22,7,32,7,Scrn3,1.06,1.00,0.94,0.57,HEART,PROT,RAT
+Q6AYR8,Secernin-2 ,11,3,7,3,Scrn2,0.76,0.45,1.02,1.00,HEART,PROT,RAT
+D4A0F5,Septin 7 ,27,10,20,9,Sept7 Septin7,1.11,0.92,1.36,0.27,HEART,PROT,RAT
+B3GNI6,Septin-11 ,17,6,14,5,Sept11,1.31,0.43,1.56,0.16,HEART,PROT,RAT
+Q91Y81,Septin-2 ,24,6,16,6,Sept2,1.26,0.04,1.37,<0.01,HEART,PROT,RAT
+Q6P9U0,"Serine (Or cysteine) peptidase inhibitor, clade B, member 6a ",32,10,24,10,Serpinb6; Serpinb6a,0.98,1.00,1.07,0.36,HEART,PROT,RAT
+Q5M7T5,"Serine (Or cysteine) peptidase inhibitor, clade C (Antithrombin), member 1 ",43,20,71,20,Serpinc1,1.04,0.51,1.24,0.05,HEART,PROT,RAT
+Q5U3Z7,Serine hydroxymethyltransferase ,19,7,14,6,Shmt2,1.03,1.00,1.05,1.00,HEART,PROT,RAT
+P05545,Serine protease inhibitor A3K ,42,12,105,9,Serpina3c; Serpina3k,0.95,0.83,1.19,0.11,HEART,PROT,RAT
+Q7TQP6,Serine/threonine-protein kinase TNNI3K ,2,2,3,2,Tnni3k,0.63,0.04,0.76,0.17,HEART,PROT,RAT
+Q64538,Serine/threonine-protein phosphatase (Fragment) ,17,6,13,6,Ppp5c,1.10,1.00,0.98,1.00,HEART,PROT,RAT
+B2RYQ2,Serine/threonine-protein phosphatase 2A activator ,15,3,10,3,Ppp2r4; Ptpa,1.11,1.00,1.39,0.29,HEART,PROT,RAT
+P62716,Serine/threonine-protein phosphatase 2A catalytic subunit beta isoform ,19,5,18,5,Ppp2cb,0.96,1.00,1.08,1.00,HEART,PROT,RAT
+P62138,Serine/threonine-protein phosphatase PP1-alpha catalytic subunit ,18,6,33,2,Ppp1ca,1.18,1.00,1.27,0.33,HEART,PROT,RAT
+M0RCV0,Serine-threonine kinase receptor-associated protein-like ,23,5,12,5,LOC100910575,0.88,0.08,1.07,0.19,HEART,PROT,RAT
+P12346,Serotransferrin ,28,20,241,19,Tf,1.46,<0.01,1.44,<0.01,HEART,PROT,RAT
+E0A3N4,Serpina3n-like protein ,49,16,72,14,Serpina3n,1.47,<0.01,1.64,<0.01,HEART,PROT,RAT
+A0A0G2JSH5,Serum albumin ,28,21,661,2,Alb,1.10,0.08,1.24,0.01,HEART,PROT,RAT
+P02770,Serum albumin ,28,21,646,2,Alb,1.06,0.84,0.97,0.94,HEART,PROT,RAT
+B0BNE5,S-formylglutathione hydrolase ,36,7,28,7,Esd,0.85,0.26,1.02,1.00,HEART,PROT,RAT
+Q925Q9,SH3 domain-containing kinase-binding protein 1 ,7,5,16,5,Sh3kbp1,1.13,0.29,1.04,1.00,HEART,PROT,RAT
+B0K040,Sh3bgr protein (Fragment) ,32,7,25,7,Sh3bgr,0.94,0.75,1.10,0.97,HEART,PROT,RAT
+P70584,"Short/branched chain specific acyl-CoA dehydrogenase, mitochondrial ",19,6,11,6,Acadsb,0.58,0.01,1.07,1.00,HEART,PROT,RAT
+P15651,"Short-chain specific acyl-CoA dehydrogenase, mitochondrial ",42,15,274,15,Acads,0.88,0.01,0.80,<0.01,HEART,PROT,RAT
+D4ACC5,"Similar to 106 kDa O-GlcNAc transferase-interacting protein (Predicted), isoform CRA_a ",6,3,7,3,Trak1,1.31,0.59,0.76,0.59,HEART,PROT,RAT
+A0A0G2K896,Similar to RIKEN cDNA 1300017J02 ,8,6,15,5,RGD1310507,1.06,1.00,1.53,0.99,HEART,PROT,RAT
+D3ZML4,Similar to RIKEN cDNA 5730502D15 gene (Predicted) ,14,3,5,3,Trabd,0.76,0.21,0.84,0.57,HEART,PROT,RAT
+Q5FVG5,"Similar to tropomyosin 1, embryonic fibroblast-rat, isoform CRA_c ",54,23,170,4,Tpm2,0.89,1.00,1.24,0.83,HEART,PROT,RAT
+P28042,"Single-stranded DNA-binding protein, mitochondrial ",39,5,16,5,Ssbp1,0.88,0.94,0.88,0.96,HEART,PROT,RAT
+D4ACP2,Small integral membrane protein 12 ,32,3,5,3,LOC685634; Smim12,1.08,1.00,1.21,0.66,HEART,PROT,RAT
+Q925F0,Small muscular protein ,47,4,18,4,Smpx,0.82,0.91,0.95,1.00,HEART,PROT,RAT
+B5DES0,Small nuclear ribonucleoprotein Sm D2 ,25,2,5,2,Snrpd2,0.91,1.00,1.50,0.88,HEART,PROT,RAT
+B5DFL0,Snta1 protein ,23,10,23,9,Snta1,0.70,0.11,1.03,1.00,HEART,PROT,RAT
+Q01728,Sodium/calcium exchanger 1 ,7,5,10,4,Slc8a1,1.12,1.00,1.83,0.16,HEART,PROT,RAT
+P06685,Sodium/potassium-transporting ATPase subunit alpha-1 ,37,33,165,23,Atp1a1,0.88,0.33,1.07,0.41,HEART,PROT,RAT
+P07340,Sodium/potassium-transporting ATPase subunit beta-1 ,22,5,31,5,Atp1b1,0.75,0.01,0.90,0.47,HEART,PROT,RAT
+Q63377,Sodium/potassium-transporting ATPase subunit beta-3 ,18,3,8,3,Atp1b3,0.87,1.00,1.35,0.90,HEART,PROT,RAT
+P19357,"Solute carrier family 2, facilitated glucose transporter member 4 ",15,6,13,6,Slc2a4,0.77,0.11,0.88,0.57,HEART,PROT,RAT
+F1LX07,Solute carrier family 25 member 12 ,45,21,94,17,Slc25a12 LOC100360985,0.91,0.59,1.21,0.03,HEART,PROT,RAT
+F1LZW6,Solute carrier family 25 member 13 ,49,18,81,14,Slc25a13,1.03,1.00,1.36,<0.01,HEART,PROT,RAT
+Q5XIL4,"Sorbin and SH3 domain containing 3, isoform CRA_b ",12,7,11,7,Sorbs3,0.94,1.00,1.04,0.95,HEART,PROT,RAT
+F1M8Z8,Sorbin and SH3 domain-containing protein 1 ,36,26,109,3,Sorbs1,1.48,0.01,1.11,1.00,HEART,PROT,RAT
+F1M820,Sorbin and SH3 domain-containing protein 1 ,26,26,105,3,Sorbs1,1.04,0.30,0.98,0.80,HEART,PROT,RAT
+F1LPM3,Sorbin and SH3 domain-containing protein 2 ,29,25,127,25,Sorbs2,1.94,<0.01,1.65,<0.01,HEART,PROT,RAT
+P27867,Sorbitol dehydrogenase ,26,8,20,8,Sord,0.84,0.05,0.89,0.25,HEART,PROT,RAT
+Q6AXV4,Sorting and assembly machinery component 50 homolog ,30,12,54,12,Samm50,0.95,0.53,1.04,0.57,HEART,PROT,RAT
+B2RYP4,Sorting nexin 2 ,14,6,9,5,Snx2,0.96,1.00,1.23,0.96,HEART,PROT,RAT
+E9PT90,Spartin ,5,2,4,2,Spart Spg20,1.01,1.00,0.87,1.00,HEART,PROT,RAT
+Q6IRK8,"Spectrin alpha chain, non-erythrocytic 1 ",66,131,650,2,Sptan1,1.34,0.36,1.29,0.27,HEART,PROT,RAT
+A0A0G2K1Y8,"Spectrin alpha chain, non-erythrocytic 1 ",65,134,658,5,Sptan1,1.18,<0.01,1.17,<0.01,HEART,PROT,RAT
+G3V6S0,Spectrin beta chain ,50,95,432,85,Sptbn1,1.23,<0.01,1.25,<0.01,HEART,PROT,RAT
+Q6XDA0,Spectrin beta chain ,15,22,49,17,Sptb,1.03,1.00,1.41,0.66,HEART,PROT,RAT
+D4A678,"Spectrin, alpha, erythrocytic 1 ",17,28,56,27,Spta1,1.06,0.57,1.27,0.01,HEART,PROT,RAT
+A0A0G2K4X8,S-phase kinase-associated protein 1 ,36,6,19,6,Skp1,1.09,1.00,1.08,1.00,HEART,PROT,RAT
+Q63413,Spliceosome RNA helicase Ddx39b ,10,4,12,4,Ddx39b,0.96,1.00,1.09,0.38,HEART,PROT,RAT
+D3ZMS1,"Splicing factor 3b, subunit 2 ",4,2,6,2,Sf3b2,0.96,1.00,0.84,0.48,HEART,PROT,RAT
+Q4FZT8,SPRY domain-containing protein 4 ,35,6,18,6,Spryd4,0.84,0.56,0.96,1.00,HEART,PROT,RAT
+D4A1Y9,"Steroid 5 alpha-reductase 2-like 2 (Predicted), isoform CRA_b ",8,2,3,2,Tecrl,0.83,0.92,1.31,0.71,HEART,PROT,RAT
+Q4FZT0,"Stomatin-like protein 2, mitochondrial ",31,9,17,9,Stoml2,1.27,0.29,1.47,0.05,HEART,PROT,RAT
+F1M953,"Stress-70 protein, mitochondrial ",54,30,275,29,Hspa9,0.95,0.06,0.92,0.03,HEART,PROT,RAT
+O35814,Stress-induced-phosphoprotein 1 ,38,20,63,20,Stip1,1.23,<0.01,1.25,<0.01,HEART,PROT,RAT
+Q63638,Striated muscle-specific serine/threonine-protein kinase ,10,19,49,19,Speg,0.89,1.00,0.88,1.00,HEART,PROT,RAT
+Q6PCT8,"Succinate dehydrogenase [ubiquinone] cytochrome b small subunit, mitochondrial ",11,2,4,2,Sdhd,0.89,1.00,1.19,0.92,HEART,PROT,RAT
+Q920L2,"Succinate dehydrogenase [ubiquinone] flavoprotein subunit, mitochondrial ",41,21,372,21,Sdha,0.89,0.30,0.88,0.33,HEART,PROT,RAT
+P21913,"Succinate dehydrogenase [ubiquinone] iron-sulfur subunit, mitochondrial ",26,9,101,9,Sdhb,0.86,0.73,0.83,0.28,HEART,PROT,RAT
+Q641Z9,Succinate dehydrogenase complex subunit C ,24,3,17,3,Sdhc,1.12,1.00,0.84,1.00,HEART,PROT,RAT
+A0A0H2UHE1,"Succinate--CoA ligase [ADP/GDP-forming] subunit alpha, mitochondrial ",30,9,140,9,Suclg1,0.73,<0.01,0.79,<0.01,HEART,PROT,RAT
+B2RZ24,Succinate-CoA ligase subunit beta (Fragment) ,50,20,216,20,Sucla2,0.91,0.02,0.92,0.10,HEART,PROT,RAT
+Q499V7,Succinate-CoA ligase subunit beta (Fragment) ,50,20,105,20,Suclg2,0.74,<0.01,0.83,<0.01,HEART,PROT,RAT
+P51650,"Succinate-semialdehyde dehydrogenase, mitochondrial ",36,14,37,14,Aldh5a1,0.76,0.37,0.80,0.57,HEART,PROT,RAT
+B2GV06,"Succinyl-CoA:3-ketoacid coenzyme A transferase 1, mitochondrial ",53,20,658,20,Oxct1,1.85,<0.01,1.56,<0.01,HEART,PROT,RAT
+G3V6R5,Sulfite oxidase ,33,12,36,12,Suox,0.70,0.12,0.83,0.70,HEART,PROT,RAT
+Q6LDS4,Superoxide dismutase [Cu-Zn] ,38,6,56,6,Sod1,1.00,1.00,1.00,1.00,HEART,PROT,RAT
+P07895,"Superoxide dismutase [Mn], mitochondrial ",64,11,187,11,Sod2,0.97,0.85,0.89,0.52,HEART,PROT,RAT
+D3ZEV8,"Sushi domain containing 2 (Predicted), isoform CRA_a ",11,6,12,6,Susd2,1.00,1.00,1.27,0.28,HEART,PROT,RAT
+Q3MIE4,Synaptic vesicle membrane protein VAT-1 homolog ,17,5,8,5,Vat1,1.47,0.03,1.71,0.02,HEART,PROT,RAT
+Q9WVJ4,Synaptojanin-2-binding protein ,32,4,9,4,Synj2bp,0.76,0.08,0.81,0.06,HEART,PROT,RAT
+B1VKB4,Synaptopodin ,16,10,25,10,Synpo,0.88,0.04,1.07,0.77,HEART,PROT,RAT
+D3ZZ68,Synaptopodin 2-like ,19,11,34,11,Synpo2l,1.09,0.57,1.01,1.00,HEART,PROT,RAT
+D4A702,Synaptopodin-2 ,23,21,63,21,Synpo2,1.16,0.09,1.07,0.78,HEART,PROT,RAT
+D3ZM91,Syncoilin (Predicted) ,24,8,15,8,Sync,1.10,1.00,1.14,1.00,HEART,PROT,RAT
+A0A096MK54,Synemin,26,20,33,20,Synm,2.54,<0.01,1.71,0.01,HEART,PROT,RAT
+A0A0G2K4U8,Syntaxin-12 ,21,3,16,3,Stx12,1.08,1.00,1.19,0.62,HEART,PROT,RAT
+D3ZWC6,"Syntrophin, basic 1 (Predicted) ",38,17,47,15,Sntb1,1.11,0.82,1.05,0.46,HEART,PROT,RAT
+D3ZA84,Talin 2 ,34,66,202,58,Tln2,1.04,0.34,1.17,<0.01,HEART,PROT,RAT
+A0A0G2K2T1,Taxilin beta ,27,14,26,14,Txlnb,0.87,0.18,0.94,1.00,HEART,PROT,RAT
+P28480,T-complex protein 1 subunit alpha ,34,15,47,15,Tcp1,1.15,1.00,1.24,0.29,HEART,PROT,RAT
+Q5XIM9,T-complex protein 1 subunit beta ,52,20,81,20,Cct2,1.22,0.02,1.18,0.06,HEART,PROT,RAT
+Q7TPB1,T-complex protein 1 subunit delta ,23,12,27,12,Cct4,1.14,0.14,1.27,0.01,HEART,PROT,RAT
+Q68FQ0,T-complex protein 1 subunit epsilon ,39,19,50,19,Cct5,1.19,0.04,1.24,0.03,HEART,PROT,RAT
+D4AC23,T-complex protein 1 subunit eta ,26,12,35,12,Cct7,1.22,<0.01,1.27,<0.01,HEART,PROT,RAT
+Q6P502,T-complex protein 1 subunit gamma ,33,16,66,16,Cct3,1.15,0.16,1.29,0.03,HEART,PROT,RAT
+F1LN42,Tensin 1 ,32,37,96,36,Tns1,0.83,0.07,1.01,1.00,HEART,PROT,RAT
+D3ZTN1,Tescalcin ,33,6,14,6,Tesc,0.80,1.00,1.61,0.96,HEART,PROT,RAT
+A0A0G2KAW4,Thimet oligopeptidase ,11,6,12,6,Thop1,0.95,1.00,0.86,0.60,HEART,PROT,RAT
+P11232,Thioredoxin ,31,3,14,3,Txn1,1.11,1.00,1.22,0.93,HEART,PROT,RAT
+G3V912,Thioredoxin domain containing 13 ,19,5,7,5,Tmx4,1.16,0.31,1.33,0.07,HEART,PROT,RAT
+A0A0G2K3Z9,Thioredoxin domain-containing protein ,45,9,69,9,Prdx1l1,1.22,0.04,1.13,0.28,HEART,PROT,RAT
+R9PXU4,"Thioredoxin reductase 1, cytoplasmic ",24,8,18,8,Txnrd1,1.02,1.00,1.14,0.85,HEART,PROT,RAT
+Q9Z0J5,"Thioredoxin reductase 2, mitochondrial ",35,13,69,13,Txnrd2,0.81,0.11,0.85,0.48,HEART,PROT,RAT
+A0A0G2K737,Thioredoxin-like protein 1 ,32,6,19,6,Txnl1,1.21,0.66,1.12,1.00,HEART,PROT,RAT
+P24329,Thiosulfate sulfurtransferase ,39,10,41,9,Tst,0.70,<0.01,0.91,0.36,HEART,PROT,RAT
+Q68FW7,"Threonine--tRNA ligase, mitochondrial ",19,11,29,10,Tars2,1.17,0.30,1.24,0.22,HEART,PROT,RAT
+Q5M7V8,Thyroid hormone receptor-associated protein 3 ,4,2,4,2,Thrap3,1.00,1.00,1.12,1.00,HEART,PROT,RAT
+A0A0G2K2P5,Tight junction protein ZO-1 ,10,12,25,12,Tjp1,1.02,1.00,0.96,1.00,HEART,PROT,RAT
+A2VCX1,TIP41-like protein ,23,3,10,3,Tiprl,0.77,0.67,0.85,0.99,HEART,PROT,RAT
+Q9WVJ6,Tissue-type transglutaminase ,35,21,107,21,Tgm2,3.55,<0.01,2.41,<0.01,HEART,PROT,RAT
+Q63580,Titin (Fragment) ,48,8,53,8,Ttn,0.93,1.00,0.89,0.30,HEART,PROT,RAT
+Q9JJ49,Titin (Fragment) ,52,8,57,8,Ttn,0.91,0.50,0.91,0.62,HEART,PROT,RAT
+P97851,Titin protein homolog (Fragment) ,60,3,26,3,Ttn,0.94,1.00,0.93,1.00,HEART,PROT,RAT
+B1WBR4,Tnnt2 protein ,47,20,527,20,Tnnt2,0.93,0.97,0.92,0.66,HEART,PROT,RAT
+B4F793,Tnxb protein (Fragment) ,10,6,11,6,Tnxa-ps1,1.63,0.06,1.58,0.09,HEART,PROT,RAT
+A2RUW1,Toll-interacting protein ,13,3,4,3,Tollip,0.97,1.00,0.86,1.00,HEART,PROT,RAT
+Q499Q2,TPD52-like 1 ,41,6,15,6,Tpd52l1,0.93,1.00,0.91,1.00,HEART,PROT,RAT
+Q9EQS0,Transaldolase ,26,9,30,9,Taldo1,0.94,0.91,1.02,1.00,HEART,PROT,RAT
+Q91ZW1,"Transcription factor A, mitochondrial ",34,9,19,9,Tfam,1.01,1.00,0.96,1.00,HEART,PROT,RAT
+F1LPS8,Transcriptional activator protein Pur-alpha ,31,7,21,6,Pura,1.08,0.42,1.06,0.25,HEART,PROT,RAT
+A0A0G2JUX5,Transcriptional activator protein Pur-beta ,38,7,13,6,Purb,1.19,0.30,1.08,1.00,HEART,PROT,RAT
+P61589,Transforming protein RhoA ,22,3,13,3,Rhoa,1.02,1.00,1.01,1.00,HEART,PROT,RAT
+A0A0G2JWK7,Transgelin ,49,10,34,10,Tagln,0.65,<0.01,1.27,0.06,HEART,PROT,RAT
+Q5XFX0,Transgelin-2 ,61,10,63,10,Tagln2,1.61,0.02,1.52,0.02,HEART,PROT,RAT
+P46462,Transitional endoplasmic reticulum ATPase ,40,29,166,29,Vcp,1.21,<0.01,1.08,0.07,HEART,PROT,RAT
+G3V826,Transketolase ,22,9,27,9,Tkt,1.28,0.09,1.54,0.03,HEART,PROT,RAT
+D4A601,Translational activator of cytochrome c oxidase 1 ,23,4,7,4,Taco1,1.13,1.00,0.87,1.00,HEART,PROT,RAT
+P63029,Translationally-controlled tumor protein ,35,5,23,5,Tpt1,0.92,1.00,0.99,1.00,HEART,PROT,RAT
+Q63584,Transmembrane emp24 domain-containing protein 10 ,22,4,9,4,Tmed10,1.49,0.01,1.44,0.01,HEART,PROT,RAT
+Q5HZA9,Transmembrane protein 126A ,12,2,7,2,Tmem126a,0.84,0.78,1.16,0.91,HEART,PROT,RAT
+D3ZZT3,Transmembrane protein 182 ,10,2,11,2,Tmem182,1.13,0.87,1.11,0.48,HEART,PROT,RAT
+F1LQZ0,Transmembrane protein 65 ,14,3,5,3,Tmem65,0.64,<0.01,0.78,0.03,HEART,PROT,RAT
+A0A0G2JXP4,Transport and golgi organization 2 homolog ,26,5,13,5,RGD1310348; Tango2,0.91,0.97,0.85,0.67,HEART,PROT,RAT
+P02767,Transthyretin ,63,7,46,7,Ttr,1.13,1.00,1.11,1.00,HEART,PROT,RAT
+Q64428,"Trifunctional enzyme subunit alpha, mitochondrial ",49,31,562,31,Hadha,0.44,<0.01,0.53,<0.01,HEART,PROT,RAT
+Q60587,"Trifunctional enzyme subunit beta, mitochondrial ",54,20,226,20,Hadhb,0.44,<0.01,0.56,<0.01,HEART,PROT,RAT
+P48500,Triosephosphate isomerase ,50,11,153,11,Tpi1; LOC100911515,1.06,0.13,1.02,1.00,HEART,PROT,RAT
+A0JPQ4,Tripartite motif-containing protein 72 ,41,16,133,16,Trim72,1.16,0.01,1.11,0.07,HEART,PROT,RAT
+Q9EQV6,Tripeptidyl-peptidase 1 ,14,4,11,4,Tpp1,0.78,0.60,0.88,1.00,HEART,PROT,RAT
+Q64560,Tripeptidyl-peptidase 2 ,20,17,41,17,Tpp2,1.47,<0.01,1.48,<0.01,HEART,PROT,RAT
+Q4VBH2,tRNA nucleotidyl transferase 1 ,13,4,11,4,Trnt1,0.90,1.00,1.09,0.45,HEART,PROT,RAT
+D3ZSG3,Tropomodulin 4 ,19,5,18,4,Tmod4,0.25,<0.01,0.49,<0.01,HEART,PROT,RAT
+Q6IMZ5,Tropomodulin-1 ,50,17,82,15,Tmod1,1.29,<0.01,1.08,0.26,HEART,PROT,RAT
+Q923Z2,"Tropomyosin 1, alpha, isoform CRA_a ",62,26,267,4,Tpm1,0.71,0.01,1.14,0.45,HEART,PROT,RAT
+P04692,Tropomyosin alpha-1 chain ,73,34,488,9,Tpm1,1.00,1.00,0.95,0.87,HEART,PROT,RAT
+Q63610,Tropomyosin alpha-3 chain ,42,16,194,5,Tpm3,1.53,0.08,1.46,0.10,HEART,PROT,RAT
+P09495,Tropomyosin alpha-4 chain ,48,19,122,6,Tpm4,1.29,0.01,1.12,0.08,HEART,PROT,RAT
+P23693,"Troponin I, cardiac muscle ",35,10,270,10,Tnni3,0.92,1.00,0.93,0.99,HEART,PROT,RAT
+A0A0G2K673,Tryptophanyl-tRNA synthetase ,15,5,12,5,Wars,1.38,0.05,1.16,0.37,HEART,PROT,RAT
+P68370,Tubulin alpha-1A chain ,45,17,181,5,Tuba1a,1.53,<0.01,1.52,<0.01,HEART,PROT,RAT
+Q5XIF6,Tubulin alpha-4A chain ,39,13,183,3,Tuba4a,1.54,<0.01,1.58,<0.01,HEART,PROT,RAT
+Q6AY56,Tubulin alpha-8 chain ,39,12,139,3,Tuba8,0.82,0.01,1.06,0.57,HEART,PROT,RAT
+Q4QQV0,Tubulin beta chain ,43,12,107,4,Tubb6,1.65,0.12,1.52,0.20,HEART,PROT,RAT
+P85108,Tubulin beta-2A chain ,49,15,184,4,Tubb2a,1.08,0.53,1.23,0.21,HEART,PROT,RAT
+P69897,Tubulin beta-5 chain ,52,17,222,5,Tubb5,1.61,<0.01,1.43,<0.01,HEART,PROT,RAT
+Q6PEC1,Tubulin-specific chaperone A ,15,2,4,2,Tbca,0.85,1.00,1.26,0.92,HEART,PROT,RAT
+Q6PCT3,Tumor protein D54 ,31,5,13,5,Tpd52l2,1.02,1.00,1.13,0.70,HEART,PROT,RAT
+Q6IRE4,Tumor susceptibility gene 101 protein ,13,4,6,4,Tsg101,1.06,1.00,1.24,0.57,HEART,PROT,RAT
+B0BN97,Txndc12 protein (Fragment) ,31,5,11,5,Txndc12,1.67,<0.01,1.63,0.01,HEART,PROT,RAT
+P41499,Tyrosine-protein phosphatase non-receptor type 11 ,26,11,33,11,Ptpn11,1.07,1.00,1.00,1.00,HEART,PROT,RAT
+Q4KM49,"Tyrosine--tRNA ligase, cytoplasmic ",12,5,8,5,Yars,1.06,0.98,0.94,0.98,HEART,PROT,RAT
+F2Z3T9,U2 snRNP auxiliary factor large subunit ,12,4,11,4,U2af2,0.86,1.00,0.96,1.00,HEART,PROT,RAT
+B2RZA9,Ube2l3 protein ,56,6,40,6,Ube2l3; NEWGENE_1308361,1.15,0.06,1.11,0.33,HEART,PROT,RAT
+A0A140TAI1,"Ubiquilin 1, isoform CRA_a ",8,3,7,3,Ubqln1,1.25,0.70,0.96,1.00,HEART,PROT,RAT
+Q68FU7,"Ubiquinone biosynthesis monooxygenase COQ6, mitochondrial ",36,12,38,12,Coq6,0.69,0.04,0.86,0.90,HEART,PROT,RAT
+Q68FT1,"Ubiquinone biosynthesis protein COQ9, mitochondrial ",45,9,137,9,Coq9,0.57,<0.01,0.68,<0.01,HEART,PROT,RAT
+D3ZVQ0,Ubiquitin carboxyl-terminal hydrolase ,26,17,38,17,Usp5,1.09,0.97,1.08,1.00,HEART,PROT,RAT
+Q5U2N2,Ubiquitin carboxyl-terminal hydrolase ,33,13,27,13,Usp14,0.92,1.00,1.10,0.94,HEART,PROT,RAT
+Q9ES53,Ubiquitin recognition factor in ER-associated degradation protein 1 ,23,4,8,4,Ufd1l; Ufd1,1.03,1.00,1.07,1.00,HEART,PROT,RAT
+B2RYG6,Ubiquitin thioesterase OTUB1 ,29,6,14,6,Otub1,1.02,1.00,1.18,0.66,HEART,PROT,RAT
+Q9EQX9,Ubiquitin-conjugating enzyme E2 N ,62,7,39,7,Ube2n,1.05,0.81,1.13,0.79,HEART,PROT,RAT
+D3ZFY8,Ubiquitin-conjugating enzyme E2 V1 ,23,4,16,2,Ube2v1; LOC679539; LOC100912618,1.03,0.75,1.10,0.50,HEART,PROT,RAT
+D3ZNQ6,Ubiquitin-conjugating enzyme E2M ,25,5,14,5,Ube2m,1.03,1.00,1.06,0.95,HEART,PROT,RAT
+Q5U300,Ubiquitin-like modifier-activating enzyme 1 ,36,26,89,26,Uba1,1.07,0.79,1.24,0.16,HEART,PROT,RAT
+Q499N6,UBX domain-containing protein 1 ,21,3,8,3,Ubxn1,1.02,1.00,1.01,1.00,HEART,PROT,RAT
+D3ZF39,UDP-N-acetylglucosamine pyrophosphorylase 1 ,15,6,14,6,Uap1,2.15,0.03,2.27,0.08,HEART,PROT,RAT
+Q4KM73,UMP-CMP kinase ,46,7,29,7,Cmpk1,0.96,1.00,1.02,1.00,HEART,PROT,RAT
+A0A096MJB5,Unc-45 myosin chaperone B ,33,23,56,23,Unc45b,1.00,1.00,1.19,0.44,HEART,PROT,RAT
+Q63355,Unconventional myosin-Ic ,26,20,48,20,Myo1c,0.95,0.98,1.05,1.00,HEART,PROT,RAT
+M0R5J4,Uncharacterized protein ,59,19,346,15,,1.35,<0.01,1.18,<0.01,HEART,PROT,RAT
+F1M7L9,Uncharacterized protein ,26,16,66,16,,1.23,0.01,1.14,0.11,HEART,PROT,RAT
+F1LM19,Uncharacterized protein ,8,2,9,2,,1.20,0.26,1.14,0.77,HEART,PROT,RAT
+D3ZJE2,Uncharacterized protein ,19,2,8,2,Rpl12-ps1,1.04,1.00,1.02,1.00,HEART,PROT,RAT
+F1LTJ5,Uncharacterized protein ,21,37,147,37,,1.01,1.00,1.00,0.92,HEART,PROT,RAT
+D3ZM33,Uncharacterized protein ,18,3,6,3,LOC100362298,1.01,1.00,0.90,1.00,HEART,PROT,RAT
+D3Z874,Uncharacterized protein ,42,16,109,16,,0.99,1.00,0.99,1.00,HEART,PROT,RAT
+F1M4I1,Uncharacterized protein ,27,11,25,10,,0.99,1.00,1.29,0.79,HEART,PROT,RAT
+D4A8Y1,Uncharacterized protein ,38,24,190,24,,0.90,0.15,0.92,0.11,HEART,PROT,RAT
+D3ZW57,Uncharacterized protein ,19,2,3,2,N/A,0.75,0.91,1.56,0.65,HEART,PROT,RAT
+F1LWK7,Uncharacterized protein (Fragment) ,22,12,52,7,,1.00,0.92,0.92,1.00,HEART,PROT,RAT
+Q642A4,UPF0598 protein C8orf82 homolog ,26,5,19,5,MGC94207,0.89,0.97,0.93,1.00,HEART,PROT,RAT
+Q4V8I9,UTP--glucose-1-phosphate uridylyltransferase ,56,22,118,22,Ugp2,0.93,0.17,0.94,1.00,HEART,PROT,RAT
+A0A0G2JXT0,Vacuolar protein sorting-associated protein 26A ,20,6,8,6,Vps26a,1.00,1.00,1.57,0.11,HEART,PROT,RAT
+G3V8A5,Vacuolar protein sorting-associated protein 35 ,27,18,54,18,Vps35,1.09,1.00,1.41,0.17,HEART,PROT,RAT
+P0C0A1,Vacuolar protein-sorting-associated protein 25 ,28,5,10,5,Vps25,0.95,1.00,1.13,0.58,HEART,PROT,RAT
+Q04462,Valine--tRNA ligase ,25,21,53,21,Vars,0.95,1.00,0.95,1.00,HEART,PROT,RAT
+Q4KLZ0,Vanin 1 ,23,7,30,7,Vnn1,2.05,<0.01,1.79,0.03,HEART,PROT,RAT
+Q64232,Very-long-chain enoyl-CoA reductase ,17,5,6,5,Tecr,0.91,1.00,1.04,1.00,HEART,PROT,RAT
+Q9Z270,Vesicle-associated membrane protein-associated protein A ,32,6,30,5,Vapa,1.06,1.00,1.16,0.77,HEART,PROT,RAT
+Q9Z269,Vesicle-associated membrane protein-associated protein B ,23,5,18,4,Vapb,0.93,0.74,0.89,0.10,HEART,PROT,RAT
+P31000,Vimentin ,68,30,250,23,Vim,1.92,<0.01,1.63,<0.01,HEART,PROT,RAT
+A0A0G2K8V2,Vinculin ,59,58,401,58,Vcl,1.11,0.05,1.10,0.06,HEART,PROT,RAT
+Q9Z2L0,Voltage-dependent anion-selective channel protein 1 ,68,15,273,15,Vdac1,1.31,0.04,0.85,0.34,HEART,PROT,RAT
+P81155,Voltage-dependent anion-selective channel protein 2 ,35,8,93,7,Vdac2,1.01,0.87,0.89,0.37,HEART,PROT,RAT
+A0A0G2JSR0,Voltage-dependent anion-selective channel protein 3 ,43,9,79,8,Vdac3,1.11,0.07,0.88,0.04,HEART,PROT,RAT
+A0A0G2K3W1,von Willebrand factor A domain-containing 8 ,21,8,22,8,Vwa8,0.57,0.05,0.68,0.08,HEART,PROT,RAT
+Q642A6,von Willebrand factor A domain-containing protein 1 ,34,8,18,8,Vwa1,1.11,1.00,1.15,1.00,HEART,PROT,RAT
+P62815,"V-type proton ATPase subunit B, brain isoform ",12,5,10,5,Atp6v1b2,1.15,0.25,1.42,0.02,HEART,PROT,RAT
+Q5RKI0,WD repeat-containing protein 1 ,38,16,79,16,Wdr1,1.07,0.34,1.13,0.53,HEART,PROT,RAT
+O54975,Xaa-Pro aminopeptidase 1 ,17,8,20,8,Xpnpep1,1.41,0.02,1.42,0.02,HEART,PROT,RAT
+Q5I0D7,Xaa-Pro dipeptidase ,15,7,8,7,Pepd,1.11,1.00,1.21,0.90,HEART,PROT,RAT
+D4ABA9,Xin actin-binding repeat containing 1 ,24,18,39,18,Xirp1,2.10,<0.01,1.79,0.01,HEART,PROT,RAT
+F1LMC2,Xin actin-binding repeat-containing protein 2 ,29,72,166,72,Xirp2,4.87,<0.01,2.79,<0.01,HEART,PROT,RAT
+Q3ZAV2,Y-box-binding protein 1 ,8,2,4,2,Ybx1,0.95,1.00,1.02,1.00,HEART,PROT,RAT
+D4A264,"Zinc-binding alcohol dehydrogenase, domain-containing 2 ",33,8,29,8,Zadh2,0.62,0.04,0.76,0.68,HEART,PROT,RAT
+D4A7U1,Zyxin ,24,8,29,8,Zyx,1.79,0.02,1.84,0.01,HEART,PROT,RAT

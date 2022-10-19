@@ -1,0 +1,93 @@
+﻿NCBI accession no.,Protein name,Mean fold change ratio - MI vs C,Mean fold change ratio - 30D PMI vs MI,Mean fold change ratio - 120D PMI vs MI,Functions,Tissue,Ome,Species
+149063018,Heat shock 27 kDa protein 1,1.24 ± 0.004,–,–,Stress response.,HEART,PROT,RAT
+38303969,Heat shock protein 5,1.72 ± 0.5067,0.54 ± 0.091,0.44 ± 0.063,ER stress response,HEART,PROT,RAT
+435950,Alpha B-crystallin,2.47 ± 1.059,0.87 ± 0.227,0.51 ± 0.0003,Stress response,HEART,PROT,RAT
+54673763,"Heat shock protein 90, alpha (cytosolic), class A member 1",2.26 ± 1.022,0.48 ± 0.224,0.42 ± 0.274,Stress response,HEART,PROT,RAT
+55778012,Heat shock protein 1 (chaperonin),1.68 ± 0.387,–,–,Stress response,HEART,PROT,RAT
+55855,Precursor (AA − 17 to 399),2.06 ± 0.073,0.44 ± 0.124,0.51 ± 0.113,Precursor to calreticulin. Chaperone,HEART,PROT,RAT
+57241,Sulfated glycoprotein 2,2.83 ± 0.768,0.15 ± 0.027,0.16 ± 0.016,Chaperone,HEART,PROT,RAT
+81910761,T-complex protein 1 subunit epsilon,1.49 ± 0.068,–,–,Chaperone,HEART,PROT,RAT
+91234898,84 kDa heat shock protein,1.43 ± 0.157,0.58 ± 0.064,0.63 ± 0.043,Stress response,HEART,PROT,RAT
+112889,Alpha-1-antiproteinase; precursor,7.88 ± 2.592,0.13 ± 0.075,0.16 ± 0.063,Serine protease inhibitor. Acute phase protein.,HEART,PROT,RAT
+158138561,Complement C3; precursor,6.74 ± 1.782,0.29 ± 0.135,0.35 ± 0.002,Complement pathway.,HEART,PROT,RAT
+407970992,"Alpha-1-inhibitor 3, precursor",1.28 ± 0.024,0.57 ± 0.219,0.40 ± 0.335,Protease inhibitor. Inflammation.,HEART,PROT,RAT
+60097941,Haptoglobin precursor,7.64 ± 5.915,–,–,Haemoglobin binding. Acute phase protein,HEART,PROT,RAT
+60392583,"T-kininogen 2, precursor",2.50 ± 0.839,0.39 ± 0.029,0.14 ± 0.065,Acute phase protein,HEART,PROT,RAT
+623560,"Immunoglobulin gamma-2b, partial",2.90 ± 1.049,–,–,Inflammation,HEART,PROT,RAT
+38197676,Desmin,1.90 ± 0.587,0.77 ± 0.361,0.52 ± 0.193,Intermediate filament. Cellular cytoskeleton,HEART,PROT,RAT
+55575,Beta-actin,1.83 ± 0.569,0.37 ± 0.065,0.34 ± 0.027,Microfilament. Cellular cytoskeleton,HEART,PROT,RAT
+57480,Vimentin,2.38 ± 0.151,0.78 ± 0.102,0.36 ± 0.083,Intermediate filament. Cellular cytoskeleton,HEART,PROT,RAT
+149042350,"Dystrophin, muscular dystrophy, isoform CRA_a",0.31 ± 0.007,2.89 ± 1.123,4.94 ± 1.479,Structural protein. Costamere forming,HEART,PROT,RAT
+183985854,Dihydrolipoamide branched chain transacylase E2,1.83 ± 0.223,–,–,Branched chain amino acid metabolism,HEART,PROT,RAT
+205829936,"Succinyl-CoA:3-ketoacid coenzyme A transferase 1, mitochondrial, precursor",1.38 ± 0.109,–,–,Ketone body metabolism,HEART,PROT,RAT
+6978515,Apolipoprotein A-I preproprotein,5.98 ± 1.059,0.11 ± 0.048,0.12 ± 0.040,Cholesterol transport and metabolism,HEART,PROT,RAT
+8393948,Phosphoglycerate mutase 2,1.62 ± 0.373,–,–,Glycolysis,HEART,PROT,RAT
+149027156,"Acetyl-coenzyme A acyltransferase 2 (mitochondrial 3-oxoacyl-coenzyme A thiolase), isoform CRA_f",0.69 ± 0.095,1.81 ± 0.125,1.88 ± 0.077,β oxidation of fatty acid,HEART,PROT,RAT
+292494885,"Medium-chain specific acyl-CoA dehydrogenase, mitochondrial, precursor",0.61 ± 0.068,–,–,β oxidation of fatty acids.,HEART,PROT,RAT
+400269,"Methylmalonate-semialdehyde dehydrogenase [acylating], mitochondrial, precursor",0.73 ± 0.058,–,–,Valine and pyrimidine metabolism,HEART,PROT,RAT
+401461805,"Acetyl-CoA acetyltransferase, mitochondrial, precursor",0.75 ± 0.027,–,–,Ketone body metabolism,HEART,PROT,RAT
+42476181,"Malate dehydrogenase, mitochondrial, precursor",0.73 ± 0.061,–,–,Malate metabolic process enzyme,HEART,PROT,RAT
+48675862,"Acyl-coenzyme A thioesterase 2, mitochondrial",0.58 ± 0.061,1.43 ± 0.026,1.64 ± 0.128,Fatty acid metabolism,HEART,PROT,RAT
+50370082,"Isocitrate dehydrogenase 2 (NADP +), mitochondrial",0.30 ± 0.124,4.22 ± 2.503,5.68 ± 3.103,Intermediary metabolism and energy production,HEART,PROT,RAT
+56090293,"Pyruvate dehydrogenase E1 component subunit beta, mitochondrial, precursor",0.64 ± 0.057,2.72 ± 1.449,2.03 ± 0.748,Glucose metabolism,HEART,PROT,RAT
+56585024,Phosphoglycerate kinase 1,0.67 ± 0.078,–,–,Glycolysis,HEART,PROT,RAT
+6015047,"Delta(3,5)-Delta(2,4)-dienoyl-CoA isomerase, mitochondrial, precursor",0.76 ± 0.012,–,–,β oxidation of fatty acid,HEART,PROT,RAT
+67476443,"2,4-dienoyl-CoA reductase, mitochondrial, precursor",0.53 ± 0.119,–,–,β oxidation of fatty acid,HEART,PROT,RAT
+6978661,Creatine kinase M-type,0.45 ± 0.135,2.17 ± 0.365,2.73 ± 0.999,Phosphocreatine biosynthetic process,HEART,PROT,RAT
+77993368,"Acyl-CoA synthetase family member 2, mitochondrial, precursor",0.36 ± 0.047,–,–,Fatty acid metabolism,HEART,PROT,RAT
+81861572,"Malate dehydrogenase, cytoplasmic",0.44 ± 0.15,2.07 ± 0.203,2.78 ± 0.651,Malate metabolic process,HEART,PROT,RAT
+81883712,"2-oxoglutarate dehydrogenase, mitochondrial, precursor",0.29 ± 0.020,2.75 ± 0.439,3.34 ± 0.712,Metabolism,HEART,PROT,RAT
+81883845,"Methylcrotonoyl-CoA carboxylase beta chain, mitochondrial, precursor",0.41 ± 0.139,–,–,Branched chain amino acid catabolism,HEART,PROT,RAT
+81892272,Glucose-6-phosphate isomerase,0.69 ± 0.044,1.39 ± 0.005,1.92 ± 0.293,Glycolysis,HEART,PROT,RAT
+55971,Cytochrome c oxidase subunit Va preprotein,1.29 ± 0.041,–,–,Mitochondrial respiratory chain,HEART,PROT,RAT
+71681130,"ATP synthase, H + transporting, mitochondrial F1 complex, beta polypeptide",1.64 ± 0.165,–,–,Oxidative phosphorylation,HEART,PROT,RAT
+82617686,NADH dehydrogenase (ubiquinone) 1 beta subcomplex 4,1.47 ± 0.255,–,–,Mitochondrial respiratory chain,HEART,PROT,RAT
+83300587,"ATP synthase subunit alpha, mitochondrial, precursor",1.76 ± 0.129,–,–,Oxidative phosphorylation,HEART,PROT,RAT
+83305118,"NADH dehydrogenase [ubiquinone] flavoprotein 2, mitochondrial, precursor",1.70 ± 0.329,–,–,Mitochondrial respiratory chain,HEART,PROT,RAT
+9506411,"ATP synthase subunit d, mitochondrial",1.28 ± 0.057,–,–,Oxidative phosphorylation,HEART,PROT,RAT
+461587,"ATP synthase subunit e, mitochondrial",0.61 ± 0.268,–,–,Oxidative phosphorylation,HEART,PROT,RAT
+60391194,"Aconitate hydratase, mitochondrial, precursor",0.61 ± 0.064,1.20 ± 0.033,1.61 ± 0.221,Citric acid cycle,HEART,PROT,RAT
+6978725,"Cytochrome c, somatic",0.39 ± 0.120,1.95 ± 0.151,3.07 ± 0.909,Electron transport,HEART,PROT,RAT
+90111992,"Ubiquinone biosynthesis protein COQ9, mitochondrial, precursor",0.59 ± 0.027,–,–,Electron transport chain,HEART,PROT,RAT
+81884378,"Cytochrome b-c1 complex subunit 1, mitochondrial, precursor",–,1.17 ± 0.053,1.40 ± 0.090,Mitochondrial respiratory chain,HEART,PROT,RAT
+281332157,Actinin alpha 2,0.65 ± 0.030,,,Actin binding,HEART,PROT,RAT
+300797519,Myomesin-1,0.51 ± 0.027,2.23 ± 0.194,1.64 ± 0.305,Myofibril organisation,HEART,PROT,RAT
+322510050,"Myosin-binding protein C, cardiac-type",0.59 ± 0.070,–,–,Muscle contraction,HEART,PROT,RAT
+6981666,"Troponin T, cardiac muscle",0.29 ± 0.129,1.83 ± 0.117,3.38 ± 0.898,Muscle contraction and sarcomeric unit,HEART,PROT,RAT
+8394469,"Troponin I, cardiac muscle",0.46 ± 0.008,–,–,Muscle contraction and sarcomeric unit,HEART,PROT,RAT
+88853790,"Myosin, heavy chain 4, skeletal muscle",0.62 ± 0.090,–,–,Myofibril organisation and muscle contraction,HEART,PROT,RAT
+6978505,Annexin A5,1.92 ± 0.417,–,–,Calcium binding membrane protein,HEART,PROT,RAT
+9845234,Annexin A2,2.19 ± 0.505,0.58 ± 0.055,0.32 ± 0.018,Calcium binding membrane protein,HEART,PROT,RAT
+378526630,Ryanodine receptor 2,0.47 ± 0.050,1.78 ± 0.526,2.22 ± 0.203,Calcium channel protein for Ca homeostasis,HEART,PROT,RAT
+78099764,"Calsequestrin-2, precursor",0.56 ± 0.174,–,–,Calcium binding,HEART,PROT,RAT
+157786694,Polymerase I and transcript release factor,1.27 ± 0.030,–,–,Transcription regulation,HEART,PROT,RAT
+157817027,"Coiled-coil-helix-coiled-coil-helix domain-containing protein 3, mitochondrial",1.42 ± 0.075,–,–,Transcription regulation,HEART,PROT,RAT
+300797978,Filamin-C,2.04 ± 0.536,0.44 ± 0.120,0.62 ± 0.130,Actin filament cross linker,HEART,PROT,RAT
+33086660,Cc1-8,3.99 ± 0.121,0.30 ± 0.094,0.25 ± 0.034,GTP binding protein,HEART,PROT,RAT
+61216932,14-3-3 protein epsilon,3.04 ± 1.796,1.05 ± 0.113,0.68 ± 0.136,Adaptor protein. Cellular signalling,HEART,PROT,RAT
+66911717,Prohibitin,1.64 ± 0.068,–,–,DNA synthesis. Negative regulation,HEART,PROT,RAT
+6981324,"Protein disulfide-isomerase, precursor",2.37 ± 1.101,–,–,Post translation processing protein,HEART,PROT,RAT
+8393296,Elongation factor 2,1.89 ± 0.251,0.52 ± 0.036,0.44 ± 0.075,Translation,HEART,PROT,RAT
+186659510,Myosin-6,0.50 ± 0.050,0.62 ± 0.004,2.12 ± 0.527,Intracellular organelle and vesicle transport,HEART,PROT,RAT
+190359305,"Elongation factor Tu, mitochondrial, precursor",0.60 ± 0.0003,2.17 ± 0.741,2.15 ± 0.014,Translation,HEART,PROT,RAT
+38014819,"Solute carrier family 25 (mitochondrial carrier; adenine nucleotide translocator), member 4",0.42 ± 0.197,–,–,Transport,HEART,PROT,RAT
+461496476,LIM domain-binding protein 3 isoform 2,0.41 ± 0.173,3.46 ± 1.152,3.17 ± 0.923,Adaptor protein. Cytoskeleton binding,HEART,PROT,RAT
+544102,Cysteine-rich protein 2,0.62 ± 0.008,1.50 ± 0.250,1.61 ± 0.080,Transcription factor,HEART,PROT,RAT
+6981146,L-lactate dehydrogenase B chain,0.35 ± 0.118,4.30 ± 2.301,3.82 ± 2.144,Pyruvate to lactate fermentation pathway,HEART,PROT,RAT
+81867103,Protein NDRG2,0.50 ± 0.060,–,–,Cellular signalling,HEART,PROT,RAT
+81910618,EH domain-containing protein 1,0.29 ± 0.281,,,Cellular signalling,HEART,PROT,RAT
+453180,Lamin A,1.36 ± 0.119,–,–,Nuclear membrane protein,HEART,PROT,RAT
+56260,Beta-globin,4.37 ± 2.374,0.21 ± 0.173,0.32 ± 0.205,Respiratory pigment protein,HEART,PROT,RAT
+59808174,"Inter alpha-trypsin inhibitor, heavy chain 4",6.83 ± 0.752,0.11 ± 0.020,0.12 ± 0.040,Protease inhibitor,HEART,PROT,RAT
+641973,Transitional endoplasmic reticulum ATPase,5.34 ± 3.615,0.59 ± 0.038,0.49 ± 0.004,Multifunctional ER protein.,HEART,PROT,RAT
+6981010,Haemoglobin subunit alpha-1/2,3.74 ± 2.435,–,–,Respiratory pigment protein,HEART,PROT,RAT
+149040547,Peroxiredoxin 3,0.69 ± 0.054,2.83 ± 0.629,2.15 ± 0.178,Antioxidant,HEART,PROT,RAT
+209529636,"Inorganic pyrophosphatase 2, mitochondrial",0.55 ± 0.069,3.45 ± 0.723,2.67 ± 0.550,Miscellaneous,HEART,PROT,RAT
+28933457,Glutathione S-transferase Mu 2,0.66 ± 0.016,–,–,Glutathione conjugating protein,HEART,PROT,RAT
+5902791,Peroxiredoxin-6,0.62 ± 0.088,2.8377 ± 0.629,2.15525 ± 0.178,Antioxidant,HEART,PROT,RAT
+61557127,"NAD(P) transhydrogenase, mitochondrial",0.58 ± 0.051,–,–,Oxidoreductase,HEART,PROT,RAT
+77917528,"ATPase inhibitor, mitochondrial, precursor",0.66 ± 0.027,,,Protease inhibitor,HEART,PROT,RAT
+77917546,Mitochondrial inner membrane protein,0.51 ± 0.200,–,–,Mitochondrial architecture maintenance,HEART,PROT,RAT
+78099013,Myoglobin,0.34 ± 0.023,2.95 ± 1.188,2.44 ± 0.482,Oxygen transport,HEART,PROT,RAT
+81907928,Hydroxysteroid dehydrogenase-like protein 2,0.54 ± 0.210,–,–,Oxidoreductase,HEART,PROT,RAT
+83302472,"ES1 protein homolog, mitochondrial, precursor",0.54 ± 0.210,–,–,Uncharacterized,HEART,PROT,RAT
