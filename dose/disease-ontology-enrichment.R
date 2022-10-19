@@ -278,13 +278,10 @@ selected_resuls = do_enrichment_analysis_results[
   do_enrichment_analysis_results$qvalue < 0.05,
 ]
 selected_resuls = selected_resuls[
-  order(selected_resuls$set_mito_overlap_p),
-]
-selected_resuls = selected_resuls[
-  selected_resuls$set_mito_overlap_p < 0.01,
+  selected_resuls$mito_overlap_p < 0.05,
 ]
 dim(selected_resuls)
-selected_resuls[,c("Description","tissue","ome","setname","qvalue","set_mito_overlap_p")]
+selected_resuls[,c("Description","tissue","ome","setname","qvalue","mito_overlap_p")]
 write.table(
   selected_resuls,
   file=paste(data_dir,"supp_fig_disease_enrichment.tsv"),
