@@ -56,7 +56,7 @@ add_overlap_tests_and_enrichments<-function(
   dataset_fc_col = "fc",
   dataset_gene_col = "symbol",
   datasetname,tissue,
-  min_size_for_sign_analysis = 10,
+  min_size_for_sign_analysis = 20,
   fdr_motrpac=0.2,fdr_external=0.2,
   enrichment_species = "hsapiens"){
   
@@ -176,11 +176,12 @@ add_overlap_tests_and_enrichments<-function(
       organism=enrichment_species,
       significant=FALSE, # return all results
       correction_method='fdr', # it will not return unadjusted p-values. 
-      sources=c('KEGG','REAC'),
+      sources=c('KEGG','REAC','WP'),
       custom_bg = bg,
       domain_scope='custom',
       evcodes=T)
   res$result$q_value = p.adjust(res$result$p_value,method="fdr")
+  res$result = res$result[res$result$term_size < 200,]
   res$result = res$result[order(res$result$q_value),]
   dataset2set_enrichment_analysis[[datasetname]] = res$result
   assign("dataset2set_enrichment_analysis", dataset2set_enrichment_analysis, envir = .GlobalEnv)
@@ -325,44 +326,43 @@ add_overlap_tests_and_enrichments(
 rm(chae_d);rm(motrpac_d)
 ```
 
-# Ubaida et al.: proteomics, muscle, aging
+<!-- # Ubaida et al.: proteomics, muscle, aging -->
 
-```{r}
-ubaida_d = fread(file=paste0(disease_datasets_dir,"ubaida_mohien_ 2019_elife_stat.csv"),
-               data.table = F,stringsAsFactors = F)
-ubaida_d_genes = strsplit(ubaida_d$Genenames,split=",|\\s+")
-ubaida_d_genes = cbind(
-  rep(ubaida_d$GenePrimary,sapply(ubaida_d_genes,length)),
-  unname(unlist(ubaida_d_genes))
-)
-colnames(ubaida_d_genes) = c("GenePrimary","symbol")
-ubaida_d = merge(ubaida_d,ubaida_d_genes,by="GenePrimary")
-ubaida_d$fc = ubaida_d$AgeBeta
-ubaida_d$q = p.adjust(ubaida_d$`BH Adjusted Pvalue`)
+<!-- ```{r} -->
+<!-- ubaida_d = fread(file=paste0(disease_datasets_dir,"ubaida_mohien_ 2019_elife_stat.csv"), -->
+<!--                data.table = F,stringsAsFactors = F) -->
+<!-- ubaida_d_genes = strsplit(ubaida_d$Genenames,split=",|\\s+") -->
+<!-- ubaida_d_genes = cbind( -->
+<!--   rep(ubaida_d$GenePrimary,sapply(ubaida_d_genes,length)), -->
+<!--   unname(unlist(ubaida_d_genes)) -->
+<!-- ) -->
+<!-- colnames(ubaida_d_genes) = c("GenePrimary","symbol") -->
+<!-- ubaida_d = merge(ubaida_d,ubaida_d_genes,by="GenePrimary") -->
+<!-- ubaida_d$fc = ubaida_d$AgeBeta -->
+<!-- ubaida_d$q = p.adjust(ubaida_d$`BH Adjusted Pvalue`) -->
 
-ubaida_set = fread(file=paste0(disease_datasets_dir,"uniprot2gene_name_ubaida.tsv"),
-               data.table = F,stringsAsFactors = F)
+<!-- ubaida_set = fread(file=paste0(disease_datasets_dir,"uniprot2gene_name_ubaida.tsv"), -->
+<!--                data.table = F,stringsAsFactors = F) -->
 
-motrpac_d = PROT_SKMGN_DA
-motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
+<!-- motrpac_d = PROT_SKMGN_DA -->
+<!-- motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID") -->
 
-add_overlap_tests_and_enrichments(
-  ubaida_d,motrpac_d,
-  dataset_d_gene_set = unique(ubaida_set$To),
-  motrpac_gene_col = "HUMAN_ORTHOLOG_SYMBOL",
-  dataset_gene_col = "symbol",
-  dataset_qval_col = "q",
-  dataset_fc_col = "fc",
-  datasetname = "Aging,Ubaida et al.",
-  tissue = "SKMGN"
-)
+<!-- add_overlap_tests_and_enrichments( -->
+<!--   ubaida_d,motrpac_d, -->
+<!--   dataset_d_gene_set = unique(ubaida_set$To), -->
+<!--   motrpac_gene_col = "HUMAN_ORTHOLOG_SYMBOL", -->
+<!--   dataset_gene_col = "symbol", -->
+<!--   dataset_qval_col = "q", -->
+<!--   dataset_fc_col = "fc", -->
+<!--   datasetname = "Aging,Ubaida et al.", -->
+<!--   tissue = "SKMGN" -->
+<!-- ) -->
 
-# free space
-rm(ubaida_d);rm(motrpac_d)
-```
+<!-- # free space -->
+<!-- rm(ubaida_d);rm(motrpac_d) -->
+<!-- ``` -->
 
-# Stocks: proteomics in liver, high fat diet in rat
-
+# Stocks: proteomics in liver, obesity
 
 ```{r}
 stocks_d = fread(file=paste0(disease_datasets_dir,"stocks_2022_molcellproteomics_stat.csv"),
@@ -399,45 +399,45 @@ rm(stocks_d);rm(motrpac_d)
 ```
 
 
-# Zhang.: proteomics in liver, high fat diet in rat
+<!-- # Zhang.: proteomics in liver, high fat diet in rat -->
 
 
-```{r}
-zhang_d = fread(file=paste0(disease_datasets_dir,"zhang_2010_hepatology.csv"),
-               data.table = F,stringsAsFactors = F)
+<!-- ```{r} -->
+<!-- zhang_d = fread(file=paste0(disease_datasets_dir,"zhang_2010_hepatology.csv"), -->
+<!--                data.table = F,stringsAsFactors = F) -->
 
-ipi_db = fread(paste0(data_dir,"ipi.genes.RAT.xrefs"),data.table = F,stringsAsFactors = F)
-gene2ipi = strsplit(ipi_db$V10,split=";")
-names(gene2ipi) = ipi_db$V7
-gene_ipi_mat = unique(cbind(
-  rep(names(gene2ipi),sapply(gene2ipi,length)),
-  unname(unlist(gene2ipi))
-))
-gene_ipi_mat = as.data.frame(gene_ipi_mat)
-names(gene_ipi_mat) = c("entrez","ipi")
-gene_ipi_mat = merge(gene_ipi_mat,feature2gene[,c("feature_ID","gene_symbol")],
-                     by.x = "entrez",by.y ="feature_ID")
-zhang_d = merge(zhang_d,gene_ipi_mat,by.x = "Accession Number",by.y="ipi")
-zhang_d$hfd_fc = log2(as.numeric(zhang_d$HFD_vs_control_ratio_24w))
-zhang_d$q = zhang_d$HFD_vs_control_pval_24w
+<!-- ipi_db = fread(paste0(data_dir,"ipi.genes.RAT.xrefs"),data.table = F,stringsAsFactors = F) -->
+<!-- gene2ipi = strsplit(ipi_db$V10,split=";") -->
+<!-- names(gene2ipi) = ipi_db$V7 -->
+<!-- gene_ipi_mat = unique(cbind( -->
+<!--   rep(names(gene2ipi),sapply(gene2ipi,length)), -->
+<!--   unname(unlist(gene2ipi)) -->
+<!-- )) -->
+<!-- gene_ipi_mat = as.data.frame(gene_ipi_mat) -->
+<!-- names(gene_ipi_mat) = c("entrez","ipi") -->
+<!-- gene_ipi_mat = merge(gene_ipi_mat,feature2gene[,c("feature_ID","gene_symbol")], -->
+<!--                      by.x = "entrez",by.y ="feature_ID") -->
+<!-- zhang_d = merge(zhang_d,gene_ipi_mat,by.x = "Accession Number",by.y="ipi") -->
+<!-- zhang_d$hfd_fc = log2(as.numeric(zhang_d$HFD_vs_control_ratio_24w)) -->
+<!-- zhang_d$q = zhang_d$HFD_vs_control_pval_24w -->
 
-motrpac_d = PROT_LIVER_DA
-motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID")
+<!-- motrpac_d = PROT_LIVER_DA -->
+<!-- motrpac_d = merge(motrpac_d,feature2gene,by="feature_ID") -->
 
-add_overlap_tests_and_enrichments(
-  zhang_d,motrpac_d,
-  motrpac_gene_col = "gene_symbol",
-  dataset_gene_col = "gene_symbol",
-  dataset_qval_col = "q",
-  dataset_fc_col = "hfd_fc",
-  datasetname = "HFD,Zhang et al.",
-  tissue = "LIVER",
-  enrichment_species = "rnorvegicus"
-)
+<!-- add_overlap_tests_and_enrichments( -->
+<!--   zhang_d,motrpac_d, -->
+<!--   motrpac_gene_col = "gene_symbol", -->
+<!--   dataset_gene_col = "gene_symbol", -->
+<!--   dataset_qval_col = "q", -->
+<!--   dataset_fc_col = "hfd_fc", -->
+<!--   datasetname = "HFD,Zhang et al.", -->
+<!--   tissue = "LIVER", -->
+<!--   enrichment_species = "rnorvegicus" -->
+<!-- ) -->
 
-# free space
-rm(zhang_d);rm(motrpac_d)
-```
+<!-- # free space -->
+<!-- rm(zhang_d);rm(motrpac_d) -->
+<!-- ``` -->
 
 # Yuan et al.: proteomics in liver
 
@@ -702,6 +702,7 @@ ggplot(df[grepl("Overall",df$sex),],
 
 ```{r}
 selected_enr_res = lapply(dataset2set_enrichment_analysis,function(x)x[x$q_value<0.1,])
+selected_enr_res = lapply(selected_enr_res,function(x)x[x$intersection_size>2,])
 sapply(selected_enr_res,nrow)
 selected_enr_res
 ```
