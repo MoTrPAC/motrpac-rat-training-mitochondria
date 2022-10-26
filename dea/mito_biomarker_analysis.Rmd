@@ -17,6 +17,7 @@ library(corrplot)
 library(ggcorrplot)
 library(dplyr)
 library(ggpubr)
+library("gridExtra")
 # Load MoTrPAC data:
 library(MotrpacRatTraining6moData)
 data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/"
@@ -489,7 +490,7 @@ boxplot(mt_reads~group,data=df[df$sex=="female",],las=2,xlab="",
 
 ## Examine all tissues
 
-```{r}
+```{r,fig.height=4, fig.width=15,warning=F,message=F}
 symargs = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), 
                symbols = c("****", "***", "**", "*", ""))
 for(tissue in names(mt_biomarkers)){
@@ -515,14 +516,19 @@ for(tissue in names(mt_biomarkers)){
   # boxplot(mt_reads~group,data=df[df$sex=="female",],las=2,xlab="",
   #       main=paste(tissue,"mito reads, females",sep=","),ylab="Percent reads",col=curr_col)
   
+  currplots = list()
   curr_range = c(min(df$mt_reads,na.rm=T),max(df$mt_reads,na.rm=T))
-  new_max = curr_range[2] + 0.1 *(curr_range[2]-curr_range[1])
-  p = ggboxplot(df,x="group",y="mt_reads",fill = curr_col,facet.by = "sex") + 
-  stat_compare_means(method = "anova", label.y = new_max,size=5)+      # Add global p-value
+  new_max = curr_range[2] + 0.15 *(curr_range[2]-curr_range[1])
+  new_max2 = curr_range[2] + 0.3 *(curr_range[2]-curr_range[1])
+  p = ggboxplot(df,x="group",y="mt_reads",fill = curr_col,facet.by = "sex",notch = F) +
+  stat_compare_means(method = "anova", label.y = new_max,size=5, label.x = 2)+      # Add global p-value
   stat_compare_means(label = "p.signif", method = "t.test",
-    ref.group = "control",symnum.args=symargs,size=6) + ylab("% mito reads (RNA-seq)") + xlab("") +
-    ggtitle(paste(tissue,"mito reads"))
-  print(p)
+    ref.group = "control",symnum.args=symargs,size=6) + ylab("Percent reads") + xlab("") +
+    ggtitle(paste(tissue,"mito reads")) + 
+    theme(strip.text.x = element_text(size = 15),plot.title = element_text(size=18,hjust=0.5)) 
+  p = ggpar(p,ylim = c(curr_range[1],new_max2))
+  currplots[["pct"]] = p
+  #print(p)
   
   if(!all(is.na(df$mtdna))){
     # boxplot(mtdna~group,data=df[df$sex=="male",],las=2,xlab="",
@@ -531,13 +537,17 @@ for(tissue in names(mt_biomarkers)){
     #     main=paste(tissue,"mtDNA, females",sep=","),ylab="mtDNA level",col=curr_col)
     
     curr_range = c(min(df$mtdna,na.rm=T),max(df$mtdna,na.rm=T))
-    new_max = curr_range[2] + 0.1 *(curr_range[2]-curr_range[1])
-    p = ggboxplot(df,x="group",y="mtdna",fill = curr_col,facet.by = "sex") + 
-      stat_compare_means(method = "anova", label.y = new_max, size=5)+      # Add global p-value
+    new_max = curr_range[2] + 0.15 *(curr_range[2]-curr_range[1])
+    new_max2 = curr_range[2] + 0.3 *(curr_range[2]-curr_range[1])
+    p = ggboxplot(df,x="group",y="mtdna",fill = curr_col,facet.by = "sex",notch = F) + 
+      stat_compare_means(method = "anova", label.y = new_max, size=5,label.x = 2)+      # Add global p-value
       stat_compare_means(label = "p.signif", method = "t.test",
-        ref.group = "control",symnum.args=symargs,size=6) + ylab("mtDNA levels") + xlab("") +
-        ggtitle(paste(tissue,"mtDNA"))
-    print(p)
+        ref.group = "control",symnum.args=symargs,size=6) + ylab("mtDNA level") + xlab("") +
+        ggtitle(paste(tissue,"mtDNA")) + 
+        theme(strip.text.x = element_text(size = 15),plot.title = element_text(size=18,hjust=0.5)) 
+    p = ggpar(p,ylim = c(curr_range[1],new_max2))
+    currplots[["mtdna"]] = p
+    #print(p)
   }
   
   if(!all(is.na(df$CL_72_8))){
@@ -547,21 +557,26 @@ for(tissue in names(mt_biomarkers)){
     #     main=paste(tissue,"CL, females",sep=","),ylab="log2 intensity",col=curr_col)
     
     curr_range = c(min(df$CL_72_8,na.rm=T),max(df$CL_72_8,na.rm=T))
-    new_max = curr_range[2] + 0.1 *(curr_range[2]-curr_range[1])
-     p = ggboxplot(df,x="group",y="CL_72_8",fill = curr_col,facet.by = "sex") + 
-      stat_compare_means(method = "anova",label.y = new_max,size=5)+      # Add global p-value
+    new_max = curr_range[2] + 0.15 *(curr_range[2]-curr_range[1])
+    new_max2 = curr_range[2] + 0.3 *(curr_range[2]-curr_range[1])
+    p = ggboxplot(df,x="group",y="CL_72_8",fill = curr_col,facet.by = "sex",notch = F) + 
+      stat_compare_means(method = "anova",label.y = new_max,size=5,label.x = 2)+      # Add global p-value
       stat_compare_means(label = "p.signif", method = "t.test",
-        ref.group = "control",symnum.args=symargs,size=6) + ylab("CL levels") + xlab("") +
-        ggtitle(paste(tissue,"CL(72:8)"))
-     print(p)
+        ref.group = "control",symnum.args=symargs,size=6) + ylab("log2 intensity") + xlab("") +
+        ggtitle(paste(tissue,"CL(72:8)")) + 
+        theme(strip.text.x = element_text(size = 15),plot.title = element_text(size=18,hjust=0.5))
+    p = ggpar(p,ylim = c(curr_range[1],new_max2))
+    currplots[["cl"]] = p
+    #print(p)
   }
+  do.call("grid.arrange", c(currplots, nrow = 1))
 }
 
 ```
 
 ## Visualizations
 
-```{r}
+```{r,fig.width=6,height=12}
 get_stat_matrix<-function(mt_biomarker_dea,stat_name,biomarkers,tissues){
   m = matrix(NA,nrow=length(tissues),ncol=2*length(biomarkers),
              dimnames = list(tissues,c(paste0(biomarkers,"-male"),paste0(biomarkers,"-female"))))
@@ -583,10 +598,12 @@ mtdna_pctreads = sort(mtdna_pctreads,decreasing = T)
 names(mtdna_pctreads)[names(mtdna_pctreads)=="SKMGN"] = "SKM-GN"
 names(mtdna_pctreads)[names(mtdna_pctreads)=="SKMVL"] = "SKM-VL"
 names(mtdna_pctreads)[names(mtdna_pctreads)=="WATSC"] = "WAT-SC"
-barplot(mtdna_pctreads,las=2,col=TISSUE_COLORS[names(mtdna_pctreads)],ylab = "Pearson correlation")
+barplot(mtdna_pctreads,las=2,col=TISSUE_COLORS[names(mtdna_pctreads)],
+        ylab = "Pearson correlation",cex.axis = 1.2,space = 0)
 abline(h=0.5,lty=2,lwd=2)
+```
 
-library("gridExtra")
+```{r}
 tissues_with_cls = names(mt_biomarker_correlations)[sapply(mt_biomarker_correlations,nrow)>2]
 corrgplots = list()
 for(tissue_name in tissues_with_cls){

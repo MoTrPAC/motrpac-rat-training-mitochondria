@@ -275,7 +275,8 @@ do_enrichment_analysis_results = do_enrichment_analysis_results[
   order(do_enrichment_analysis_results$pvalue),]
 
 selected_resuls = do_enrichment_analysis_results[
-  do_enrichment_analysis_results$qvalue < 0.05,
+  do_enrichment_analysis_results$qvalue < 0.05 &
+    do_enrichment_analysis_results$Count > 2,
 ]
 selected_resuls = selected_resuls[
   selected_resuls$mito_overlap_p < 0.05,
@@ -301,140 +302,140 @@ do_enrichment_analysis_results$intersection_size  = do_enrichment_analysis_resul
 do_enrichment_analysis_results$term_name = do_enrichment_analysis_results$Description
 do_enrichment_analysis_results$term_id = do_enrichment_analysis_results$ID
 
-# write a supplementary table with all unadjusted results
-supp_table_columns = c("setname","term_id","term_name","query_size","term_size","pvalue",
-                       "qvalue","intersection")
-do_supp_table = do_enrichment_analysis_results[,supp_table_columns]
-do_supp_table = do_supp_table[order(do_supp_table$qvalue),]
-# write.table(do_supp_table,file="supp_table_disease_ontology_enrichment.txt",
-#             row.names = F,col.names = T,quote = F,sep="\t")
-
-# select the significant and meaningful results
-significant_results = do_enrichment_analysis_results[
-  do_enrichment_analysis_results$qvalue < 0.2 &
-    do_enrichment_analysis_results$Count > 2 ,]
-significant_results[,c("Description","qvalue","setname")]
-dim(significant_results)
-significant_results_gene_sets = lapply(significant_results$intersection,
-    function(x)strsplit(x,split=",")[[1]])
-
-# Rank the top genes for each setname
-set2top_genes = c()
-for (sname in unique(significant_results$setname)){
-  curr_sets = significant_results_gene_sets[
-    significant_results$setname == sname
-  ]
-  names(curr_sets) = significant_results[
-    significant_results$setname == sname, "Description"
-  ]
-  curr_gene_ranks = sort(table(unlist(curr_sets)),decreasing = T)
-  set2top_genes[[sname]] = curr_gene_ranks
-}
-
-# Make some disease names simpler
-significant_results$Description = gsub(
-  "Human immunodeficiency virus",
-  "HIV",
-  significant_results$Description
-)
-
-significant_results$Description = gsub(
-  "chronic obstructive pulmonary disease",
-  "COPD",
-  significant_results$Description
-)
-
-significant_results$Description = gsub(
-  "non-small cell lung carcinoma",
-  "NSCLC",
-  significant_results$Description
-)
-
-significant_results$Description = gsub(
-  "hypersensitivity reaction type IV disease",
-  "DTH",
-  significant_results$Description
-)
-
-significant_results$Description = gsub(
-  "type 2 diabetes mellitus",
-  "T2D",
-  significant_results$Description
-)
-
-significant_results$Description = gsub(
-  "hypersensitivity reaction type II disease",
-  "hypersensitivity type II",
-  significant_results$Description
-)
-
-# Create a set-do-gene network
-edges = c()
-nodes  = c()
-for(sname in unique(significant_results$setname)){
-  arr = strsplit(sname,split=";")[[1]]
-  tp = arr[1]
-  tp = gsub("8w_","",tp)
-  tissue = arr[3]
-  ome = arr[2]
-  set_node = paste(tissue,tp,sep=";")
-  
-  curr_df = significant_results[significant_results$setname == sname,]
-  rownames(curr_df)  = curr_df$Description
-  curr_genes = lapply(curr_df$intersection,
-    function(x)strsplit(x,split=",")[[1]])
-  names(curr_genes) = rownames(curr_df)
-  
-  # Step 1: add all disease-set edges
-  curr_disease_set_edges = data.frame(
-    A = set_node,B=curr_df$Description,
-    Type = ome,Score = -log10(curr_df[,"pvalue"])
-  )
-  
-  # Step 2: add all disease-gene edges:
-  curr_gene_disease_edges = c()
-  for(gsname in names(curr_genes)){
-    gs_df  = data.frame(
-      A = gsname, B = curr_genes[[gsname]],
-      Type = "Disease-Gene",Score = -log10(curr_df[gsname,"pvalue"])
-    )
-    curr_gene_disease_edges = rbind(
-      curr_gene_disease_edges,gs_df
-    )
-  }
-  
-  # Step 3: add all set-gene edges:
-  curr_gene_tb = table(unlist(curr_genes))
-  curr_gene_sname_edges = data.frame(
-    A = set_node,B = names(curr_gene_tb),
-    Type = "Set-Gene",Score = unname(as.numeric(curr_gene_tb))
-  )
-  
-  edges = rbind(
-    edges,
-    curr_disease_set_edges,
-    curr_gene_disease_edges,
-    curr_gene_sname_edges
-  )
-  
-  nodes = rbind(
-    nodes,
-    c(set_node,"Set"),
-    cbind(names(curr_gene_tb),"Gene"),
-    cbind(curr_df$Description,"Disease")
-  )
-  nodes = unique(nodes)
-}
-nodes = as.data.frame(nodes,stringsAsFactors = F)
-colnames(nodes) = c("Node","Type")
-nodes$tp = NA
-nodes$tissue = NA
-setinds = nodes$Type == "Set"
-nodes[setinds,"tp"] = sapply(nodes[setinds,"Node"],function(x)strsplit(x,split=";")[[1]][2])
-nodes[setinds,"tissue"] = sapply(nodes[setinds,"Node"],function(x)strsplit(x,split=";")[[1]][1])
-
-# Write text files for analysis/viz in cytoscape
-write.table(edges,file="DO_res_edges.txt",sep="\t",quote = F,row.names = F,col.names = T)
-write.table(nodes,file="DO_res_nodes.txt",sep="\t",quote = F,row.names = F,col.names = T)
+# # write a supplementary table with all unadjusted results
+# supp_table_columns = c("setname","term_id","term_name","query_size","term_size","pvalue",
+#                        "qvalue","intersection")
+# do_supp_table = do_enrichment_analysis_results[,supp_table_columns]
+# do_supp_table = do_supp_table[order(do_supp_table$qvalue),]
+# # write.table(do_supp_table,file="supp_table_disease_ontology_enrichment.txt",
+# #             row.names = F,col.names = T,quote = F,sep="\t")
+# 
+# # select the significant and meaningful results
+# significant_results = do_enrichment_analysis_results[
+#   do_enrichment_analysis_results$qvalue < 0.2 &
+#     do_enrichment_analysis_results$Count > 2 ,]
+# significant_results[,c("Description","qvalue","setname")]
+# dim(significant_results)
+# significant_results_gene_sets = lapply(significant_results$intersection,
+#     function(x)strsplit(x,split=",")[[1]])
+# 
+# # Rank the top genes for each setname
+# set2top_genes = c()
+# for (sname in unique(significant_results$setname)){
+#   curr_sets = significant_results_gene_sets[
+#     significant_results$setname == sname
+#   ]
+#   names(curr_sets) = significant_results[
+#     significant_results$setname == sname, "Description"
+#   ]
+#   curr_gene_ranks = sort(table(unlist(curr_sets)),decreasing = T)
+#   set2top_genes[[sname]] = curr_gene_ranks
+# }
+# 
+# # Make some disease names simpler
+# significant_results$Description = gsub(
+#   "Human immunodeficiency virus",
+#   "HIV",
+#   significant_results$Description
+# )
+# 
+# significant_results$Description = gsub(
+#   "chronic obstructive pulmonary disease",
+#   "COPD",
+#   significant_results$Description
+# )
+# 
+# significant_results$Description = gsub(
+#   "non-small cell lung carcinoma",
+#   "NSCLC",
+#   significant_results$Description
+# )
+# 
+# significant_results$Description = gsub(
+#   "hypersensitivity reaction type IV disease",
+#   "DTH",
+#   significant_results$Description
+# )
+# 
+# significant_results$Description = gsub(
+#   "type 2 diabetes mellitus",
+#   "T2D",
+#   significant_results$Description
+# )
+# 
+# significant_results$Description = gsub(
+#   "hypersensitivity reaction type II disease",
+#   "hypersensitivity type II",
+#   significant_results$Description
+# )
+# 
+# # Create a set-do-gene network
+# edges = c()
+# nodes  = c()
+# for(sname in unique(significant_results$setname)){
+#   arr = strsplit(sname,split=";")[[1]]
+#   tp = arr[1]
+#   tp = gsub("8w_","",tp)
+#   tissue = arr[3]
+#   ome = arr[2]
+#   set_node = paste(tissue,tp,sep=";")
+#   
+#   curr_df = significant_results[significant_results$setname == sname,]
+#   rownames(curr_df)  = curr_df$Description
+#   curr_genes = lapply(curr_df$intersection,
+#     function(x)strsplit(x,split=",")[[1]])
+#   names(curr_genes) = rownames(curr_df)
+#   
+#   # Step 1: add all disease-set edges
+#   curr_disease_set_edges = data.frame(
+#     A = set_node,B=curr_df$Description,
+#     Type = ome,Score = -log10(curr_df[,"pvalue"])
+#   )
+#   
+#   # Step 2: add all disease-gene edges:
+#   curr_gene_disease_edges = c()
+#   for(gsname in names(curr_genes)){
+#     gs_df  = data.frame(
+#       A = gsname, B = curr_genes[[gsname]],
+#       Type = "Disease-Gene",Score = -log10(curr_df[gsname,"pvalue"])
+#     )
+#     curr_gene_disease_edges = rbind(
+#       curr_gene_disease_edges,gs_df
+#     )
+#   }
+#   
+#   # Step 3: add all set-gene edges:
+#   curr_gene_tb = table(unlist(curr_genes))
+#   curr_gene_sname_edges = data.frame(
+#     A = set_node,B = names(curr_gene_tb),
+#     Type = "Set-Gene",Score = unname(as.numeric(curr_gene_tb))
+#   )
+#   
+#   edges = rbind(
+#     edges,
+#     curr_disease_set_edges,
+#     curr_gene_disease_edges,
+#     curr_gene_sname_edges
+#   )
+#   
+#   nodes = rbind(
+#     nodes,
+#     c(set_node,"Set"),
+#     cbind(names(curr_gene_tb),"Gene"),
+#     cbind(curr_df$Description,"Disease")
+#   )
+#   nodes = unique(nodes)
+# }
+# nodes = as.data.frame(nodes,stringsAsFactors = F)
+# colnames(nodes) = c("Node","Type")
+# nodes$tp = NA
+# nodes$tissue = NA
+# setinds = nodes$Type == "Set"
+# nodes[setinds,"tp"] = sapply(nodes[setinds,"Node"],function(x)strsplit(x,split=";")[[1]][2])
+# nodes[setinds,"tissue"] = sapply(nodes[setinds,"Node"],function(x)strsplit(x,split=";")[[1]][1])
+# 
+# # Write text files for analysis/viz in cytoscape
+# write.table(edges,file="DO_res_edges.txt",sep="\t",quote = F,row.names = F,col.names = T)
+# write.table(nodes,file="DO_res_nodes.txt",sep="\t",quote = F,row.names = F,col.names = T)
 
 

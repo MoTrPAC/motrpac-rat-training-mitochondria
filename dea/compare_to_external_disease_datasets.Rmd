@@ -672,13 +672,14 @@ df$Weight[df$log10P < 1.5] = NA
 df$Test = df$sex
 df$logPthreshold = df$log10P > 5
 df$log10P = pmin(5,df$log10P)
-ggplot(df,aes(x = Test,y = log10P,fill = Study,color=Study)) +
-  geom_bar(stat = "identity",position = "dodge") + 
-  theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1))  +
-  geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
-  geom_text(aes(x = Test,y = log10P+0.3,label = Weight),
-            vjust = 1.5, position = position_dodge(.9),
-            col="black",size=3,angle=45)
+
+# ggplot(df,aes(x = Test,y = log10P,fill = Study,color=Study)) +
+#   geom_bar(stat = "identity",position = "dodge") + 
+#   theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1))  +
+#   geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
+#   geom_text(aes(x = Test,y = log10P+0.3,label = Weight),
+#             vjust = 1.5, position = position_dodge(.9),
+#             col="black",size=3,angle=45)
 
 ggplot(df[!grepl("Overall",df$sex),],
   aes(x = Test,y = log10P,fill = Study,color=Study)) +
@@ -689,14 +690,42 @@ ggplot(df[!grepl("Overall",df$sex),],
             vjust = 1.5, position = position_dodge(.9),
             col="black",size=3,angle=45)
 
-ggplot(df[grepl("Overall",df$sex),],
-  aes(x = Test,y = log10P,fill = Study,color=Study)) +
-  geom_bar(stat = "identity",position = "dodge") + 
-  theme(axis.text.x = element_blank())  + xlab("Overall set overlap") + 
+# ggplot(df[grepl("Overall",df$sex),],
+#   aes(x = Test,y = log10P,fill = Study,color=Study)) +
+#   geom_bar(stat = "identity",position = "dodge") + 
+#   theme(axis.text.x = element_blank())  + xlab("Overall set overlap") + 
+#   geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
+#   geom_text(aes(x = Test,y = log10P+0.3,label = Weight),
+#             vjust = 1.5, position = position_dodge(.9),
+#             col="black",size=3,angle=45)
+
+df$name3 = sapply(df$name2,function(x)paste(strsplit(x,split=",")[[1]][-1],collapse=","))
+df_overall_test = df[grepl("Overall",df$sex),]
+df_overall_test = df_overall_test[order(df_overall_test$tissue),]
+df_overall_test$name3 = factor(df_overall_test$name3,
+                               levels = df_overall_test$name3)
+ggplot(df_overall_test,
+  aes(x = name3,y = log10P,fill = tissue)) +
+  geom_bar(stat = "identity",position = "dodge") + xlab("") + 
   geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
-  geom_text(aes(x = Test,y = log10P+0.3,label = Weight),
+  geom_text(aes(x = name3,y = log10P+0.3,label = Weight),
             vjust = 1.5, position = position_dodge(.9),
-            col="black",size=3,angle=45)
+            col="black",size=4,angle=45) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1,size=11)) +
+  theme(axis.text.y = element_text(size=8))
+
+
+df$name4 = sapply(df$name3,function(x)paste(strsplit(x,split=",")[[1]][-3],collapse=","))
+df$name4 = factor(df$name4,levels=unique(df$name4))
+ggplot(df[!grepl("Overall",df$sex),],
+  aes(x = name4,y = log10P,fill = tissue)) +
+  facet_wrap(~sex,  ncol=1) +
+  geom_bar(stat = "identity",position = "dodge") + xlab("") + 
+  theme(axis.text.x = element_text(angle = 60,vjust = 1, hjust = 1,size=11))  +
+  geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
+  geom_text(aes(x = name4,y = log10P+0.3,label = Weight),
+            vjust = 1.5, position = position_dodge(.9),
+            col="black",size=3,angle=30)
 
 ```
 
@@ -706,4 +735,51 @@ selected_enr_res = lapply(selected_enr_res,function(x)x[x$intersection_size>2,])
 sapply(selected_enr_res,nrow)
 selected_enr_res
 ```
+Create gene set files for cytoscape
+
+```{r}
+cirr_sets = dataset2selected_sets$`Cirr,Niu et al.`
+cirr_genes = data.frame(
+  gene = cirr_sets$female_up_disease_down,
+  direction = "exercise_up"
+)
+cirr_genes = rbind(cirr_genes,
+  data.frame(
+    gene = cirr_sets$female_down_disease_up,
+    direction = "exercise_down"
+  )
+)
+write.table(
+  cirr_genes,
+  sep = "\t", 
+  file = paste0(data_dir,"/selected_cirr_gene_set.tsv"),
+  quote=F,row.names=F
+)
+
+diab_sets1 = dataset2selected_sets$`T2D,Ohman et al.`
+diab_sets2 = dataset2selected_sets$`T2D,Chae et al.`
+diab_sets = list()
+for(s in names(diab_sets1)){
+  diab_sets[[s]] = intersect(diab_sets1[[s]],diab_sets2[[s]])
+}
+sapply(diab_sets, length)
+diab_genes = data.frame(
+  gene = intersect(diab_sets$male_up_disease_down,diab_sets$female_up_disease_down),
+  direction = "exercise_up"
+)
+diab_genes = rbind(
+  diab_genes,
+  data.frame(
+    gene = intersect(diab_sets$male_down_disease_up,diab_sets$female_down_disease_up),
+    direction = "exercise_down"
+  )
+)
+write.table(
+  diab_genes,
+  sep = "\t", 
+  file = paste0(data_dir,"/selected_t2d_gene_set.tsv"),
+  quote=F,row.names=F
+)
+```
+
 
