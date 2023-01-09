@@ -47,6 +47,29 @@ Load DEA results from prot and RNA-seq
 rna_seq_dea = get(load(paste0(scratch,"ihw_adjusted_mito_paper_dea_results.RData")))
 dea_combined = get(load(paste0(scratch,"ihw_adjusted_mito_paper_dea_prot_results.RData")))
 dea_combined[["TRNSCRPT"]] = rna_seq_dea
+
+# save supp data tables for the paper
+for(ome in names(dea_combined)){
+  curr_timewise = dea_combined[[ome]][["timewise_dea_mt_adjusted"]]
+  curr_training = dea_combined[[ome]][["training_dea_mt_adjusted"]]
+  curr_timewise$rname = paste(curr_timewise$feature_ID,curr_timewise$tissue_abbr)
+  curr_training$rname = paste(curr_training$feature_ID,curr_training$tissue_abbr)
+  curr_timewise = merge(curr_timewise,
+      curr_training[,c("rname","p_value_male","p_value_female","p_value","ihw_q")],
+      by="rname")
+  curr_timewise = curr_timewise[,!colnames(curr_timewise)=="rname"]
+  colnames(curr_timewise)[colnames(curr_timewise)=="p_value.y"] = "training_p_value"
+  colnames(curr_timewise)[colnames(curr_timewise)=="p_value_male"] = "training_p_value_male"
+  colnames(curr_timewise)[colnames(curr_timewise)=="p_value_female"] = "training_p_value_female"
+  colnames(curr_timewise)[colnames(curr_timewise)=="ihw_q"] = "selection_fdr"
+  # fwrite(
+  #   curr_timewise,file=paste0(output_dir,ome,"_timeweise_dea.csv"),
+  #   sep=",",quote = F,row.names = F
+  # )
+  timewise_df = curr_timewise
+  save(timewise_df,file=paste0(output_dir,ome,"_timeweise_dea.RData"))
+}
+
 ```
 
 # Analyze the effect of adjustment
@@ -280,8 +303,8 @@ cluster_res = data.frame(
   cluster = cluster_obj,
   ome=arrs[,1],feature_ID = arrs[,3],tissue=arrs[,2]
 )
-cluster_res$feature = names(cluster_obj)
-cluster_res$feature = gsub("SKMGN","SKM-GN",cluster_res$feature)
+cluster_res$feature_raw = names(cluster_obj)
+cluster_res$feature = gsub("SKMGN","SKM-GN",cluster_res$feature_raw)
 cluster_res$feature = gsub("SKMVL","SKM-VL",cluster_res$feature)
 cluster_res$tissue =gsub("SKMGN","SKM-GN",cluster_res$tissue)
 cluster_res$tissue = gsub("SKMVL","SKM-VL",cluster_res$tissue)
@@ -291,14 +314,20 @@ clustering_analysis_matrix1_cols = t(sapply(
   strsplit(colnames(clustering_analysis_matrix1),split=","),function(x)x))
 colnames(clustering_analysis_matrix1) = 
   paste(clustering_analysis_matrix1_cols[,1],clustering_analysis_matrix1_cols[,2],sep="_")
-pls_before = plot_cluster_trajectories(clustering_analysis_matrix1[,1:8],cluster_res)
+pls_before = plot_cluster_trajectories(
+  clustering_analysis_matrix1[,1:8],
+  cluster_res[,setdiff(colnames(cluster_res),"feature_raw")])
 
 clustering_analysis_matrix2 = clustering_analysis_matrix[z_diff_features,9:16]
 clustering_analysis_matrix2_cols = 
   t(sapply(strsplit(colnames(clustering_analysis_matrix2),split=","),function(x)x))
 colnames(clustering_analysis_matrix2) = 
   paste(clustering_analysis_matrix2_cols[,1],clustering_analysis_matrix2_cols[,2],sep="_")
-pls_after = plot_cluster_trajectories(clustering_analysis_matrix2[,1:8],cluster_res)
+pls_after = plot_cluster_trajectories(
+  clustering_analysis_matrix2[,1:8],
+  cluster_res[,setdiff(colnames(cluster_res),"feature_raw")])
+
+
 library(gridExtra)
 pls = list()
 for(i in 1:length(pls_before[[2]])){
@@ -309,9 +338,26 @@ grid.arrange(grobs = pls, ncol=4)
 table(cluster_res$cluster,cluster_res$ome)
 features_per_cluster(cluster_res)
 
+clust_res_supp_df = cluster_res
+rownames(clust_res_supp_df)  = clust_res_supp_df$feature_raw
+curr_f2g = FEATURE_TO_GENE[
+  FEATURE_TO_GENE$feature_ID %in% clust_res_supp_df$feature_ID,
+]
+clust_res_supp_df = cbind(clust_res_supp_df,
+  clustering_analysis_matrix[rownames(clust_res_supp_df),])
+clust_res_supp_df = merge(
+  clust_res_supp_df,
+  curr_f2g[,c("feature_ID","gene_symbol")],
+  by.x = "feature_ID",
+  by.y = "feature_ID"
+)
+colnames(clust_res_supp_df) = gsub(
+  ",","_",
+  colnames(clust_res_supp_df)
+)
 write.csv(
-  cluster_res,
-  file = paste0(output_dir,"clustering_results.csv"),
+  clust_res_supp_df,
+  file = paste0(output_dir,"supp_clustering_results.csv"),
   row.names = F,quote = F
 )
 

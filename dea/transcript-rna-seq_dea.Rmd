@@ -96,6 +96,291 @@ for(tissue in names(mt_biomarkers)){
 
 See main functions in pass1b-06/tools/get_fx.R. 
 
+## Sanity check: permutation test within sex
+
+Here we permute the training group in each sex and check the number of differential genes found. This is a sanity check for the landscape results.
+
+```{r}
+perm_dea_results = list()
+for(tissue_name in c("ADRNL","HEART","COLON","SKM-GN")){
+  tissue_code = TISSUE_ABBREV_TO_CODE[tissue_name]
+  if(tissue_name=="" || tissue_code == ""){next}
+  print(paste("Analyzing tissue:",tissue_name))
+  
+  # load data 
+  raw_data_name = paste0("TRNSCRPT_",gsub("-","",tissue_name),"_RAW_COUNTS")
+  norm_data_name = paste0("TRNSCRPT_",gsub("-","",tissue_name),"_NORM_DATA")
+  raw_data = get(raw_data_name)
+  norm_data = get(norm_data_name)
+  rownames(raw_data) = raw_data$feature_ID
+  raw_data = raw_data[,-c(1:4)]
+  rownames(norm_data) = norm_data$feature_ID
+  norm_data = norm_data[,-c(1:4)]
+  # filter unexpressed genes by taking the genes in the norm data
+  raw_data = raw_data[rownames(norm_data),]
+  curr_vials = colnames(norm_data)
+  data = list(
+    meta = data.table(cbind(pheno[curr_vials,],rnaseq_qa_qc[curr_vials,])),
+    counts = raw_data[,curr_vials],
+    tmm = norm_data[,curr_vials]
+  )
+  
+  # prep data
+  prepped = transcript_prep_data(tissue_code, 
+    data$meta, 
+    data$counts, 
+    data$tmm,
+    covariates=c('pct_globin', 'rin', 'pct_umi_dup', 'median_5_3_bias'),
+    outliers=outliers)
+
+  # take training groups that appear in both sexes
+  reduced_meta = as.data.frame(prepped$fixed_meta)
+  rownames(reduced_meta) = reduced_meta$viallabel
+  reduced_meta = reduced_meta[!rownames(reduced_meta) %in% outliers,]
+  tb = table(reduced_meta$group,reduced_meta$sex)
+  tb = tb[!rownames(tb)=="control",]
+  if(!is.null(dim(tb)) && ncol(tb)>1){
+    tb = tb[apply(tb>2,1,all),]
+    training_groups = rownames(tb)
+  }else{
+    tb = tb[tb>2]
+    training_groups = names(tb)
+  }
+  
+  print("analyzing the following timewise contrasts:")
+  print(training_groups)
+  
+  # timewise_dea = transcript_timewise_dea_each_sex(tissue_code, 
+  #   prepped$fixed_meta, 
+  #   prepped$fixed_counts, 
+  #   prepped$fixed_covariates, 
+  #   prepped$curr_outliers,
+  #   date = "14122022",
+  #   training_groups = training_groups,
+  #   write=F, save_rdata = F)
+  
+  training_dea = transcript_training_dea_each_sex(tissue_code, 
+    prepped$fixed_meta, 
+    prepped$fixed_counts, 
+    prepped$fixed_covariates, 
+    prepped$curr_outliers,
+    date = "14122022",write=F)
+  print("Number of DEA at 5% FDR:")
+  print(table(p.adjust(training_dea$p_value,method="fdr")<0.05))
+  perm_dea_results[[tissue_name]] = list(real = training_dea,perms = list())
+  
+  print("Number of DEA at 5% FDR after permutation:")
+  for(j in 1:10){
+    for(sex in unique(prepped$fixed_meta$sex)){
+      inds = prepped$fixed_meta$sex == sex
+      prepped$fixed_meta$group[inds] = sample(
+        prepped$fixed_meta$group[inds],replace = F)
+    }
+    
+    perm_training_dea = transcript_training_dea_each_sex(tissue_code, 
+      prepped$fixed_meta, 
+      prepped$fixed_counts, 
+      prepped$fixed_covariates, 
+      prepped$curr_outliers,
+      date = "14122022",write=F)
+    print(table(p.adjust(perm_training_dea$p_value,method="fdr")<0.05))
+    perm_dea_results[[tissue_name]][["perms"]][[j]] = perm_training_dea
+  }
+}
+
+```
+
+## Sanity check: permutation test for sex differences
+
+Here we permute the sex assignment and rerun the differential analysis pipelines.
+
+```{r}
+sex_perm_dea_results = list()
+for(tissue_name in sort(unique(names(TISSUE_ABBREV_TO_CODE)))){
+  tissue_code = TISSUE_ABBREV_TO_CODE[tissue_name]
+  if(tissue_name=="" || tissue_code == ""){next}
+  if(tissue_name %in% c("VENACV","TESTES","OVARY","PLASMA")){next}
+  print(paste("Analyzing tissue:",tissue_name))
+  
+  # load data 
+  raw_data_name = paste0("TRNSCRPT_",gsub("-","",tissue_name),"_RAW_COUNTS")
+  norm_data_name = paste0("TRNSCRPT_",gsub("-","",tissue_name),"_NORM_DATA")
+  raw_data = get(raw_data_name)
+  norm_data = get(norm_data_name)
+  rownames(raw_data) = raw_data$feature_ID
+  raw_data = raw_data[,-c(1:4)]
+  rownames(norm_data) = norm_data$feature_ID
+  norm_data = norm_data[,-c(1:4)]
+  # filter unexpressed genes by taking the genes in the norm data
+  raw_data = raw_data[rownames(norm_data),]
+  curr_vials = colnames(norm_data)
+  data = list(
+    meta = data.table(cbind(pheno[curr_vials,],rnaseq_qa_qc[curr_vials,])),
+    counts = raw_data[,curr_vials],
+    tmm = norm_data[,curr_vials]
+  )
+  
+  # prep data
+  prepped = transcript_prep_data(tissue_code, 
+    data$meta, 
+    data$counts, 
+    data$tmm,
+    covariates=c('pct_globin', 'rin', 'pct_umi_dup', 'median_5_3_bias'),
+    outliers=outliers)
+
+  # take training groups that appear in both sexes
+  reduced_meta = as.data.frame(prepped$fixed_meta)
+  rownames(reduced_meta) = reduced_meta$viallabel
+  reduced_meta = reduced_meta[!rownames(reduced_meta) %in% outliers,]
+  tb = table(reduced_meta$group,reduced_meta$sex)
+  tb = tb[!rownames(tb)=="control",]
+  if(!is.null(dim(tb)) && ncol(tb)>1){
+    tb = tb[apply(tb>2,1,all),]
+    training_groups = rownames(tb)
+  }else{
+    tb = tb[tb>2]
+    training_groups = names(tb)
+  }
+  
+  print("analyzing the following timewise contrasts:")
+  print(training_groups)
+  
+  timewise_dea = transcript_timewise_dea_each_sex(tissue_code,
+    prepped$fixed_meta,
+    prepped$fixed_counts,
+    prepped$fixed_covariates,
+    prepped$curr_outliers,
+    date = "14122022",
+    training_groups = training_groups,
+    write=F, save_rdata = F)
+  
+  training_dea = transcript_training_dea_each_sex(tissue_code,
+    prepped$fixed_meta,
+    prepped$fixed_counts,
+    prepped$fixed_covariates,
+    prepped$curr_outliers,
+    date = "14122022",write=F)
+
+  print("Number of DEA at 5% FDR:")
+  selected_training_genes = training_dea$feature_ID[p.adjust(training_dea$p_value,method="fdr")<0.05]
+  print(length(selected_training_genes))
+  
+  # Get the logFC and z-score correlations
+  logfc_sex_corrs = compute_sex_dea_corr(timewise_dea,selected_training_genes,"logFC")
+  zscore_sex_corrs = compute_sex_dea_corr(timewise_dea,selected_training_genes,"zscore")
+  real_sex_corrs = data.frame(
+    feature_ID = selected_training_genes,
+    logfc = logfc_sex_corrs[selected_training_genes],
+    zscore = zscore_sex_corrs[selected_training_genes]
+  )
+  sex_perm_dea_results[[tissue_name]] = list(
+    real_sex_corrs = real_sex_corrs,
+    perm_sex_corrs = c(),
+    perm_selected_genes_sex_corrs = c()
+  )
+  
+  print("Number of DEA at 5% FDR after sex permutation:")
+  for(j in 1:10){
+    prepped$fixed_meta$sex = sample(prepped$fixed_meta$sex, replace = F)
+    
+    sex_perm_timewise_dea = transcript_timewise_dea_each_sex(tissue_code,
+      prepped$fixed_meta,
+      prepped$fixed_counts,
+      prepped$fixed_covariates,
+      prepped$curr_outliers,
+      date = "14122022",
+      training_groups = training_groups,
+      write=F, save_rdata = F)
+    
+    sex_perm_training_dea = transcript_training_dea_each_sex(tissue_code, 
+      prepped$fixed_meta, 
+      prepped$fixed_counts, 
+      prepped$fixed_covariates, 
+      prepped$curr_outliers,
+      date = "14122022",write=F)
+    
+    print(table(p.adjust(sex_perm_training_dea$p_value,method="fdr")<0.05))
+    sex_perm_selected_training_genes = sex_perm_training_dea$feature_ID[
+      p.adjust(sex_perm_training_dea$p_value,method="fdr")<0.05]
+    print(length(sex_perm_selected_training_genes))
+    print(paste("Overlap of perm and real:",length(intersect(
+      sex_perm_selected_training_genes,selected_training_genes
+    ))))
+    
+    curr_logfc_sex_corrs = compute_sex_dea_corr(sex_perm_timewise_dea,selected_training_genes,"logFC")
+    curr_zscore_sex_corrs = compute_sex_dea_corr(sex_perm_timewise_dea,selected_training_genes,"zscore")
+    perm_sex_corrs = data.frame(
+      feature_ID = selected_training_genes,
+      logfc = curr_logfc_sex_corrs[selected_training_genes],
+      zscore = curr_zscore_sex_corrs[selected_training_genes],
+      rep = j
+    )
+    curr_logfc_sex_corrs = compute_sex_dea_corr(
+      sex_perm_timewise_dea,sex_perm_selected_training_genes,"logFC")
+    curr_zscore_sex_corrs = compute_sex_dea_corr(
+      sex_perm_timewise_dea,sex_perm_selected_training_genes,"zscore")
+    perm_sex_corrs2 = data.frame(
+      feature_ID = sex_perm_selected_training_genes,
+      logfc = curr_logfc_sex_corrs[sex_perm_selected_training_genes],
+      zscore = curr_zscore_sex_corrs[sex_perm_selected_training_genes],
+      rep = j
+    )
+    sex_perm_dea_results[[tissue_name]]$perm_sex_corrs = rbind(
+      sex_perm_dea_results[[tissue_name]]$perm_sex_corrs,
+      perm_sex_corrs
+    )
+    sex_perm_dea_results[[tissue_name]]$perm_selected_genes_sex_corrs = rbind(
+      sex_perm_dea_results[[tissue_name]]$perm_selected_genes_sex_corrs,
+      perm_sex_corrs2
+    )
+    
+    # plot the two distributions
+    hist_df = data.frame(
+      rho = c(real_sex_corrs$logfc,perm_sex_corrs$logfc),
+      var = c(rep("real",nrow(real_sex_corrs)),rep("perm",nrow(perm_sex_corrs)))
+    )
+    p = ggplot(hist_df, aes(x=rho, fill=var)) +
+      geom_histogram( color='#e9ecef', alpha=0.6, position='identity') + 
+      ggtitle(paste(tissue_name,", permutation repeat:",j))
+    print(p)
+    print(paste(
+      "Real vs. perm correlations, paired Wilcox test p:",
+      wilcox.test(
+        real_sex_corrs$logfc,
+        perm_sex_corrs$logfc,
+        paired = T
+      )$p.value))
+  }
+}
+
+library(tidyr)
+compute_sex_dea_corr<-function(timewise,ids,column_name = "logFC",add_zero=T){
+  timewise = as.data.frame(timewise)
+  timewise = timewise[timewise$feature_ID %in% ids,]
+  timewise_male = timewise[timewise$sex=="male",]
+  timewise_female = timewise[timewise$sex=="female",]
+  timewise_male = timewise_male[,c("feature_ID","comparison_group",column_name)]
+  timewise_female = timewise_female[,c("feature_ID","comparison_group",column_name)]
+  timewise_male = reshape(timewise_male,idvar="feature_ID",timevar = "comparison_group",direction = "wide")
+  timewise_female = reshape(timewise_female,idvar="feature_ID",timevar = "comparison_group",direction = "wide")
+  rownames(timewise_male) = timewise_male$feature_ID
+  rownames(timewise_female) = timewise_female$feature_ID
+  timewise_male = timewise_male[,-1]
+  timewise_female = timewise_female[,-1]
+  timewise_female = timewise_female[rownames(timewise_male),colnames(timewise_female)]
+  if(add_zero){
+    timewise_male = cbind(0,timewise_male)
+    timewise_female = cbind(0,timewise_female)
+  }
+  sex_corrs = diag(cor(
+    t(timewise_male),
+    t(timewise_female)
+  ))
+  return(sex_corrs)
+}
+
+```
+
 ## Adjust for mtDNA levels
 
 ```{r rna-seq dea table,eval=T}

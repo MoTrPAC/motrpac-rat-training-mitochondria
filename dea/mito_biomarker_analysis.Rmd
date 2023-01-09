@@ -41,6 +41,7 @@ mt_data = read.csv(
   stringsAsFactors = F
 )
 mt_data$bid = mt_data$Label
+mt_data$Tissue[mt_data$Tissue=="AORTA"] = "VENACV"
 
 # read the RNA-seq metrics to obtain mtRNA read percentages
 rnaseq_qa_qc = TRNSCRPT_META
@@ -198,22 +199,23 @@ currdf_female$sex = "Female"
 
 baseline_pct_mito = rbind(currdf_male,currdf_female)
 
-ggplot(baseline_pct_mito, aes(x=tissue, y=pct_mito_reads,fill=as.character(tissue))) + 
+ggplot(baseline_pct_mito, aes(x=tissue, y=pct_mito_reads,color = as.character(tissue))) + 
   geom_boxplot() + facet_wrap(~sex) + xlab("") + 
   theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) + 
-  scale_fill_manual(
+  scale_color_manual(
     labels = sort(as.character(unique(baseline_pct_mito$tissue))),
     values = TISSUE_COLORS[sort(as.character(unique(baseline_pct_mito$tissue)))])
 
 mt_dna_copy = mt_data[mt_data$Group=="Ctrl",]
-mt_dna_copy$sex = ifelse(mt_dna_copy$sex == "M","Male","Femlae")
+mt_dna_copy$sex = ifelse(mt_dna_copy$sex == "M","Male","Female")
 tissue_med = tapply(mt_dna_copy$Level,mt_dna_copy$Tissue,median)
 tissue_med = sort(tissue_med,decreasing = T)
 mt_dna_copy$Tissue = factor(mt_dna_copy$Tissue,levels = names(tissue_med))
-ggplot(mt_dna_copy, aes(x=Tissue, y=Level,fill=as.character(Tissue))) + 
+
+ggplot(mt_dna_copy, aes(x=Tissue, y=Level,color=as.character(Tissue))) + 
   geom_boxplot() + facet_wrap(~sex) + xlab("") + 
   theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) + 
-  scale_fill_manual(
+  scale_color_manual(
     labels = sort(as.character(unique(mt_dna_copy$Tissue))),
     values = TISSUE_COLORS[sort(as.character(unique(mt_dna_copy$Tissue)))])
 
@@ -629,7 +631,7 @@ sort(table(mt_biomarker_dea$biomarker))
 biomarkers = c("mtdna","mt_reads","CL(74:9)","CL(74:11)","CL(72:8)")
 mt_group_kw = get_stat_matrix(mt_biomarker_dea,"kw_p",biomarkers,tissues)
 corrplot(t(-log10(mt_group_kw)),is.corr = F,method = "circle",
-         p.mat = t(mt_group_kw),sig.level = 0.05)
+         p.mat = t(mt_group_kw),sig.level = 0.05,tl.col="black",col=rev(COL2('RdBu', 200)))
 par(mar=c(8,8,8,8))
 tissue_counts_kw = colSums(mt_group_kw<0.05,na.rm=T)
 barplot(sort(tissue_counts_kw,decreasing = T),las=2,col="white",
@@ -638,7 +640,8 @@ barplot(sort(tissue_counts_kw,decreasing = T),las=2,col="white",
 fc8w = get_stat_matrix(mt_biomarker_dea,"fc_8w",biomarkers,tissues)
 p8w = get_stat_matrix(mt_biomarker_dea,"pval_8w",biomarkers,tissues)
 tstats = get_stat_matrix(mt_biomarker_dea,"tstat_8w",biomarkers,tissues)
-corrplot(t(tstats),method = "circle",is.corr = F,p.mat = t(p8w),sig.level = 0.05)
+corrplot(t(tstats),method = "circle",is.corr = F,p.mat = t(p8w),sig.level = 0.05,
+         tl.col="black",col=rev(COL2('RdBu', 200)))
 par(mar=c(8,8,8,8))
 tissue_counts_8w = colSums(p8w<0.05,na.rm=T)
 barplot(sort(tissue_counts_8w,decreasing = T),las=2,col="white",ylab = "Num tissues with p<0.05")
@@ -647,7 +650,8 @@ barplot(sort(tissue_counts_8w,decreasing = T),las=2,col="white",ylab = "Num tiss
 fc1w = get_stat_matrix(mt_biomarker_dea,"fc_1w",biomarkers,tissues)
 p1w = get_stat_matrix(mt_biomarker_dea,"pval_1w",biomarkers,tissues)
 tstats1w = get_stat_matrix(mt_biomarker_dea,"tstat_1w",biomarkers,tissues)
-corrplot(t(tstats1w),method = "circle",is.corr = F,p.mat = t(p1w),sig.level = 0.05)
+corrplot(t(tstats1w),method = "circle",is.corr = F,p.mat = t(p1w),sig.level = 0.05,
+         tl.col="black",col=rev(COL2('RdBu', 200)))
 par(mar=c(8,8,8,8))
 tissue_counts_1w = colSums(p1w<0.05,na.rm=T)
 barplot(sort(tissue_counts_1w,decreasing = T),las=2,col="white",
