@@ -184,102 +184,6 @@ upset(
 dev.off()
 
 ```
-```{r}
-#Upset for publication
-pdf(file="/Users/araja7/work/companion/mitochondria/scratch/output/upset_significant_mito_genes_training_rnaseq_subset.pdf",width=12,height=5)
-upset(
-    df_final,set_names,width_ratio=0.2, min_size=2,
-    queries=list(
-        upset_query(
-            intersect=c('SKM-VL','COLON','BAT','ADRNL'),
-            color='blue',
-            fill='blue',
-            only_components=c('intersections_matrix', 'Intersection size')
-        ),
-        upset_query(
-            intersect=c('SKM-VL','COLON','BAT','ADRNL','SKM-GN','BLOOD'),
-            color='pink',
-            fill='pink',
-            only_components=c('intersections_matrix', 'Intersection size')
-        ),
-        upset_query(
-            intersect=c('HEART','BAT','ADRNL'),
-            color='yellow',
-            fill='yellow',
-            only_components=c('intersections_matrix', 'Intersection size')
-        ),
-        upset_query(
-            intersect=c('COLON','BAT','ADRNL'),
-            color='purple',
-            fill='purple',
-            only_components=c('intersections_matrix', 'Intersection size')
-        ),
-                upset_query(
-            intersect=c('ADRNL'),
-            color='#DDA0DD',
-            fill='#DDA0DD',
-            only_components=c('intersections_matrix')
-        ),
-        upset_query(
-            intersect=c('SKM-VL'),
-            color='#025939',
-            fill='#025939',
-            only_components=c('intersections_matrix')
-        ),
-        upset_query(
-            intersect=c('BAT'),
-            color='#8c5220',
-            fill='#8c5220',
-            only_components=c('intersections_matrix')
-        ),
-        upset_query(
-            intersect=c('LIVER'),
-            color='#da6c75',
-            fill='#da6c75',
-            only_components=c('intersections_matrix')
-        ),
-        upset_query(
-            intersect=c('COLON'),
-            color='#BECA55',
-            fill='#BECA55',
-            only_components=c('intersections_matrix')
-        ),
-        upset_query(
-            intersect=c('WAT-SC'),
-            color='#214da6',
-            fill='#214da6',
-            only_components=c('intersections_matrix')
-        ),
-        upset_query(
-            intersect=c('BLOOD'),
-            color='#d92c04',
-            fill='#d92c04',
-            only_components=c('intersections_matrix')
-        )
-        
-    ),
-                      base_annotations=list(
-                      'Intersection size'=(
-                        intersection_size(
-                          bar_number_threshold=1,  # show all numbers on top of bars
-                          width=0.5,   # reduce width of the bars
-                        )
-                        # add some space on the top of the bars
-                        + scale_y_continuous(expand=expansion(mult=c(0, 0.05)))
-                        + theme(
-                          # hide grid lines
-                          panel.grid.major=element_blank(),
-                          panel.grid.minor=element_blank(),
-                          # show axis lines
-                          axis.line=element_line(colour='black')
-                        )
-                      )
-                    )
-)
-
-
-dev.off()
-```
 
 ```{r}
 #qc to check the number of unique and shared genes by counting the number of non-zero rows for each tissue by feature_ids
@@ -288,57 +192,7 @@ nonzero <- function(x) sum(x != 0)
 numcolwise(nonzero)(df_final)
 
 ```
-```{r}
-#testing
-library(ComplexUpset)
-set_names=c("SKM-GN","SKM-VL","HEART")
-pdf(file="/Users/araja7/work/companion/mitochondria/scratch/output/upset_significant_mito_genes_training_rnaseq_subset_test.pdf",width=12,height=5)
 
-upset(
-    df_final, 
-    set_names,
-    width_ratio=0.2,
-    group_by='sets',
-    min_degree=1,
-    max_degree=3,
-    queries=list(
-        upset_query(set='HEART', fill=tissue_cols[["HEART"]],only_components=c('intersections_matrix')),
-        upset_query(set='SKM-GN', fill=tissue_cols[["SKM-GN"]],only_components=c('intersections_matrix')),
-        upset_query(set='SKM-VL', fill=tissue_cols["SKM-VL"],only_components=c('intersections_matrix'))
-        
-
-    )
-)
-dev.off()
-```
-##test2
-set_names=c("SKM-GN","SKM-VL","HEART")
-pdf(file="/Users/araja7/work/companion/mitochondria/scratch/output/upset_significant_mito_genes_training_rnaseq_subset_test.pdf",width=12,height=5)
-
-upset(
-    df_final, 
-    set_names,
-    width_ratio=0.2,
-#    group_by='sets',
-    min_degree=1,
-    max_degree=6,
-#    mode='inclusive_union',
-    min_size=7,
-    queries=list(
-        upset_query(set='ADRNL', fill=tissue_cols[["ADRNL"]]),
-#        upset_query(set='BAT', fill=tissue_cols[["BAT"]]),
-#        upset_query(set='COLON', fill=tissue_cols[["COLON"]]),
-        upset_query(set='HEART', fill=tissue_cols[["HEART"]]),
-#        upset_query(set='LIVER', fill=tissue_cols[["LIVER"]]),
-        upset_query(set='SKM-GN', fill=tissue_cols[["SKM-GN"]]),
-        upset_query(set='SKM-VL', fill=tissue_cols["SKM-VL"])
-#        upset_query(set='WAT-SC', fill=tissue_cols[["WAT-SC"]]),
-#        upset_query(set='BLOOD', fill=tissue_cols[["BLOOD"]])
-    )
-)
-dev.off()
-
-```
 ```{r}
 #proteomics
 #subset the training regulated features to PROT 
@@ -382,10 +236,9 @@ set_names <- set_names[! set_names %in% c('feature_ID')]
 #subset to specific set names
 set_names=c("SKM-GN","LIVER","HEART","WAT-SC")
 pdf(file="/Users/araja7/work/companion/mitochondria/scratch/output/upset_significant_mito_genes_training_prot_subset_min3.pdf",width=12,height=5)
-
+#generate upset displaying sets with minimum 3 genes
 upset(
     df_final,set_names,width_ratio=0.2, min_size=3,
-#    sort_intersections_by=c('cardinality','degree'),
     base_annotations=list('Size'=(intersection_size(bar_number_threshold = 1,width=0.5))),
     matrix=(
         intersection_matrix(geom=geom_point(shape='circle filled', size=3))
@@ -399,10 +252,6 @@ upset(
         upset_query(set='LIVER', fill=tissue_cols[["LIVER"]],only_components=c('intersections_matrix')),
         upset_query(set='SKM-GN', fill=tissue_cols[["SKM-GN"]],only_components=c('intersections_matrix')),
         upset_query(set='WAT-SC', fill=tissue_cols[["WAT-SC"]],only_components=c('intersections_matrix'))
- #       upset_query(set='KIDNEY', fill=tissue_cols[["KIDNEY"]],only_components=c('intersections_matrix'))
-  #      upset_query(set='LUNG', fill=tissue_cols[["LUNG"]],only_components=c('intersections_matrix')),
-  #      upset_query(set='CORTEX', fill=tissue_cols[["CORTEX"]],only_components=c('intersections_matrix'))
-        
         
     )
     
