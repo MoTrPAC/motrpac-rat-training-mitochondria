@@ -1,0 +1,19 @@
+dataset	test	tissue	bg_size	overlap	same_direction	opposite_direction	p
+T2D,Ohman et al.	sign_test_male	SKMGN	388	13	121	267	0.0180106199105162
+T2D,Ohman et al.	sign_test_female	SKMGN	388	12	135	253	0.0224345472861477
+T2D,Chae et al.	sign_test_male	SKMGN	148	30	51	97	0.00456595513908108
+T2D,Chae et al.	sign_test_female	SKMGN	148	34	54	94	0.0305802022102866
+Obesity,Stocks et al.	sign_test_male	LIVER	483	129	255	228	0.910615265083399
+Obesity,Stocks et al.	sign_test_female	LIVER	483	136	243	240	0.624706193282431
+NAFLD,Yuan et al.	sign_test_male	LIVER	95	32	52	43	0.845940479394017
+NAFLD,Yuan et al.	sign_test_female	LIVER	95	29	39	56	0.0215894041996829
+NASH,Niu et al.	sign_test_male	LIVER	61	16	28	33	0.431642141206227
+NASH,Niu et al.	sign_test_female	LIVER	61	25	34	27	0.747182327512897
+Cirr,Niu et al.	sign_test_male	LIVER	521	122	270	251	0.809460360258754
+Cirr,Niu et al.	sign_test_female	LIVER	521	101	161	360	4.16208558201843e-18
+MI,Park et al.	sign_test_male	HEART	240	52	139	101	0.999935604699607
+MI,Park et al.	sign_test_female	HEART	240	42	115	125	0.712555306027707
+HCM,Coats et al.	sign_test_male	HEART	117	38	49	68	0.0602291799962248
+HCM,Coats et al.	sign_test_female	HEART	117	38	61	56	0.794825313866816
+HF,Havlenova et al.	sign_test_male	HEART	245	84	127	118	0.852942828302729
+HF,Havlenova et al.	sign_test_female	HEART	245	96	156	89	0.999999750963924

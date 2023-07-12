@@ -1,0 +1,9 @@
+dataset	test	bg_size	overlap	p	tissue
+T2D,Ohman et al.	selection_overlap_p	1869	388	2.00142801299297e-06	SKMGN
+T2D,Chae et al.	selection_overlap_p	1873	148	8.29057683004696e-13	SKMGN
+Obesity,Stocks et al.	selection_overlap_p	5853	483	5.14443590124807e-05	LIVER
+NASH,Niu et al.	selection_overlap_p	4945	61	0.0436898835857194	LIVER
+Cirr,Niu et al.	selection_overlap_p	4945	521	8.07308667102793e-06	LIVER
+MI,Park et al.	selection_overlap_p	1127	240	0.80653671654882	HEART
+HCM,Coats et al.	selection_overlap_p	938	117	3.32447637906583e-05	HEART
+HF,Havlenova et al.	selection_overlap_p	1138	245	2.70540970920404e-07	HEART

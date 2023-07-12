@@ -98,6 +98,7 @@ add_overlap_tests_and_enrichments<-function(
         data.frame(dataset=datasetname,test = "selection_overlap_p",
         bg_size = sum(tb),overlap=tb["TRUE","TRUE"],
         p=overall_test,tissue=tissue))
+    assign("dataset_overlap_stats", dataset_overlap_stats, envir = .GlobalEnv)
   }else{
     print("Skipping overlap test, dataset may have selected features only")
   }
@@ -109,7 +110,6 @@ add_overlap_tests_and_enrichments<-function(
   
   if(length(shared_genes) < min_size_for_sign_analysis){
     print("Not enough overlapping selected genes, skipping the sign tests")
-    assign("dataset_overlap_stats", dataset_overlap_stats, envir = .GlobalEnv)
     return(NULL)
   }
   
@@ -117,14 +117,19 @@ add_overlap_tests_and_enrichments<-function(
     fc1[shared_genes] > 0,fc2[shared_genes] > 0
   )
   if(length(sign_table)>2){
-    dataset_overlap_stats = rbind(dataset_overlap_stats,
+    dataset_direction_stats = rbind(dataset_direction_stats,
       data.frame(dataset=datasetname,test = "sign_test_male",tissue=tissue,
       bg_size = sum(sign_table),overlap=sign_table["TRUE","TRUE"],
+      same_direction = sign_table["TRUE","TRUE"] + sign_table["FALSE","FALSE"],
+      opposite_direction = sign_table["TRUE","FALSE"] + sign_table["FALSE","TRUE"],
       p=fisher.test(sign_table,alt="l")$p.value))
   }else{
-    dataset_overlap_stats = rbind(dataset_overlap_stats,
+    dataset_direction_stats = rbind(dataset_direction_stats,
       data.frame(dataset=datasetname,test = "sign_test_male",tissue=tissue,
-      bg_size = sum(sign_table),overlap=0,p=NA))
+      bg_size = sum(sign_table),overlap=0,
+      same_direction = 0,
+      opposite_direction = 0,
+      p=NA))
   }
   
   bg = shared_genes
@@ -147,17 +152,22 @@ add_overlap_tests_and_enrichments<-function(
     fc1[shared_genes] > 0,fc2[shared_genes] > 0
   )
   if(length(sign_table)>2){
-    dataset_overlap_stats = rbind(dataset_overlap_stats,
+    dataset_direction_stats = rbind(dataset_direction_stats,
       data.frame(dataset=datasetname,test = "sign_test_female",tissue=tissue,
       bg_size = sum(sign_table),overlap=sign_table["TRUE","TRUE"],
+      same_direction = sign_table["TRUE","TRUE"] + sign_table["FALSE","FALSE"],
+      opposite_direction = sign_table["TRUE","FALSE"] + sign_table["FALSE","TRUE"],
       p=fisher.test(sign_table,alt="l")$p.value))
   }else{
-    dataset_overlap_stats = rbind(dataset_overlap_stats,
+    dataset_direction_stats = rbind(dataset_direction_stats,
       data.frame(dataset=datasetname,test = "sign_test_female",tissue=tissue,
-      bg_size = sum(sign_table),overlap=0,p=NA))
+      bg_size = sum(sign_table),overlap=0,
+      same_direction = 0,
+      opposite_direction = 0,
+      p=NA))
   }
   
-  assign("dataset_overlap_stats", dataset_overlap_stats, envir = .GlobalEnv)
+  assign("dataset_direction_stats", dataset_direction_stats, envir = .GlobalEnv)
   
   selected_sets[["female_up_disease_down"]] = shared_genes[
     fc1[shared_genes] < 0 & fc2[shared_genes] > 0]
@@ -243,6 +253,7 @@ Define the stats to keep over the datasets:
 
 ```{r}
 dataset_overlap_stats = c()
+dataset_direction_stats = c()
 dataset2selected_sets = list()
 dataset2set_enrichment_analysis = list()
 ```
@@ -628,6 +639,23 @@ add_overlap_tests_and_enrichments(
 
 
 ```{r}
+
+# Write the stats tables for supplement
+write.table(
+  dataset_overlap_stats,
+  sep="\t",
+  quote=F,
+  row.names = F,
+  file="~/Desktop/repos/motrpac-rat-training-mitochondria/data/human_data_comparison_overlap_stats.tsv"
+)
+write.table(
+  dataset_direction_stats,
+  sep="\t",
+  quote=F,
+  row.names = F,
+  file="~/Desktop/repos/motrpac-rat-training-mitochondria/data/human_data_comparison_direction_stats.tsv"
+)
+
 dataset_overlap_stats$sex = sapply(dataset_overlap_stats$test,
     function(x){arr=strsplit(x,split="_")[[1]];arr[length(arr)]})
 dataset_overlap_stats$log10P = -log10(dataset_overlap_stats$p)
