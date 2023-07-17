@@ -84,7 +84,8 @@ dea_merged = merge(x = rnaseq_training, y = mito_genes, by.x ="feature_ID",by.y=
 #slice df
 rnaseq_training_sub <- dea_merged[ , c('feature_ID', 'tissue')]
 df_sub=distinct(rnaseq_training_sub)
-write.table(df_sub,file.path(config$outdir_scratch,paste0("test_df_sub.tsv")),row.names=FALSE,quote=F,sep="\t")
+###testing only
+#write.table(df_sub,file.path(config$outdir_scratch,paste0("test_df_sub.tsv")),row.names=FALSE,quote=F,sep="\t")
 
 ```
 
@@ -107,7 +108,7 @@ for (i in unique(df_sub$tissue)) {
 df_final=(subset(df_final, select = -c(tissue)))
 #remove duplicate rows with identical feature_ids
 df_final=distinct(df_final)
-write.table(df_final,file.path(config$outdir_scratch,paste0("test_df_final_for_upset.tsv")),row.names=FALSE,quote=F,sep="\t")
+write.table(df_final,file.path(config$outdir_scratch,paste0("rnaseq_df_final_for_upset.tsv")),row.names=FALSE,quote=F,sep="\t")
 
 #replace all NAs with zero
 df_final=na_replace(df_final, 0)
@@ -207,7 +208,8 @@ prot_dea_with_mito = merge(x = prot_dea_with_feat, y = mito_genes, by.x ="entrez
 #slice df
 prot_training_sub <- prot_dea_with_mito[ , c('feature_ID', 'tissue')]
 df_prot_sub=distinct(prot_training_sub)
-write.table(df_prot_sub,file.path(config$outdir_scratch,paste0("test_df_prot_sub.tsv")),row.names=FALSE,quote=F,sep="\t")
+###testing 
+#write.table(df_prot_sub,file.path(config$outdir_scratch,paste0("test_df_prot_sub.tsv")),row.names=FALSE,quote=F,sep="\t")
 
 #preparing data for upset (proteomics)
 
@@ -226,7 +228,7 @@ for (i in unique(df_prot_sub$tissue)) {
 df_final=(subset(df_final, select = -c(tissue)))
 #remove duplicate rows with identical feature_ids
 df_final=distinct(df_final)
-write.table(df_final,file.path(config$outdir_scratch,paste0("test_df_final_for_upset_prot.tsv")),row.names=FALSE,quote=F,sep="\t")
+write.table(df_final,file.path(config$outdir_scratch,paste0("df_final_for_upset_prot.tsv")),row.names=FALSE,quote=F,sep="\t")
 
 #replace all NAs with zero
 df_final=na_replace(df_final, 0)
