@@ -42,7 +42,7 @@ Loading zone
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
 ###  Set working directory ### 
-setwd(file.path(config$setwd_user, "mitochondria"))
+setwd(file.path(config$setwd_user))
 
 # path to local clone of https://github.com/MoTrPAC/motrpac-mawg
 # gitdir_mawg = "~/GitHub/motrpac-mawg"
@@ -54,7 +54,10 @@ setwd(file.path(config$setwd_user, "mitochondria"))
 # Run 'which gsutil' from the Terminal and copy/paste the path into this variable
 # gsutil = "/usr/bin/gsutil"
 # gsutil <- path.expand(config$gsutil_user)
-
+#path to github dir
+github_dir <- path.expand(config$setwd_user)
+#path that contains input files
+indir_scratch <- path.expand(config$indir_scratch)
 # 'outdir_scratch' is an intermediate folder where files are downloaded from GCP locally
 # before loading them into R
 outdir_scratch <- path.expand(config$outdir_scratch)
@@ -67,8 +70,8 @@ outdir_scratch <- path.expand(config$outdir_scratch)
 
 ```{r}
 #load and subset mitochondrial genes
-#to do move the below path to config
-mito_genes = read.delim("/Users/araja7/work/companion/mitochondria/scratch/input/mito-genes_gencode_merged_v1.txt",sep="\t",header=TRUE,fill=TRUE)
+mito_genes_file=file.path(paste0("data/mito-genes_gencode_merged_v1.txt"))
+mito_genes = read.delim(mito_genes_file,sep="\t",header=TRUE,fill=TRUE)
 mito_genes <- mito_genes %>%
   select("entrez_gene","rgd_gene","gene_symbol","ensembl_gene","old_gene_symbol") %>% as.data.frame()
 #below yielded 1346 unique genes
@@ -81,7 +84,7 @@ dea_merged = merge(x = rnaseq_training, y = mito_genes, by.x ="feature_ID",by.y=
 #slice df
 rnaseq_training_sub <- dea_merged[ , c('feature_ID', 'tissue')]
 df_sub=distinct(rnaseq_training_sub)
-write.table(df_sub,"/Users/araja7/work/companion/mitochondria/scratch/output/test_df_sub.tsv",row.names=FALSE,quote=F,sep="\t")
+write.table(df_sub,file.path(config$outdir_scratch,paste0("test_df_sub.tsv")),row.names=FALSE,quote=F,sep="\t")
 
 ```
 
@@ -104,21 +107,21 @@ for (i in unique(df_sub$tissue)) {
 df_final=(subset(df_final, select = -c(tissue)))
 #remove duplicate rows with identical feature_ids
 df_final=distinct(df_final)
-write.table(df_final,"/Users/araja7/work/companion/mitochondria/scratch/output/test_df_final_for_upset.tsv",row.names=FALSE,quote=F,sep="\t")
+write.table(df_final,file.path(config$outdir_scratch,paste0("test_df_final_for_upset.tsv")),row.names=FALSE,quote=F,sep="\t")
 
 #replace all NAs with zero
 df_final=na_replace(df_final, 0)
 #replace >1 values with 1
 df_final <- df_final %>% mutate_if(is.numeric, ~1 * (. != 0))
-#df_final_with_annot <- merge(x = df_final, y = mito_genes, by.x ="feature_ID",by.y = "ensembl_gene",all.x=TRUE)
-#write.table(df_final_with_annot,"/Users/araja7/work/companion/mitochondria/scratch/output/significant_genes_training.txt",row.names=FALSE,quote=F,sep="\t")
+df_final_with_annot <- merge(x = df_final, y = mito_genes, by.x ="feature_ID",by.y = "ensembl_gene",all.x=TRUE)
+write.table(df_final_with_annot,file.path(config$outdir_scratch,paste0("significant_genes_training_with_annot.txt")),row.names=FALSE,quote=F,sep="\t")
 
 #upset plot
 set_names<-names(df_final)
 set_names <- set_names[! set_names %in% c('feature_ID')]
 #subset to specific set names
 set_names=c("ADRNL","BAT","COLON","SKM-GN","SKM-VL","LIVER","HEART","WAT-SC","BLOOD")
-pdf(file="/Users/araja7/work/companion/mitochondria/scratch/output/upset_significant_mito_genes_training_rnaseq_subset_min6.pdf",width=12,height=5)
+pdf(file=file.path(config$outdir_scratch,paste0("upset_significant_mito_genes_training_rnaseq_subset_min6.pdf")),width=12,height=6)
 
 upset(
     df_final,set_names,width_ratio=0.2, min_size=6,
@@ -155,7 +158,7 @@ dev.off()
 ```{r}
 #upset plot for the 3 muscle tissues
 set_names=c("SKM-GN","SKM-VL","HEART")
-pdf(file="/Users/araja7/work/companion/mitochondria/scratch/output/upset_significant_mito_genes_training_rnaseq_muscle_tissues.pdf",width=12,height=5)
+pdf(file=file.path(config$outdir_scratch,paste0("upset_significant_mito_genes_training_rnaseq_muscle_tissues.pdf")),width=12,height=5)
 
 upset(
     df_final,set_names,width_ratio=0.2, min_size=1,min_degree=1,
@@ -204,9 +207,9 @@ prot_dea_with_mito = merge(x = prot_dea_with_feat, y = mito_genes, by.x ="entrez
 #slice df
 prot_training_sub <- prot_dea_with_mito[ , c('feature_ID', 'tissue')]
 df_prot_sub=distinct(prot_training_sub)
-write.table(df_prot_sub,"/Users/araja7/work/companion/mitochondria/scratch/output/test_df_prot_sub.tsv",row.names=FALSE,quote=F,sep="\t")
+write.table(df_prot_sub,file.path(config$outdir_scratch,paste0("test_df_prot_sub.tsv")),row.names=FALSE,quote=F,sep="\t")
 
-#preparing data for upset (rna-seq)
+#preparing data for upset (proteomics)
 
 df_final=df_prot_sub
 
@@ -223,7 +226,7 @@ for (i in unique(df_prot_sub$tissue)) {
 df_final=(subset(df_final, select = -c(tissue)))
 #remove duplicate rows with identical feature_ids
 df_final=distinct(df_final)
-write.table(df_final,"/Users/araja7/work/companion/mitochondria/scratch/output/test_df_final_for_upset_prot.tsv",row.names=FALSE,quote=F,sep="\t")
+write.table(df_final,file.path(config$outdir_scratch,paste0("test_df_final_for_upset_prot.tsv")),row.names=FALSE,quote=F,sep="\t")
 
 #replace all NAs with zero
 df_final=na_replace(df_final, 0)
@@ -235,7 +238,7 @@ set_names<-names(df_final)
 set_names <- set_names[! set_names %in% c('feature_ID')]
 #subset to specific set names
 set_names=c("SKM-GN","LIVER","HEART","WAT-SC")
-pdf(file="/Users/araja7/work/companion/mitochondria/scratch/output/upset_significant_mito_genes_training_prot_subset_min3.pdf",width=12,height=5)
+pdf(file=file.path(outdir_scratch,paste0("upset_significant_mito_genes_training_prot_subset_min3.pdf")),width=12,height=6)
 #generate upset displaying sets with minimum 3 genes
 upset(
     df_final,set_names,width_ratio=0.2, min_size=3,
