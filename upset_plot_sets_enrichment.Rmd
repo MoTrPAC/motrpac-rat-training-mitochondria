@@ -11,6 +11,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 # External libraries
 library(data.table)
+#fix to install the below 2 packages on R version 4.2 can be found in the 
+#blog post => https://support.bioconductor.org/p/118405/
 library(org.Hs.eg.db)
 library(org.Rn.eg.db)
 library(MotrpacBicQC)
@@ -18,13 +20,14 @@ library(ggplot2)
 library(gprofiler2)
 library(MotrpacRatTraining6moData)
 
-data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/upset_plot/"
-output_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/results/"
+data_dir = "~/work/Github/motrpac-rat-training-mitochondria/data/upset_plot/"
+#output_dir = "~/work/Github/motrpac-rat-training-mitochondria/results/"
+output_dir="/Users/araja7/work/companion/mitochondria/scratch/output/"
 ```
 
 Load existing mito annotation data (see `mito_biomarker_analysis.Rmd`):
 ```{r}
-load("~/Desktop/repos/motrpac-rat-training-mitochondria/data/mito_gene_annotation.RData")
+load("~/work/Github/motrpac-rat-training-mitochondria/data/mito_gene_annotation.RData")
 # Create a feature to gene to mito mapping
 mt_symbols = mt$gene_symbol
 # Remove RRBS and ATAC features
@@ -39,10 +42,16 @@ mito_features = FEATURE_TO_GENE$feature_ID[FEATURE_TO_GENE$is_mito]
 ```{r}
 selected_sets = list()
 selected_sets[["adrenal_bat_colon"]] = 
-  fread(paste0(data_dir,"adrenal_bat_colon_sig_gene_symbols.txt"),
+  fread(paste0(data_dir,"ad_bat_col_gene_symbols.txt"),
         header=F,stringsAsFactors = F,data.table = F)[,1]
 selected_sets[["common"]] = 
-  fread(paste0(data_dir,"common_sig_gene_symbols.txt"),
+  fread(paste0(data_dir,"ad_bat_col_blood_skmvl-skmgn_gene_symbols.txt"),
+        header=F,stringsAsFactors = F,data.table = F)[,1]
+selected_sets[["adrenal_bat_colon_skm-vl"]] = 
+  fread(paste0(data_dir,"ad_bat_colon_skm-vl_gene_symbols.txt"),
+        header=F,stringsAsFactors = F,data.table = F)[,1]
+selected_sets[["adrenal_bat_heart"]] = 
+  fread(paste0(data_dir,"ad_bat_heart_gs.txt"),
         header=F,stringsAsFactors = F,data.table = F)[,1]
 ```
 
