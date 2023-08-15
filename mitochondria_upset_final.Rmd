@@ -202,6 +202,7 @@ numcolwise(nonzero)(df_final)
 #subset the training regulated features to PROT 
 prot_training <- subset(TRAINING_REGULATED_FEATURES, assay %in% c('PROT'))
 prot_dea_with_feat = merge(x = prot_training, y = FEATURE_TO_GENE, by.x ="feature_ID",by.y="feature_ID")
+
 #subset to mito genes
 prot_dea_with_mito = merge(x = prot_dea_with_feat, y = mito_genes, by.x ="entrez_gene",by.y="entrez_gene")
 
@@ -234,7 +235,9 @@ write.table(df_final,file.path(config$outdir_scratch,paste0("df_final_for_upset_
 df_final=na_replace(df_final, 0)
 #replace >1 values with 1
 df_final <- df_final %>% mutate_if(is.numeric, ~1 * (. != 0))
-df_final_with_annot <- merge(x = df_final, y = mito_genes, by.x ="feature_ID",by.y = "ensembl_gene",all.x=TRUE)
+#to get the mito genes the df needs to be merged with the master feature to gene map
+prot_dea_with_feat = merge(x = df_final, y = FEATURE_TO_GENE, by.x ="feature_ID",by.y="feature_ID")
+df_final_with_annot <- merge(x = prot_dea_with_feat, y = mito_genes, by.x ="entrez_gene",by.y = "entrez_gene",all.x=TRUE)
 write.table(df_final_with_annot,file.path(config$outdir_scratch,paste0("significant_genes_training_with_annot_prot.txt")),row.names=FALSE,quote=F,sep="\t")
 #upset plot
 set_names<-names(df_final)

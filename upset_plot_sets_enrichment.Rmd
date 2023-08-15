@@ -40,6 +40,7 @@ mito_features = FEATURE_TO_GENE$feature_ID[FEATURE_TO_GENE$is_mito]
 
 
 ```{r}
+#Transcriptomics 
 selected_sets = list()
 selected_sets[["adrenal_bat_colon"]] = 
   fread(paste0(data_dir,"ad_bat_col_gene_symbols.txt"),
@@ -54,7 +55,19 @@ selected_sets[["adrenal_bat_heart"]] =
   fread(paste0(data_dir,"ad_bat_heart_gs.txt"),
         header=F,stringsAsFactors = F,data.table = F)[,1]
 ```
-
+```{r}
+#Proteomics
+selected_sets = list()
+selected_sets[["skm-gn_liver_heart"]] = 
+  fread(paste0(data_dir,"skm-liver-heart-prot-sig-genes.txt"),
+        header=F,stringsAsFactors = F,data.table = F)[,1]
+selected_sets[["skm-gn_heart"]] = 
+  fread(paste0(data_dir,"skm-heart-port-sig-genes.txt"),
+        header=F,stringsAsFactors = F,data.table = F)[,1]
+selected_sets[["skm-gn_wat"]] = 
+  fread(paste0(data_dir,"skm-wat-prot-sig-genes.txt"),
+        header=F,stringsAsFactors = F,data.table = F)[,1]
+```
 ```{r}
 simple_enrichment_analysis<-function(s,univ,pathways,min_size=5,setname=""){
   s = intersect(s,univ)
@@ -105,4 +118,10 @@ write.table(selected_enrichment_results,
 
 ```
 
+```{r}
+#proteomics 
+write.table(selected_enrichment_results,
+            file = paste0(output_dir,"upset_sets_enrichment_results_proteomics.txt"),
+            sep="\t",quote=F,row.names = F)
+```
 
