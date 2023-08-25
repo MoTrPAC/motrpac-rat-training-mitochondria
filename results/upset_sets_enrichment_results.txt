@@ -1,0 +1,15 @@
+setname	pathway	setsize	pathwaysize	overlap	p	genes	q
+adrenal_bat_colon	Complex II	38	8	3	0.00103985055075835	Sdhc,Sdha,Sdhd	0.0380745278585363
+adrenal_bat_colon	Carbohydrate metabolism	38	73	10	1.5746075214798e-05	Mdh2,Sdhc,Fh,Suclg1,Hmgcl,Sdha,Fahd1,Sdhd,Aco2,Idh3g	0.000749513180224387
+adrenal_bat_colon	TCA cycle	38	20	8	1.77478522392605e-08	Mdh2,Sdhc,Fh,Suclg1,Sdha,Sdhd,Aco2,Idh3g	1.6895955331776e-06
+adrenal_bat_colon	Fe-S-containing proteins	38	30	5	0.00113914670796462	Cisd1,Uqcrfs1,Aco2,Ndufs7,Ndufv2	0.0387309880707971
+common	OXPHOS	11	166	10	5.96298871831423e-09	Ndufb11,Ndufb9,Cox4i1,Cox5a,Cox6b1,Atp5mf,Cox7a2,Uqcrq,Cox7b,Ndufa3	7.09595657479394e-07
+common	OXPHOS subunits	11	102	10	4.00985211426404e-11	Ndufb11,Ndufb9,Cox4i1,Cox5a,Cox6b1,Atp5mf,Cox7a2,Uqcrq,Cox7b,Ndufa3	9.5434480319484e-09
+common	Complex IV	11	48	5	1.794530552464e-05	Cox4i1,Cox5a,Cox6b1,Cox7a2,Cox7b	0.000776542311793512
+common	CIV subunits	11	21	5	2.3613783485465e-07	Cox4i1,Cox5a,Cox6b1,Cox7a2,Cox7b	1.60573727701162e-05
+adrenal_bat_colon_skm-vl	OXPHOS	18	166	14	2.0843210930651e-10	Ndufa5,Sdhb,Ndufb5,Uqcr11,Ndufs8,Ndufa2,Ndufab1,Atp5f1c,Ndufb6,Uqcrb,Ndufs5,Uqcrc2,Ndufc1,Uqcr10	3.30712280099662e-08
+adrenal_bat_colon_skm-vl	OXPHOS subunits	18	102	14	1.91182131752561e-13	Ndufa5,Sdhb,Ndufb5,Uqcr11,Ndufs8,Ndufa2,Ndufab1,Atp5f1c,Ndufb6,Uqcrb,Ndufs5,Uqcrc2,Ndufc1,Uqcr10	9.1002694714219e-11
+adrenal_bat_colon_skm-vl	Complex I	18	65	8	5.51286478642372e-07	Ndufa5,Ndufb5,Ndufs8,Ndufa2,Ndufab1,Ndufb6,Ndufs5,Ndufc1	3.28015454792211e-05
+adrenal_bat_colon_skm-vl	CI subunits	18	44	8	2.23355636952785e-08	Ndufa5,Ndufb5,Ndufs8,Ndufa2,Ndufab1,Ndufb6,Ndufs5,Ndufc1	1.77195471982542e-06
+adrenal_bat_colon_skm-vl	Complex III	18	16	4	3.62433054846492e-05	Uqcr11,Uqcrb,Uqcrc2,Uqcr10	0.00143765111755775
+adrenal_bat_colon_skm-vl	CIII subunits	18	10	4	4.39692703054425e-06	Uqcr11,Uqcrb,Uqcrc2,Uqcr10	0.000232548585171007
