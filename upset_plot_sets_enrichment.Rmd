@@ -52,7 +52,7 @@ selected_sets[["adrenal_bat_colon_skm-vl"]] =
   fread(paste0(data_dir,"ad_bat_colon_skm-vl_gene_symbols.txt"),
         header=F,stringsAsFactors = F,data.table = F)[,1]
 selected_sets[["adrenal_bat_heart"]] = 
-  fread(paste0(data_dir,"ad_bat_heart_gs.txt"),
+  fread(paste0(data_dir,"ad_bat_heart.txt"),
         header=F,stringsAsFactors = F,data.table = F)[,1]
 ```
 ```{r}

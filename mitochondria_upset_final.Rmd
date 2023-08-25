@@ -122,10 +122,14 @@ set_names<-names(df_final)
 set_names <- set_names[! set_names %in% c('feature_ID')]
 #subset to specific set names
 set_names=c("ADRNL","BAT","COLON","SKM-GN","SKM-VL","LIVER","HEART","WAT-SC","BLOOD")
-pdf(file=file.path(config$outdir_scratch,paste0("upset_significant_mito_genes_training_rnaseq_subset_min6.pdf")),width=12,height=6)
+
+# Remove rows with zeros in both column A and B
+df_filtered <- df_final[!(df_final$`SKM-GN` == 0 & df_final$`LIVER` == 0 & df_final$`HEART` == 0 & df_final$`WAT-SC` == 0 & df_final$`ADRNL` == 0 & df_final$`BAT` == 0 & df_final$`COLON` == 0 & df_final$`SKM-VL` == 0 & df_final$`BLOOD` ==0 ), ]
+
+pdf(file=file.path(config$outdir_scratch,paste0("upset_significant_mito_genes_training_rnaseq_subset_min6_cleaned.pdf")),width=12,height=6)
 
 upset(
-    df_final,set_names,width_ratio=0.2, min_size=6,
+    df_filtered,set_names,width_ratio=0.2, min_size=6,
 #    sort_intersections_by=c('cardinality','degree'),
     base_annotations=list('Size'=(intersection_size(bar_number_threshold = 1,width=0.5))),
     matrix=(
@@ -244,11 +248,18 @@ set_names<-names(df_final)
 set_names <- set_names[! set_names %in% c('feature_ID')]
 #subset to specific set names
 set_names=c("SKM-GN","LIVER","HEART","WAT-SC")
-pdf(file=file.path(outdir_scratch,paste0("upset_significant_mito_genes_training_prot_subset_min3.pdf")),width=12,height=6)
+
+# Remove rows with zeros in both column A and B
+df_filtered <- df_final[!(df_final$`SKM-GN` == 0 & df_final$`LIVER` == 0 & df_final$`HEART` == 0 & df_final$`WAT-SC` == 0 ), ]
+
+# Print the resulting data frame
+print(dim(df_filtered))
+
+pdf(file=file.path(outdir_scratch,paste0("upset_significant_mito_genes_training_prot_subset_min3_test.pdf")),width=12,height=6)
 #generate upset displaying sets with minimum 3 genes
 upset(
-    df_final,set_names,width_ratio=0.2, min_size=3,
-    base_annotations=list('Size'=(intersection_size(bar_number_threshold = 1,width=0.5))),
+    df_filtered,set_names,width_ratio = 0.2, min_size=3,keep_empty_groups=FALSE,
+    base_annotations=list('Size'=(intersection_size(bar_number_threshold = 1,width=0.2))),
     matrix=(
         intersection_matrix(geom=geom_point(shape='circle filled', size=3))
         + scale_color_manual(
