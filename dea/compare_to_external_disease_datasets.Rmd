@@ -760,8 +760,19 @@ ggplot(df[!grepl("Overall",df$sex),],
 ```{r}
 selected_enr_res = lapply(dataset2set_enrichment_analysis,function(x)x[x$q_value<0.1,])
 selected_enr_res = lapply(selected_enr_res,function(x)x[x$intersection_size>2,])
-sapply(selected_enr_res,nrow)
-selected_enr_res
+selected_enr_res = selected_enr_res[sapply(selected_enr_res,nrow)>0]
+for(nn in names(selected_enr_res)){selected_enr_res[[nn]]$dataset=nn}
+selected_enr_res = do.call(rbind,selected_enr_res)
+selected_enr_res = selected_enr_res[,c("dataset","query","p_value","q_value","term_size",
+                                       "query_size","intersection_size","term_name",
+                                       "effective_domain_size","intersection")]
+write.table(
+  selected_enr_res,
+  sep="\t",
+  quote=F,
+  row.names = F,
+  file="~/Desktop/repos/motrpac-rat-training-mitochondria/data/human_data_comparison_enrichments.tsv"
+)
 ```
 Create gene set files for cytoscape
 

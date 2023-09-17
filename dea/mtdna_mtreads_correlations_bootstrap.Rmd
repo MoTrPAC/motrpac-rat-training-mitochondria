@@ -1,7 +1,9 @@
 ---
 title: "Mitochondrial marker meta-analysis"
-output: html_notebook
-editor_options: 
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -10,40 +12,6 @@ library(data.table)
 library(metafor)
 library(metap)
 ```
-
-
-```{r,eval=F}
-repodir = "~/Desktop/repos/motrpac-rat-training-mitochondria/"
-d = fread(
-  paste0(repodir,"results/mt_biomarker_dea_lm.csv"),
-  data.table = F,stringsAsFactors = F
-)
-
-metanal_results = c()
-biomarkers = c("mtdna","mt_reads")
-df_mtdna = d[d$biomarker == "mtdna",]
-df_reads = d[d$biomarker == "mt_reads",]
-for(tissue in unique(d$tissue)){
-  curr_d = d[d$tissue == tissue,]
-  curr_d = curr_d[curr_d$biomarker %in% biomarkers,]
-  if(nrow(curr_d)<1){next}
-  if(length(unique(curr_d$biomarker))<2){next}
-  cols_to_keep = colnames(curr_d)[grepl("1w|8w",colnames(curr_d))]
-  cols_to_keep = c(cols_to_keep,"sex","biomarker")
-  curr_d = curr_d[,cols_to_keep]
-  week_1_cols = colnames(curr_d)[grepl("1w",colnames(curr_d))]
-  week_8_cols = colnames(curr_d)[grepl("8w",colnames(curr_d))]
-  curr_d1 = curr_d[,c(week_1_cols,"sex","biomarker")]
-  curr_d8 = curr_d[,c(week_8_cols,"sex","biomarker")]
-  colnames(curr_d1)[1:3] = c("b","t","p")
-  colnames(curr_d8)[1:3] = c("b","t","p")
-  curr_d1$week = "1w"
-  curr_d8$week = "8w"
-  curr_d = rbind(curr_d1,curr_d8)
-}
-
-```
-
 
 
 ```{r}
@@ -134,6 +102,34 @@ for(tissue in names(mt_biomarkers)){
 }
 cor_res = cor_res[order(cor_res$rho,decreasing = T),]
 cor_res$zscore = cor_res$rho/cor_res$bootstrap_sd
+
+p<- ggplot(cor_res, aes(x=tissue, y=rho)) + 
+  geom_bar(stat="identity", color="black", position=position_dodge()) +
+  geom_errorbar(aes(ymin=rho-bootstrap_sd, ymax=rho+bootstrap_sd), width=.2,
+                 position=position_dodge(.9)) 
+
+print(p)
+
+
+
 ```
 
+
+
+```{r}
+cor_res[cor_res[,1]=="SKMVL",1] = "SKM-VL"
+cor_res[cor_res[,1]=="SKMGN",1] = "SKM-GN"
+cor_res[cor_res[,1]=="WATSC",1] = "WAT-SC"
+
+par(mar = c(10,5,2,2))
+bp = barplot(cor_res[,2],las=2,col=TISSUE_COLORS[cor_res[,1]],
+        ylab = "Pearson correlation",cex.axis = 1.3,space = 0,cex.lab = 1.5,
+        ylim=c(-0.3,0.85),names.arg = cor_res[,1],cex.names = 1.4)
+#abline(h=0.5,lty=2,lwd=2)
+arrows(x0 = bp,                           # Add error bars
+       y0 = cor_res[,2] + cor_res[,4],
+       y1 = cor_res[,2] - cor_res[,4],
+       angle = 90,
+       code = 3,
+       length = 0.1)
 ```
