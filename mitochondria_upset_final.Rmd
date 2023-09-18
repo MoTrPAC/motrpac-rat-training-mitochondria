@@ -43,17 +43,6 @@ Loading zone
 ```{r include=FALSE,message=FALSE,warning=FALSE}
 ###  Set working directory ### 
 setwd(file.path(config$setwd_user))
-
-# path to local clone of https://github.com/MoTrPAC/motrpac-mawg
-# gitdir_mawg = "~/GitHub/motrpac-mawg"
-# gitdir_mawg <- config$gitdir_mawg
-
-# Load graphical cluster analysis
-# 'gsutil' is the path to your gsutil binary
-# gsutil may have been installed somewhere else on your system
-# Run 'which gsutil' from the Terminal and copy/paste the path into this variable
-# gsutil = "/usr/bin/gsutil"
-# gsutil <- path.expand(config$gsutil_user)
 #path to github dir
 github_dir <- path.expand(config$setwd_user)
 #path that contains input files
@@ -61,10 +50,6 @@ indir_scratch <- path.expand(config$indir_scratch)
 # 'outdir_scratch' is an intermediate folder where files are downloaded from GCP locally
 # before loading them into R
 outdir_scratch <- path.expand(config$outdir_scratch)
-
-## source functions
-# source(sprintf("%s/pass1b-06/integrative/clustering/cluster_viz_fx.R", gitdir_mawg))
-# source(sprintf("%s/pass1b-06/integrative/clustering/graphical_analysis_functions.R", gitdir_mawg))
 
 ```
 
