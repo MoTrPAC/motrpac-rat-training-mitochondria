@@ -669,24 +669,24 @@ dataset_overlap_stats$tissue[
   dataset_overlap_stats$tissue=="SKMGN"
 ] = "SKM-GN"
 
-par(mar=c(12,5,2,2))
-currinds = dataset_overlap_stats$sex=="p"
-barplot(
-  dataset_overlap_stats[currinds,"log10P"],
-  col = TISSUE_COLORS[dataset_overlap_stats$tissue[currinds]],
-  names.arg = gsub(" et al.","",dataset_overlap_stats[currinds,"name"]),
-  ylab = "Overlap -log10 p-value",las=2
-);abline(h=-log10(0.05),lty=2,col="red")
-
-par(mar=c(12,5,2,2))
-currinds = dataset_overlap_stats$sex!="p"
-barplot(
-  dataset_overlap_stats[currinds,"log10P"],
-  col = TISSUE_COLORS[dataset_overlap_stats$tissue[currinds]],
-  las=2,
-  names.arg = gsub(" et al.","",dataset_overlap_stats[dataset_overlap_stats$sex!="p","name2"]),
-  ylab = "Discordant FC sign -log10 p-value"
-);abline(h=-log10(0.05),lty=2,col="red")
+# par(mar=c(12,5,2,2))
+# currinds = dataset_overlap_stats$sex=="p"
+# barplot(
+#   dataset_overlap_stats[currinds,"log10P"],
+#   col = TISSUE_COLORS[dataset_overlap_stats$tissue[currinds]],
+#   names.arg = gsub(" et al.","",dataset_overlap_stats[currinds,"name"]),
+#   ylab = "Overlap -log10 p-value",las=2
+# );abline(h=-log10(0.05),lty=2,col="red")
+# 
+# par(mar=c(12,5,2,2))
+# currinds = dataset_overlap_stats$sex!="p"
+# barplot(
+#   dataset_overlap_stats[currinds,"log10P"],
+#   col = TISSUE_COLORS[dataset_overlap_stats$tissue[currinds]],
+#   las=2,
+#   names.arg = gsub(" et al.","",dataset_overlap_stats[dataset_overlap_stats$sex!="p","name2"]),
+#   ylab = "Discordant FC sign -log10 p-value"
+# );abline(h=-log10(0.05),lty=2,col="red")
 
 # Use ggplot
 library(ggplot2)
@@ -709,14 +709,14 @@ df$log10P = pmin(5,df$log10P)
 #             vjust = 1.5, position = position_dodge(.9),
 #             col="black",size=3,angle=45)
 
-ggplot(df[!grepl("Overall",df$sex),],
-  aes(x = Test,y = log10P,fill = Study,color=Study)) +
-  geom_bar(stat = "identity",position = "dodge") + 
-  theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1))  +
-  geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
-  geom_text(aes(x = Test,y = log10P+0.3,label = Weight),
-            vjust = 1.5, position = position_dodge(.9),
-            col="black",size=3,angle=45)
+# ggplot(df[!grepl("Overall",df$sex),],
+#   aes(x = Test,y = log10P,fill = Study,color=Study)) +
+#   geom_bar(stat = "identity",position = "dodge") + 
+#   theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1))  +
+#   geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
+#   geom_text(aes(x = Test,y = log10P+0.3,label = Weight),
+#             vjust = 1.5, position = position_dodge(.9),
+#             col="black",size=3,angle=45)
 
 # ggplot(df[grepl("Overall",df$sex),],
 #   aes(x = Test,y = log10P,fill = Study,color=Study)) +
@@ -732,26 +732,44 @@ df_overall_test = df[grepl("Overall",df$sex),]
 df_overall_test = df_overall_test[order(df_overall_test$tissue),]
 df_overall_test$name3 = factor(df_overall_test$name3,
                                levels = df_overall_test$name3)
+df_overall_test$Tissue = df_overall_test$tissue
 ggplot(df_overall_test,
-  aes(x = name3,y = log10P,fill = tissue)) +
+  aes(x = name3,y = log10P,fill = Tissue)) +
   geom_bar(stat = "identity",position = "dodge") + xlab("") + 
   geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
   geom_text(aes(x = name3,y = log10P+0.3,label = Weight),
             vjust = 1.5, position = position_dodge(.9),
             col="black",size=4,angle=45) +
+  theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1,size=11)) +
   theme(axis.text.y = element_text(size=8))
 
+df_overall_test[,c("dataset","tissue","bg_size","overlap","p")]
 
-df$name4 = sapply(df$name3,function(x)paste(strsplit(x,split=",")[[1]][-3],collapse=","))
-df$name4 = factor(df$name4,levels=unique(df$name4))
-ggplot(df[!grepl("Overall",df$sex),],
-  aes(x = name4,y = log10P,fill = tissue)) +
+
+dataset_direction_stats$log10P = -log10(dataset_direction_stats$p)
+dataset_direction_stats$sex = "male"
+dataset_direction_stats$sex[grepl("female",dataset_direction_stats$test)] = "female"
+dataset_direction_stats$Weight = format(dataset_direction_stats$p,digits = 2)
+dataset_direction_stats$Weight[dataset_direction_stats$log10P < 1.5] = NA
+dataset_direction_stats$logPthreshold = dataset_direction_stats$log10P > 5
+dataset_direction_stats$log10P = pmin(5,dataset_direction_stats$log10P)
+
+dataset_direction_stats = dataset_direction_stats[
+  order(
+    dataset_direction_stats$tissue,decreasing = T
+  ),
+]
+dataset_direction_stats$Tissue = dataset_direction_stats$tissue
+ggplot(dataset_direction_stats,
+  aes(x = dataset,y = log10P,fill = Tissue)) +
   facet_wrap(~sex,  ncol=1) +
   geom_bar(stat = "identity",position = "dodge") + xlab("") + 
-  theme(axis.text.x = element_text(angle = 60,vjust = 1, hjust = 1,size=11))  +
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 60,vjust = 1, hjust = 1,size=11),
+        strip.background=element_rect(colour="black",fill="gray"))  +
   geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
-  geom_text(aes(x = name4,y = log10P+0.3,label = Weight),
+  geom_text(aes(x = dataset,y = log10P+0.3,label = Weight),
             vjust = 1.5, position = position_dodge(.9),
             col="black",size=3,angle=30)
 
@@ -774,6 +792,7 @@ write.table(
   file="~/Desktop/repos/motrpac-rat-training-mitochondria/data/human_data_comparison_enrichments.tsv"
 )
 ```
+
 Create gene set files for cytoscape
 
 ```{r}
