@@ -542,7 +542,7 @@ for(tissue in names(mt_biomarkers)){
     new_max = curr_range[2] + 0.15 *(curr_range[2]-curr_range[1])
     new_max2 = curr_range[2] + 0.3 *(curr_range[2]-curr_range[1])
     p = ggboxplot(df,x="group",y="mtdna",fill = curr_col,facet.by = "sex",notch = F) + 
-      stat_compare_means(method = "anova", label.y = new_max, size=5,label.x = 2)+      # Add global p-value
+      stat_compare_means(method = "anova", label.y = new_max, size=5,label.x = 2) + 
       stat_compare_means(label = "p.signif", method = "t.test",
         ref.group = "control",symnum.args=symargs,size=6) + ylab("mtDNA level") + xlab("") +
         ggtitle(paste(tissue,"mtDNA")) + 
@@ -562,9 +562,11 @@ for(tissue in names(mt_biomarkers)){
     new_max = curr_range[2] + 0.15 *(curr_range[2]-curr_range[1])
     new_max2 = curr_range[2] + 0.3 *(curr_range[2]-curr_range[1])
     p = ggboxplot(df,x="group",y="CL_72_8",fill = curr_col,facet.by = "sex",notch = F) + 
-      stat_compare_means(method = "anova",label.y = new_max,size=5,label.x = 2)+      # Add global p-value
-      stat_compare_means(label = "p.signif", method = "t.test",
-        ref.group = "control",symnum.args=symargs,size=6) + ylab("log2 intensity") + xlab("") +
+      stat_compare_means(
+        method = "anova",label.y = new_max,size=5,label.x = 2) +      # Add global p-value
+        stat_compare_means(label = "p.signif", method = "t.test",
+          ref.group = "control",symnum.args=symargs,size=6) + 
+        ylab("log2 intensity") + xlab("") +
         ggtitle(paste(tissue,"CL(72:8)")) + 
         theme(strip.text.x = element_text(size = 15),plot.title = element_text(size=18,hjust=0.5))
     p = ggpar(p,ylim = c(curr_range[1],new_max2))

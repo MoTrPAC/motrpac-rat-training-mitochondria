@@ -13,3 +13,4 @@ adrenal_bat_colon_skm-vl	Complex I	18	65	8	5.51286478642372e-07	Ndufa5,Ndufb5,Nd
 adrenal_bat_colon_skm-vl	CI subunits	18	44	8	2.23355636952785e-08	Ndufa5,Ndufb5,Ndufs8,Ndufa2,Ndufab1,Ndufb6,Ndufs5,Ndufc1	1.77195471982542e-06
 adrenal_bat_colon_skm-vl	Complex III	18	16	4	3.62433054846492e-05	Uqcr11,Uqcrb,Uqcrc2,Uqcr10	0.00143765111755775
 adrenal_bat_colon_skm-vl	CIII subunits	18	10	4	4.39692703054425e-06	Uqcr11,Uqcrb,Uqcrc2,Uqcr10	0.000232548585171007
+

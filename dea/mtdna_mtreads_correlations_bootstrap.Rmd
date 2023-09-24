@@ -1,0 +1,135 @@
+---
+title: "Mitochondrial marker meta-analysis"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+library(data.table)
+library(metafor)
+library(metap)
+```
+
+
+```{r}
+library(MotrpacRatTraining6moData)
+library(ggplot2)
+data_dir = "~/Desktop/repos/motrpac-rat-training-mitochondria/data/"
+
+# read the mtDNA data file
+mt_data = read.csv(
+  file=paste0(data_dir,"mtDNA_motrpac_pass1b.csv"),
+  stringsAsFactors = F
+)
+mt_data$bid = mt_data$Label
+mt_data$Tissue[mt_data$Tissue=="AORTA"] = "VENACV"
+
+# read the RNA-seq metrics to obtain mtRNA read percentages
+rnaseq_qa_qc = TRNSCRPT_META
+pct_mito_reads = rnaseq_qa_qc$pct_chrM
+names(pct_mito_reads) = as.character(rnaseq_qa_qc$viallabel)
+rownames(rnaseq_qa_qc) = as.character(rnaseq_qa_qc$viallabel)
+colnames(rnaseq_qa_qc) = tolower(colnames(rnaseq_qa_qc))
+
+# load the pheno data
+pheno = PHENO
+
+# Get data frames with all mito biomarkers, by tissue
+mt_biomarkers = list()
+for(tissue_name in unique(pheno$tissue)){
+  if(is.na(tissue_name)){next}
+  if(grepl("VENA",tissue_name)){next}
+  
+  # get all vial labels
+  tissue_vials = rownames(pheno)[pheno$tissue == tissue_name]
+  # limit to vial labels that appear in the rna-seq data
+  tissue_vials = intersect(names(pct_mito_reads),tissue_vials)
+  tissue_vials = setdiff(tissue_vials,OUTLIERS$viallabel)
+  if(length(tissue_vials)<5){next}
+  # get the bids
+  tissue_bids = sapply(tissue_vials,substring,1,5)
+  # save results in a data frame
+  tissue_df = data.frame(
+    mt_reads = pct_mito_reads[tissue_vials],
+    viallabel = tissue_vials,
+    bid = tissue_bids
+  )
+   print(paste("Analyzing data from:",tissue_name))
+   
+  tissue_df$mtdna = NA
+  if(sum(mt_data$Tissue==tissue_name)>0){
+    currmt_data = mt_data[mt_data$Tissue==tissue_name,]
+    rownames(currmt_data) = as.character(currmt_data$bid)
+    curr_shared_bids = intersect(tissue_df$bid,rownames(currmt_data))
+    for(bid in curr_shared_bids){
+      tissue_df[tissue_df$bid==bid,"mtdna"] = currmt_data[bid,"Level"]
+    }
+    tissue_df$mtdna = log2(tissue_df$mtdna)
+  }
+  
+  # add sex and group, save the df
+  tissue_df$group = pheno[tissue_df$viallabel,"group"]
+  tissue_df$sex = pheno[tissue_df$viallabel,"sex"]
+  mt_biomarkers[[gsub("-","",tissue_name)]] = tissue_df
+}
+
+# estimate cor with bootstrap
+cor_res = c()
+for(tissue in names(mt_biomarkers)){
+  x = mt_biomarkers[[tissue]]
+  v1 = x$mt_reads
+  v2 = x$mtdna
+  inds = !is.na(v1) & !is.na(v2)
+  if(sum(inds)<5){next}
+  v1=v1[inds]
+  v2=v2[inds]
+  rho = cor(v1,v2)
+  bootrhos = c()
+  for(j in 1:500){
+    samp = sample(1:length(v1),replace = T)
+    bootrhos[j] = cor(v1[samp],v2[samp])
+  }
+  res = data.frame(
+    tissue=tissue,
+    rho=rho,
+    bootstrap_mean = mean(bootrhos),
+    bootstrap_sd = sd(bootrhos)
+  )
+  cor_res = rbind(cor_res,res)
+}
+cor_res = cor_res[order(cor_res$rho,decreasing = T),]
+cor_res$zscore = cor_res$rho/cor_res$bootstrap_sd
+
+p<- ggplot(cor_res, aes(x=tissue, y=rho)) + 
+  geom_bar(stat="identity", color="black", position=position_dodge()) +
+  geom_errorbar(aes(ymin=rho-bootstrap_sd, ymax=rho+bootstrap_sd), width=.2,
+                 position=position_dodge(.9)) 
+
+print(p)
+
+
+
+```
+
+
+
+```{r}
+cor_res[cor_res[,1]=="SKMVL",1] = "SKM-VL"
+cor_res[cor_res[,1]=="SKMGN",1] = "SKM-GN"
+cor_res[cor_res[,1]=="WATSC",1] = "WAT-SC"
+
+par(mar = c(10,5,2,2))
+bp = barplot(cor_res[,2],las=2,col=TISSUE_COLORS[cor_res[,1]],
+        ylab = "Pearson correlation",cex.axis = 1.3,space = 0,cex.lab = 1.5,
+        ylim=c(-0.3,0.85),names.arg = cor_res[,1],cex.names = 1.4)
+#abline(h=0.5,lty=2,lwd=2)
+arrows(x0 = bp,                           # Add error bars
+       y0 = cor_res[,2] + cor_res[,4],
+       y1 = cor_res[,2] - cor_res[,4],
+       angle = 90,
+       code = 3,
+       length = 0.1)
+```

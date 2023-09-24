@@ -100,7 +100,7 @@ See main functions in pass1b-06/tools/get_fx.R.
 
 Here we permute the training group in each sex and check the number of differential genes found. This is a sanity check for the landscape results.
 
-```{r}
+```{r,eval=F}
 perm_dea_results = list()
 for(tissue_name in c("ADRNL","HEART","COLON","SKM-GN")){
   tissue_code = TISSUE_ABBREV_TO_CODE[tissue_name]
@@ -194,7 +194,8 @@ for(tissue_name in c("ADRNL","HEART","COLON","SKM-GN")){
 
 Here we permute the sex assignment and rerun the differential analysis pipelines.
 
-```{r}
+```{r,eval=F}
+
 sex_perm_dea_results = list()
 for(tissue_name in sort(unique(names(TISSUE_ABBREV_TO_CODE)))){
   tissue_code = TISSUE_ABBREV_TO_CODE[tissue_name]
@@ -291,7 +292,6 @@ for(tissue_name in sort(unique(names(TISSUE_ABBREV_TO_CODE)))){
       date = "14122022",
       training_groups = training_groups,
       write=F, save_rdata = F)
-    
     sex_perm_training_dea = transcript_training_dea_each_sex(tissue_code, 
       prepped$fixed_meta, 
       prepped$fixed_counts, 
@@ -299,7 +299,6 @@ for(tissue_name in sort(unique(names(TISSUE_ABBREV_TO_CODE)))){
       prepped$curr_outliers,
       date = "14122022",write=F)
     
-    print(table(p.adjust(sex_perm_training_dea$p_value,method="fdr")<0.05))
     sex_perm_selected_training_genes = sex_perm_training_dea$feature_ID[
       p.adjust(sex_perm_training_dea$p_value,method="fdr")<0.05]
     print(length(sex_perm_selected_training_genes))
