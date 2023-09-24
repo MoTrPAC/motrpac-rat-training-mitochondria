@@ -1,0 +1,12 @@
+setname	pathway	setsize	pathwaysize	overlap	p	genes	q
+skm-gn_liver_heart	Lipid metabolism	24	121	9	0.000112704269347643	Acot13,Acot9,Decr1,Eci1,Eci2,Ephx2,Mlycd,Phyh,Ptges2	0.0100588560392771
+skm-gn_heart	Carbohydrate metabolism	71	73	15	1.90942600813799e-06	Aco2,Auh,Cs,Dld,Got2,Idh3a,Idh3b,Mcee,Mdh2,Me3,Pdp1,Pdpr,Sdha,Sucla2,Suclg1	0.000227221694968421
+skm-gn_heart	TCA cycle	71	20	9	1.92337416537114e-07	Aco2,Cs,Dld,Idh3a,Idh3b,Mdh2,Sdha,Sucla2,Suclg1	3.43322288518749e-05
+skm-gn_heart	Itaconate metabolism	71	6	3	0.0024730689786603	Auh,Sucla2,Suclg1	0.074459530855707
+skm-gn_heart	Lipid metabolism	71	121	15	0.000956241706562792	Acadl,Acadm,Acot11,Acot2,Acp6,Acsf3,Acss1,Echs1,Etfa,Etfb,Fdx1,Hsd17b10,Mcee,Osbpl1a,Them4	0.0426722861553646
+skm-gn_heart	Fatty acid oxidation	71	43	9	0.000242488989808237	Acadl,Acadm,Acot11,Acss1,Echs1,Etfa,Etfb,Hsd17b10,Mcee	0.0173137138723081
+skm-gn_heart	Branched-chain amino acid metabolism	71	25	6	0.00135213028200457	Auh,Dld,Echs1,Etfa,Etfb,Hsd17b10	0.0536345011861812
+skm-gn_heart	Fe-S-containing proteins	71	30	7	0.000628880861692986	Aco2,Fdx1,Ndufs1,Ndufs7,Ndufs8,Ndufv1,Nfs1	0.0320729239463423
+skm-gn_wat	OXPHOS subunits	13	102	5	0.00174665682703043	Ndufv2,Ndufa8,Ndufa12,Ndufb9,Ndufa4	0.0623556487249864
+skm-gn_wat	Complex I	13	65	4	0.00250284137330107	Ndufv2,Ndufa8,Ndufa12,Ndufb9	0.074459530855707
+skm-gn_wat	CI subunits	13	44	4	0.000562754815418078	Ndufv2,Ndufa8,Ndufa12,Ndufb9	0.0320729239463423
