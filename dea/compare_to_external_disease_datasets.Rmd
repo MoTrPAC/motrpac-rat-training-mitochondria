@@ -732,17 +732,19 @@ df_overall_test = df[grepl("Overall",df$sex),]
 df_overall_test = df_overall_test[order(df_overall_test$tissue),]
 df_overall_test$name3 = factor(df_overall_test$name3,
                                levels = df_overall_test$name3)
+df_overall_test$name4 = gsub(" et al.,p","",df_overall_test$name3)
 df_overall_test$Tissue = df_overall_test$tissue
 ggplot(df_overall_test,
-  aes(x = name3,y = log10P,fill = Tissue)) +
+  aes(x = name4,y = log10P,fill = Tissue)) +
   geom_bar(stat = "identity",position = "dodge") + xlab("") + 
   geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
-  geom_text(aes(x = name3,y = log10P+0.3,label = Weight),
-            vjust = 1.5, position = position_dodge(.9),
-            col="black",size=4,angle=45) +
+  geom_text(aes(x = name4,y = log10P-0.25,label = Weight),
+            vjust = 0.5, position = position_dodge(.5),
+            col="black",size=4.8,angle=45) +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1,size=11)) +
-  theme(axis.text.y = element_text(size=8))
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1,size=13)) +
+  theme(axis.text.y = element_text(size=12),
+        axis.title=element_text(size=14,face="bold"))
 
 df_overall_test[,c("dataset","tissue","bg_size","overlap","p")]
 
@@ -761,17 +763,20 @@ dataset_direction_stats = dataset_direction_stats[
   ),
 ]
 dataset_direction_stats$Tissue = dataset_direction_stats$tissue
+dataset_direction_stats$Dname = gsub(" et al.","",dataset_direction_stats$dataset)
 ggplot(dataset_direction_stats,
-  aes(x = dataset,y = log10P,fill = Tissue)) +
+  aes(x = Dname,y = log10P,fill = Tissue)) +
   facet_wrap(~sex,  ncol=1) +
   geom_bar(stat = "identity",position = "dodge") + xlab("") + 
   theme_classic() + 
-  theme(axis.text.x = element_text(angle = 60,vjust = 1, hjust = 1,size=11),
-        strip.background=element_rect(colour="black",fill="gray"))  +
-  geom_hline(yintercept = -log10(0.05)) + ylab("-log10 p-value") + 
-  geom_text(aes(x = dataset,y = log10P+0.3,label = Weight),
+  theme(axis.text.x = element_text(angle = 60,vjust = 1, hjust = 1,size=14),
+        strip.background = element_rect(colour="black",fill="cyan"),
+        strip.text = element_text(size = 15),
+        axis.title=element_text(size=14,face="bold"))  +
+  geom_hline(yintercept = -log10(0.05),color="gray") + ylab("-log10 p-value") + 
+  geom_text(aes(x = Dname,y = log10P+0.3,label = Weight),
             vjust = 1.5, position = position_dodge(.9),
-            col="black",size=3,angle=30)
+            col="black",size=3.8,angle=35)
 
 ```
 
